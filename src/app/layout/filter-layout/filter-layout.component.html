@@ -1,0 +1,78 @@
+<mat-sidenav-container class="h-100">
+  <mat-sidenav #sidenav [(opened)]="opened" mode="over" position="end">
+    <div class="container mt-3">
+      <mat-label>Período</mat-label>
+
+      <!-- Botões de presets de período -->
+      <div class="row">
+        <div class="col-6"><button mat-stroked-button class="w-100 mr-2 mt-3">Hoje</button></div>
+        <div class="col-6">
+          <button mat-stroked-button class="w-100 mr-2 mt-3">Esta semana</button>
+        </div>
+        <div class="col-6">
+          <button mat-stroked-button class="w-100 mr-2 mt-3">Este mês</button>
+        </div>
+        <div class="col-6">
+          <button mat-stroked-button class="w-100 mr-2 mt-3">Mês passado</button>
+        </div>
+      </div>
+
+      <!-- Date pickers -->
+      <div class="row mt-2">
+        <mat-form-field class="col-12 col-md-6">
+          <mat-label>De</mat-label>
+          <input matInput [matDatepicker]="pickerStart" />
+          <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+          <mat-datepicker #pickerStart></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="col-12 col-md-6">
+          <mat-label>Até</mat-label>
+          <input matInput [matDatepicker]="pickerEnd" />
+          <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEnd></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row m-0 mt-3">
+        <mat-form-field class="col-12" *ngFor="let f of filter.selectFilter; let i = index">
+          <mat-select
+            multiple
+            [formControl]="filter.selectFilter[i].formControl"
+            placeholder="{{ filter.selectFilter[i].title }}"
+            (openedChange)="myInput.focus()"
+          >
+            <div class="container row m-0  mb-2">
+              <mat-checkbox class="p-0 mt-3 col-1" (change)="selectAll($event, i)"> </mat-checkbox>
+              <input
+                class="myInput pl-2 mt-2 col-11"
+                #myInput
+                matInput
+                focused="'true'"
+                type="text"
+                (keyup)="search($event.target.value)"
+                autocomplete="off"
+                placeholder="search"
+              />
+            </div>
+
+            <mat-divider></mat-divider>
+            <mat-option *ngFor="let item of filter.selectFilter[i].filteredData" [value]="item.id">
+              {{ item.descricao || item.nomeDepartamento }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <!-- Conteúdo da aplicação -->
+  <ng-content></ng-content>
+
+  <!-- Botão que abre os filtros -->
+  <button mat-fab class="filter-button" (click)="opened = !opened">
+    <mat-icon>filter_list</mat-icon>
+  </button>
+</mat-sidenav-container>

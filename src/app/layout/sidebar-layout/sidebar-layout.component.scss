@@ -1,0 +1,18 @@
+.left-sidebar {
+  background-color: #004ecb;
+
+  .sidebar-nav {
+    background-color: transparent;
+  }
+}
+
+.signin-as-sidebar {
+  position: absolute;
+  bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .signin-as-sidebar {
+    display: none;
+  }
+}
