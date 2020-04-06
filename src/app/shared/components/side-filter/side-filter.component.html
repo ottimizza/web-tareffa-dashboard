@@ -1,0 +1,57 @@
+<a class="cursor-pointer" (click)="opened = !opened">
+  <i class="fa fa-filter btn-filter btn-rounded" [ngClass]="{'btn-filter-activate': opened}"></i>
+</a>
+
+<div class="side-filter border shadow text-center" *ngIf="opened">
+  <h3 class="mt-3">Filtro</h3>
+
+  <hr>
+
+  <div class="container m-1">
+    <div class="row m-0">
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Hoje</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Esta semana</button>
+    </div>
+    <div class="row m-0">
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Este mês</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Mês passado</button>
+    </div>
+  </div>
+
+  <div class="row m-2">
+    <mat-form-field class="col-12 col-md-6">
+      <mat-label>De</mat-label>
+      <input matInput [matDatepicker]="pickerStart" />
+      <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerStart></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="col-12 col-md-6">
+      <mat-label>Até</mat-label>
+      <input matInput [matDatepicker]="pickerEnd" />
+      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <hr class="m-2">
+
+  <div class="container">
+
+    <div class="row m-0 text-center" *ngFor="let item of selects">
+      <mat-form-field class="w-75">
+        <mat-label>{{ item.title }}</mat-label>
+          <mat-select multiple>
+          <mat-select-trigger>
+            {{ getLabel(item.id)?.length ? getLabel(item.id)[0] : '' }}
+            <span *ngIf="getLabel(item.id)?.length > 1" class="example-additional-selection">
+              (+{{ getLabel(item.id)?.length - 1 }} {{ getLabel(item.id)?.length === 2 ? 'outro' : 'outros' }})
+            </span>
+          </mat-select-trigger>
+          <mat-option (onSelectionChange)="select($event)" *ngFor="let option of item.options" [value]="{ id: item.id, value: option.value, name: option.name }">{{ option.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+</div>

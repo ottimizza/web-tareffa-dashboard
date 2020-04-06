@@ -1,4 +1,5 @@
 import { FormControl } from '@angular/forms';
+
 export class SelectFilter {
   title: string;
   formControl: FormControl;
@@ -40,5 +41,25 @@ export class Filter {
       filteredData: data,
       selectedData: data
     });
+  }
+}
+
+export class MeuFiltro {
+  startDate: Date;
+  endDate: Date;
+  itens: any[] = [];
+
+  setStartDate(date: Date) {
+    this.startDate = date;
+  }
+
+  setEndDate(date: Date) {
+    this.endDate = date;
+  }
+
+  addItem(prop: string, value: string) {
+    const obj: any = {};
+    obj[prop] = value;
+    this.itens.push(obj);
   }
 }
