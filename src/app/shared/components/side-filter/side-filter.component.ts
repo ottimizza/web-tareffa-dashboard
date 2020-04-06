@@ -1,5 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material';
+import { LoggerUtils } from '@shared/utils/logger.utils';
 
 export class SelectableFilter {
   title: string;
@@ -12,19 +21,29 @@ export class SelectableFilter {
   templateUrl: './side-filter.component.html',
   styleUrls: ['./side-filter.component.scss']
 })
-export class SideFilterComponent {
+export class SideFilterComponent implements OnInit {
   @Input() selects: SelectableFilter[];
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
 
   opened = false;
-  selecteds: any[] = [];
+  selecteds: any = {};
   names: { id: string; names: string[] }[] = [];
 
-  getObject(id: string, value: string) {
-    const obj: any = {};
-    obj[id] = value;
-    return obj;
+  startDate: string;
+  endDate: string;
+
+  ngOnInit(): void {
+    this.selects.forEach(sel => {
+      if (sel.id.includes(' ')) {
+        LoggerUtils.throw(new Error('O ID do select não pode conter espaços'));
+      }
+      sel.options.forEach(opt => {
+        if (opt.value.includes(' ')) {
+          LoggerUtils.throw(new Error('O value das opções do select não pode conter espaços'));
+        }
+      });
+    });
   }
 
   getLabel(id: string) {
@@ -33,17 +52,32 @@ export class SideFilterComponent {
   }
 
   select(event: MatOptionSelectionChange) {
-    const obj = this.getObject(event.source.value.id, event.source.value.value);
-    this._add(obj);
+    this._add(event.source.value.id, event.source.value.value);
     this._addLabel(event.source.value.id, event.source.value.name);
+    const object = Object.assign(this.selecteds, {
+      startDate: this.startDate ? this.startDate : '',
+      endDate: this.endDate ? this.endDate : ''
+    });
+    this.filters.emit(this.selecteds);
   }
 
-  private _add(object: any) {
-    const index = this.selecteds.indexOf(object);
-    if (index >= 0) {
-      this.selecteds.splice(index, 1);
+  private _add(id: string, value: string) {
+    // const index = this.selecteds.indexOf(object);
+    // if (index >= 0) {
+    //   this.selecteds.splice(index, 1);
+    // } else {
+    //   this.selecteds.push(object);
+    // }
+    if (Object.keys(this.selecteds).includes(id)) {
+      const array: string[] = this.selecteds[id];
+      if (array.includes(value)) {
+        array.splice(array.indexOf(value), 1);
+      } else {
+        array.push(value);
+      }
+      this.selecteds[id] = array;
     } else {
-      this.selecteds.push(object);
+      this.selecteds[id] = [value];
     }
   }
 

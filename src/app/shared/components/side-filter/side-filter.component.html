@@ -21,14 +21,14 @@
   <div class="row m-2">
     <mat-form-field class="col-12 col-md-6">
       <mat-label>De</mat-label>
-      <input matInput [matDatepicker]="pickerStart" />
+      <input [(ngModel)]="startDate" matInput [matDatepicker]="pickerStart" />
       <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
       <mat-datepicker #pickerStart></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field class="col-12 col-md-6">
       <mat-label>Até</mat-label>
-      <input matInput [matDatepicker]="pickerEnd" />
+      <input [(ngModel)]="endDate" matInput [matDatepicker]="pickerEnd" />
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
     </mat-form-field>

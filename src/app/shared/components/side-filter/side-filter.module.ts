@@ -9,11 +9,13 @@ import {
   MatButtonModule,
   MatSelectModule
 } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [SideFilterComponent],
   imports: [
     CommonModule,
+    FormsModule,
     MatMenuModule,
     MatDatepickerModule,
     MatFormFieldModule,
