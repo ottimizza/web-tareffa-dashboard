@@ -66,8 +66,8 @@ export class SideFilterComponent implements OnInit {
   }
 
   emit() {
-    this.selecteds.startDate = this.startDate;
-    this.selecteds.endDate = this.endDate;
+    this.selecteds.startDate = this.startDate ?? '';
+    this.selecteds.endDate = this.endDate ?? '';
     this.filters.emit(this.selecteds);
     this._encode(this.selecteds);
     this._store();

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ChartsModule } from 'ng2-charts';
 import { SideFilterModule } from '@shared/components/side-filter/side-filter.module';
+import { MatInputModule, MatFormFieldModule, MatDatepickerModule } from '@angular/material';
 
 @NgModule({
   declarations: [AnalyticsComponent],
@@ -14,7 +15,10 @@ import { SideFilterModule } from '@shared/components/side-filter/side-filter.mod
     SlickCarouselModule,
     ChartsModule,
     AnalyticsRoutingModule,
-    SideFilterModule
+    SideFilterModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule
   ]
 })
 export class AnalyticsModule {}

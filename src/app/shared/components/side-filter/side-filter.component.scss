@@ -17,9 +17,10 @@
   min-width: 250px;
   background-color: white;
   position: fixed;
-  height: 100%;
+  height: calc(100vh - 70px);
   z-index: 8;
   right: 0;
+  top: 70px;
   max-height: calc(100vh - 70px);
   overflow: auto;
 }
