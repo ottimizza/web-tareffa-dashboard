@@ -1,6 +1,8 @@
+import { Injectable } from '@angular/core';
 import { NativeDateAdapter } from '@angular/material';
 import { MatDateFormats } from '@angular/material/core';
 
+@Injectable()
 export class AppDateAdapter extends NativeDateAdapter {
   format(date: Date, displayFormat: Object): string {
     if (displayFormat === 'input') {
@@ -16,12 +18,26 @@ export class AppDateAdapter extends NativeDateAdapter {
 }
 export const APP_DATE_FORMATS: MatDateFormats = {
   parse: {
-    dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
+    dateInput: {
+      month: 'short',
+      year: 'numeric',
+      day: 'numeric'
+    }
   },
   display: {
     dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'numeric' },
-    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-    monthYearA11yLabel: { year: 'numeric', month: 'long' }
+    monthYearLabel: {
+      year: 'numeric',
+      month: 'numeric'
+    },
+    dateA11yLabel: {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    },
+    monthYearA11yLabel: {
+      year: 'numeric',
+      month: 'long'
+    }
   }
 };

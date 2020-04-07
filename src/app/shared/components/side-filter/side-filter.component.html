@@ -2,7 +2,7 @@
   <i class="fa fa-filter btn-filter btn-rounded" [ngClass]="{'btn-filter-activate': opened}"></i>
 </a>
 
-<div class="side-filter border shadow text-center" *ngIf="opened">
+<div class="side-filter border shadow text-center m-0" *ngIf="opened">
   <h3 class="mt-3">Filtro</h3>
 
   <hr>
@@ -48,20 +48,8 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-
-      <!-- <mat-form-field class="w-75">
-        <mat-label>{{ item.title }}</mat-label>
-          <mat-select multiple>
-          <mat-select-trigger>
-            {{ getLabel(item.id)?.length ? getLabel(item.id)[0] : '' }}
-            <span *ngIf="getLabel(item.id)?.length > 1" class="example-additional-selection">
-              (+{{ getLabel(item.id)?.length - 1 }} {{ getLabel(item.id)?.length === 2 ? 'outro' : 'outros' }})
-            </span>
-          </mat-select-trigger>
-          <mat-option (onSelectionChange)="select($event)" *ngFor="let option of item.options" [value]="{ id: item.id, value: option.value, name: option.name }">{{ option.name }}</mat-option>
-        </mat-select>
-      </mat-form-field> -->
     </div>
+
   </div>
 
 </div>

@@ -10,7 +10,7 @@ import { SelectableFilter } from '@shared/models/Filter';
 export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [
     {
-      title: 'Categoria',
+      title: 'Categorias',
       id: 'categories',
       options: [
         {
