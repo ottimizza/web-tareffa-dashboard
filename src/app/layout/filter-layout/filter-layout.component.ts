@@ -11,7 +11,7 @@ import { Component, OnInit, OnChanges } from '@angular/core';
 export class FilterLayoutComponent implements OnInit, OnChanges {
   opened: boolean;
 
-  filter = new Filter();
+  filter: Filter;
 
   selectExampleArray = [
     'Olá',
@@ -29,15 +29,15 @@ export class FilterLayoutComponent implements OnInit, OnChanges {
   constructor(private filterService: FilterService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.filter = JSON.parse(this.filterService.getFilters());
+    // this.filter = JSON.parse(this.filterService.getFilters());
     this.route.data.subscribe(data => {
       if (data) {
-        this.filterService.requestIndicators().subscribe((response: any) => {
-          this.filter.addSelect('Indicador', response.records);
-        });
-        this.filterService.requestDepartments().subscribe((response: any) => {
-          this.filter.addSelect('Departamento', response.records);
-        });
+        // this.filterService.requestIndicators().subscribe((response: any) => {
+        // this.filter.addSelect('Indicador', response.records);
+        // });
+        // this.filterService.requestDepartments().subscribe((response: any) => {
+        // this.filter.addSelect('Departamento', response.records);
+        // });
       }
     });
   }

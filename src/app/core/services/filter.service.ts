@@ -15,8 +15,8 @@ export class FilterService {
 
   buildFilter() {}
 
-  getFilters() {
-    return window.localStorage.getItem(FILTER_KEY);
+  getFilters(filterKey: string) {
+    return JSON.parse(window.localStorage.getItem(filterKey));
   }
 
   requestCategorias() {
@@ -26,9 +26,9 @@ export class FilterService {
     });
   }
 
-  requestDepartments(agrupamento = 1) {
+  requestDepartments(key, agrupamento = 1) {
     const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
-    const filter: Filter = JSON.parse(this.getFilters());
+    const filter: Filter = JSON.parse(this.getFilters(key));
 
     return this.httpClient.post(
       url,
@@ -46,8 +46,8 @@ export class FilterService {
     });
   }
 
-  store(f: Filter) {
-    window.localStorage.setItem(FILTER_KEY, JSON.stringify(f));
+  store(key: string, f: any) {
+    window.localStorage.setItem(key, JSON.stringify(f));
   }
 
   fromLocalStorage() {

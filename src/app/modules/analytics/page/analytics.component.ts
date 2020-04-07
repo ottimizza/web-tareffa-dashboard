@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { SelectableFilter } from '@shared/components/side-filter/side-filter.component';
+import { SelectableFilter } from '@shared/models/Filter';
 
 @Component({
   selector: 'app-analytics',

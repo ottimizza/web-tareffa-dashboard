@@ -7,14 +7,14 @@
 
   <hr>
 
-  <div class="container m-1">
+  <div class="container m-1" *ngIf="mustHaveDateFilter">
     <div class="row m-0">
-      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Hoje</button>
-      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Esta semana</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="today()">Hoje</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="thisWeek()">Esta semana</button>
     </div>
     <div class="row m-0">
-      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Este mês</button>
-      <button mat-stroked-button class="btn-info col-md col-lg col-xl">Mês passado</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="thisMonth()">Este mês</button>
+      <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="lastMonth()">Mês passado</button>
     </div>
   </div>
 
@@ -41,6 +41,16 @@
     <div class="row m-0 text-center" *ngFor="let item of selects">
       <mat-form-field class="w-75">
         <mat-label>{{ item.title }}</mat-label>
+        <input type="text" matInput [matAutocomplete]="auto" [value]="getSelectedValue(item.id)">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option (onSelectionChange)="select({ id: item.id, value: option.value, name: option.name })" *ngFor="let option of item.options" [value]="option.name">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- <mat-form-field class="w-75">
+        <mat-label>{{ item.title }}</mat-label>
           <mat-select multiple>
           <mat-select-trigger>
             {{ getLabel(item.id)?.length ? getLabel(item.id)[0] : '' }}
@@ -50,7 +60,7 @@
           </mat-select-trigger>
           <mat-option (onSelectionChange)="select($event)" *ngFor="let option of item.options" [value]="{ id: item.id, value: option.value, name: option.name }">{{ option.name }}</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
   </div>
 

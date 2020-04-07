@@ -1,42 +1,41 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnInit,
-  OnChanges,
-  SimpleChanges
-} from '@angular/core';
-import { MatOptionSelectionChange } from '@angular/material';
-import { LoggerUtils } from '@shared/utils/logger.utils';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-export class SelectableFilter {
-  title: string;
-  id: string;
-  options: { name: string; value: string }[];
-}
+import { LoggerUtils } from '@shared/utils/logger.utils';
+import { FilterService } from '@app/services/filter.service';
+import { SelectableFilter } from '@shared/models/Filter';
+import { DateUtils } from '@shared/utils/date.utils';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { AppDateAdapter, APP_DATE_FORMATS } from './providers/format-datepicker';
 
 @Component({
   selector: 'app-side-filter',
   templateUrl: './side-filter.component.html',
-  styleUrls: ['./side-filter.component.scss']
+  styleUrls: ['./side-filter.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
+  ]
 })
 export class SideFilterComponent implements OnInit {
+  @Input() STORAGE_KEY: string;
+  @Input() mustHaveDateFilter = true;
   @Input() selects: SelectableFilter[];
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
 
   opened = false;
   selecteds: any = {};
-  names: { id: string; names: string[] }[] = [];
+  selectedValues: { id: string; name: string }[] = [];
 
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
+
+  constructor(private _filterService: FilterService) {}
 
   ngOnInit(): void {
     this.selects.forEach(sel => {
-      if (sel.id.includes(' ')) {
-        LoggerUtils.throw(new Error('O ID do select não pode conter espaços'));
+      if (sel.id.includes(' ') || sel.id === 'names') {
+        LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
       sel.options.forEach(opt => {
         if (opt.value.includes(' ')) {
@@ -44,56 +43,96 @@ export class SideFilterComponent implements OnInit {
         }
       });
     });
-  }
 
-  getLabel(id: string) {
-    const index = this.names.map(item => item.id).indexOf(id);
-    return this.names[index]?.names;
-  }
-
-  select(event: MatOptionSelectionChange) {
-    this._add(event.source.value.id, event.source.value.value);
-    this._addLabel(event.source.value.id, event.source.value.name);
-    const object = Object.assign(this.selecteds, {
-      startDate: this.startDate ? this.startDate : '',
-      endDate: this.endDate ? this.endDate : ''
-    });
-    this.filters.emit(this.selecteds);
-  }
-
-  private _add(id: string, value: string) {
-    // const index = this.selecteds.indexOf(object);
-    // if (index >= 0) {
-    //   this.selecteds.splice(index, 1);
-    // } else {
-    //   this.selecteds.push(object);
-    // }
-    if (Object.keys(this.selecteds).includes(id)) {
-      const array: string[] = this.selecteds[id];
-      if (array.includes(value)) {
-        array.splice(array.indexOf(value), 1);
-      } else {
-        array.push(value);
+    if (this.STORAGE_KEY) {
+      const cache = this._filterService.getFilters(this.STORAGE_KEY);
+      if (cache) {
+        this.selectedValues = cache.selectedValues || [];
+        this.startDate = cache.startDate || '';
+        this.endDate = cache.endDate || '';
+        delete cache.selectedValues;
+        delete cache.startDate;
+        delete cache.endDate;
+        this.selecteds = cache || {};
       }
-      this.selecteds[id] = array;
-    } else {
-      this.selecteds[id] = [value];
     }
   }
 
-  private _addLabel(id: string, name: string) {
-    let array = this.names.map(label => label.id);
+  today() {
+    this.startDate = new Date();
+    this.endDate = new Date();
+  }
+
+  thisWeek() {
+    this.startDate = DateUtils.iterateDays(-1, date => date.getDay() === 0);
+    this.endDate = DateUtils.iterateDays(1, date => date.getDay() === 6);
+  }
+
+  thisMonth() {
+    const reference = new Date();
+    this.startDate = DateUtils.iterateDays(
+      -1,
+      date => date.getDate() === 0 && date.getMonth() === reference.getMonth()
+    );
+    const endDate = DateUtils.iterateDays(1, date => {
+      return (
+        date.getDate() === 0 &&
+        (date.getMonth() === reference.getMonth() + 1 || date.getMonth() === 0)
+      );
+    });
+    this.endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000 * -1);
+  }
+
+  lastMonth() {}
+
+  select(event: { id: string; name: string; value: string }) {
+    this._add(event.id, event.value);
+    this._storeValues(event.id, event.name);
+    this.selecteds.startDate = this.startDate;
+    this.selecteds.endDate = this.endDate;
+    this.filters.emit(this.selecteds);
+    this._store();
+  }
+
+  getSelectedValue(id: string) {
+    const index = this.selectedValues.map(sv => sv.id).indexOf(id);
+    if (this.selectedValues[index]) {
+      return this.selectedValues[index].name;
+    } else {
+      return '';
+    }
+  }
+
+  private _storeValues(id: string, name: string) {
+    const array = this.selectedValues.map(sv => sv.id);
     const index = array.indexOf(id);
     if (index >= 0) {
-      array = this.names[index].names;
-      if (array.includes(name)) {
-        array.splice(array.indexOf(name), 1);
-      } else {
-        array.push(name);
-      }
-      this.names[index].names = array;
+      this.selectedValues[index].name = name;
     } else {
-      this.names.push({ id, names: [name] });
+      this.selectedValues.push({ id, name });
+    }
+  }
+
+  private _add(id: string, value: string) {
+    this.selecteds[id] = value;
+    // if (Object.keys(this.selecteds).includes(id)) {
+    //   const array: string[] = this.selecteds[id];
+    //   if (array.includes(value)) {
+    //     array.splice(array.indexOf(value), 1);
+    //   } else {
+    //     array.push(value);
+    //   }
+    //   this.selecteds[id] = array;
+    // } else {
+    //   this.selecteds[id] = [value];
+    // }
+  }
+
+  private _store() {
+    if (this.STORAGE_KEY) {
+      const object = Object.assign(this.selecteds, { selectedValues: this.selectedValues });
+      localStorage.removeItem(this.STORAGE_KEY);
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(object));
     }
   }
 }
