@@ -8,4 +8,5 @@ export class SelectableFilter {
   title: string;
   id: string;
   options: { name: string; value: string }[];
+  multiple?: boolean;
 }

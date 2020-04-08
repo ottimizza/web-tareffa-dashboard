@@ -41,15 +41,9 @@
   <div class="container">
 
     <div class="row m-0 text-center" *ngFor="let item of selects">
-      <mat-form-field class="w-75">
-        <mat-label>{{ item.title }}</mat-label>
-        <input type="text" matInput [matAutocomplete]="auto" [value]="getSelectedValue(item.id)">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (onSelectionChange)="select({ id: item.id, value: option.value, name: option.name })" *ngFor="let option of item.options" [value]="option.name">
-            {{ option.name }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+
+      <app-sf-select class="w-75 m-auto" *ngIf="!item.multiple" [item]="item" [cache]="cache" (filter)="select($event)"></app-sf-select>
+
     </div>
 
   </div>

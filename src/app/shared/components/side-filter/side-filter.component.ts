@@ -27,7 +27,7 @@ export class SideFilterComponent implements OnInit {
 
   opened = false;
   selecteds: any = {};
-  selectedValues: { id: string; name: string }[] = [];
+  cache: any;
 
   startDate: Date;
   endDate: Date;
@@ -39,9 +39,6 @@ export class SideFilterComponent implements OnInit {
       if (sel.id.includes(' ') || sel.id === 'names') {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
-      sel.options = [{ value: '', name: `Todos os/as ${sel.title.toLowerCase()}` }].concat(
-        sel.options
-      );
       sel.options.forEach(opt => {
         if (opt.value.includes(' ')) {
           LoggerUtils.throw(new Error('O value das opções do select não pode conter espaços'));
@@ -51,16 +48,7 @@ export class SideFilterComponent implements OnInit {
 
     if (this.STORAGE_KEY) {
       this._storageService.fetch(this.STORAGE_KEY).then(json => {
-        const cache = JSON.parse(json);
-        if (cache) {
-          this.selectedValues = cache.selectedValues || [];
-          this.startDate = cache.startDate || '';
-          this.endDate = cache.endDate || '';
-          delete cache.selectedValues;
-          delete cache.startDate;
-          delete cache.endDate;
-          this.selecteds = cache || {};
-        }
+        this.cache = JSON.parse(json);
       });
     }
   }
@@ -113,48 +101,27 @@ export class SideFilterComponent implements OnInit {
     this.emit();
   }
 
-  select(event: { id: string; name: string; value: string }) {
-    this._add(event.id, event.value);
-    this._storeValues(event.id, event.name);
+  select(event: { id: string; value: string | string[] }) {
+    this.selecteds[event.id] = event.value;
     this.emit();
-  }
-
-  getSelectedValue(id: string) {
-    const index = this.selectedValues.map(sv => sv.id).indexOf(id);
-    if (this.selectedValues[index]) {
-      return this.selectedValues[index].name;
-    } else {
-      return '';
-    }
-  }
-
-  private _storeValues(id: string, name: string) {
-    const array = this.selectedValues.map(sv => sv.id);
-    const index = array.indexOf(id);
-    if (index >= 0) {
-      this.selectedValues[index].name = name;
-    } else {
-      this.selectedValues.push({ id, name });
-    }
-  }
-
-  private _add(id: string, value: string) {
-    this.selecteds[id] = value;
   }
 
   private _store() {
     if (this.STORAGE_KEY) {
-      const object = Object.assign(this.selecteds, { selectedValues: this.selectedValues });
-      this._storageService.store(this.STORAGE_KEY, JSON.stringify(object));
+      this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
     }
   }
 
   private _encode(params: any): void {
-    const code = Object.keys(params)
-      .map(key => {
-        return [key, params[key]].map(encodeURIComponent).join('=');
-      })
-      .join('&');
-    this.encodedFilters.emit(code);
+    const multiples = Object.values(params).map(val => Array.isArray(val));
+    if (!multiples.includes(true)) {
+      const code = Object.keys(params)
+        .map(key => {
+          return [key, params[key]].map(encodeURIComponent).join('=');
+        })
+        .join('&');
+
+      this.encodedFilters.emit(code);
+    }
   }
 }
