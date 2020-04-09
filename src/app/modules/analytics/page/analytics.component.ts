@@ -124,7 +124,5 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnInit() {}
 
-  abaporu(event: any) {
-    console.log(event);
-  }
+  abaporu(event: any) {}
 }
