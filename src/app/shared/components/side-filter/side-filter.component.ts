@@ -108,7 +108,9 @@ export class SideFilterComponent implements OnInit {
 
   private _store() {
     if (this.STORAGE_KEY) {
-      this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
+      this._storageService.destroy(this.STORAGE_KEY).then(() => {
+        this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
+      });
     }
   }
 
@@ -116,11 +118,8 @@ export class SideFilterComponent implements OnInit {
     const multiples = Object.values(params).map(val => Array.isArray(val));
     if (!multiples.includes(true)) {
       const code = Object.keys(params)
-        .map(key => {
-          return [key, params[key]].map(encodeURIComponent).join('=');
-        })
+        .map(key => [key, params[key]].map(encodeURIComponent).join('='))
         .join('&');
-
       this.encodedFilters.emit(code);
     }
   }

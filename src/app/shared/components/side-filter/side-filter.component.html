@@ -43,6 +43,7 @@
     <div class="row m-0 text-center" *ngFor="let item of selects">
 
       <app-sf-select class="w-75 m-auto" *ngIf="!item.multiple" [item]="item" [cache]="cache" (filter)="select($event)"></app-sf-select>
+      <app-sf-multiple class="w-75 m-auto" *ngIf="item.multiple" [item]="item" [cache]="cache" (filter)="select($event)"></app-sf-multiple>
 
     </div>
 

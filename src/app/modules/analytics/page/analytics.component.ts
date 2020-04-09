@@ -94,6 +94,29 @@ export class AnalyticsComponent implements OnInit {
           value: 'micro_services'
         }
       ]
+    },
+    {
+      id: 'name',
+      title: 'Nomes',
+      options: [
+        {
+          name: 'Diogo',
+          value: '01'
+        },
+        {
+          name: 'Lucas',
+          value: 'be-2'
+        },
+        {
+          name: 'Ruan',
+          value: 'fe-1'
+        },
+        {
+          name: 'Rodrigo',
+          value: 'fe-2'
+        }
+      ],
+      multiple: true
     }
   ];
 

@@ -17,7 +17,7 @@ export class SideFilterSelectComponent implements OnInit {
   ngOnInit(): void {
     this.item.options.push({ name: `Todo(a)s os/as ${this.item.title.toLowerCase()}`, value: '' });
 
-    if (Object.keys(this.cache).includes(this.item.id)) {
+    if (this.cache && Object.keys(this.cache).includes(this.item.id)) {
       this.selectedValue = this.cache[this.item.id] || '';
       this.selectedName = this.item.options.filter(opt => opt.value === this.selectedValue)[0].name;
     }

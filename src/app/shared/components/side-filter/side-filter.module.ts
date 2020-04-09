@@ -15,7 +15,7 @@ import { SideFilterMultipleSelectComponent } from './side-filter-multiple-select
 import { SideFilterSelectComponent } from './side-filter-select/side-filter-select.component';
 
 @NgModule({
-  declarations: [SideFilterComponent, SideFilterSelectComponent, SideFilterMultipleSelectComponent],
+  declarations: [SideFilterSelectComponent, SideFilterMultipleSelectComponent, SideFilterComponent],
   imports: [
     CommonModule,
     FormsModule,

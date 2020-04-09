@@ -1,13 +1,13 @@
 <mat-form-field class="w-100">
   <mat-label>{{ item.title }}</mat-label>
-    <mat-select multiple>
+  <mat-select multiple>
     <mat-select-trigger>
-      {{ labels?.length ? labels[0] : '' }}
+      {{ labels.length ? labels[0] : '' }}
       <span *ngIf="labels?.length > 1" class="example-additional-selection">
         (+{{ labels?.length - 1 }} {{ labels?.length === 2 ? 'outro' : 'outros' }})
       </span>
     </mat-select-trigger>
-    <mat-option (onSelectionChange)="select({ value: option.value, label: option.name })" *ngFor="let option of item.options" [value]="option.name">
+    <mat-option (onSelectionChange)="select(option.value, option.name)" *ngFor="let option of item.options" [value]="option.name">
       {{ option.name }}
     </mat-option>
   </mat-select>

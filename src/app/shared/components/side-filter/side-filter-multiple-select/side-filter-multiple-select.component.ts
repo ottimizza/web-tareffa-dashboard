@@ -15,15 +15,8 @@ export class SideFilterMultipleSelectComponent implements OnInit {
   labels: string[] = [];
 
   ngOnInit(): void {
-    if (Object.keys(this.cache).includes(this.item.id)) {
+    if (this.cache && Object.keys(this.cache).includes(this.item.id)) {
       this.selecteds = this.cache[this.item.id] ?? [];
-      this.selecteds.forEach(sel => {
-        this.item.options.forEach(opt => {
-          if (sel === opt.value) {
-            this.labels.push(opt.name);
-          }
-        });
-      });
     }
 
     this._emit();
