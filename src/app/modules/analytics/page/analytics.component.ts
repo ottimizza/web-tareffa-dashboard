@@ -15,20 +15,18 @@ export class AnalyticsComponent implements OnInit {
   constructor(private _filterService: FilterService) {}
 
   ngOnInit() {
-    this._filterService.requestIndicators().subscribe((a: any) => {
-      this.selects = this.selects.concat(
-        SideFilterConversorUtils.parse(a.records, 'Indicadores', 'indicators')
-      );
-    });
-    this._filterService.requestCategorias().subscribe((a: any) => {
-      this.selects = this.selects.concat(
-        SideFilterConversorUtils.parse(a.records, 'Categorias', 'categories')
-      );
-    });
-    this._filterService.requestDepartments().subscribe((a: any) => {
-      this.selects = this.selects.concat(
-        SideFilterConversorUtils.parse(a.records, 'Departamentos', 'departments', true)
-      );
-    });
+    this._filterService
+      .requestIndicators()
+      .subscribe(a => this._parse(a, 'Indicadores', 'indicators'));
+    this._filterService
+      .requestCategorias()
+      .subscribe(a => this._parse(a, 'Categorias', 'categories'));
+    this._filterService
+      .requestDepartments()
+      .subscribe(a => this._parse(a, 'Departamentos', 'departments', true));
+  }
+
+  private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
+    this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
   }
 }
