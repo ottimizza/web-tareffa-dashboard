@@ -36,7 +36,7 @@ export class SideFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.selects.forEach(sel => {
-      if (sel.id.includes(' ') || sel.id === 'names') {
+      if (sel.id.includes(' ')) {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
       sel.options.forEach(opt => {
