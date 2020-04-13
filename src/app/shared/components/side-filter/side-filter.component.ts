@@ -20,7 +20,7 @@ import { DateUtils } from '@shared/utils/date.utils';
 export class SideFilterComponent implements OnInit {
   @Input() STORAGE_KEY: string;
   @Input() mustHaveDateFilter = true;
-  @Input() selects: SelectableFilter[];
+  @Input() selects: SelectableFilter[] = [];
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
   @Output() encodedFilters: EventEmitter<string> = new EventEmitter();
@@ -47,15 +47,13 @@ export class SideFilterComponent implements OnInit {
     });
 
     if (this.STORAGE_KEY) {
-      this._storageService.fetch(this.STORAGE_KEY).then(json => {
-        this.cache = JSON.parse(json);
-      });
+      this._restore();
     }
   }
 
   emit() {
-    this.selecteds.startDate = this.startDate ?? '';
-    this.selecteds.endDate = this.endDate ?? '';
+    this.selecteds.startDate = this.startDate;
+    this.selecteds.endDate = this.endDate;
     this.filters.emit(this.selecteds);
     this._encode(this.selecteds);
     this._store();
@@ -112,6 +110,17 @@ export class SideFilterComponent implements OnInit {
         this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
       });
     }
+  }
+
+  private _restore() {
+    this._storageService.fetch(this.STORAGE_KEY).then(json => {
+      const cache = JSON.parse(json);
+      this.startDate = cache.startDate;
+      this.endDate = cache.endDate;
+      delete cache.startDate;
+      delete cache.endDate;
+      this.cache = cache;
+    });
   }
 
   private _encode(params: any): void {

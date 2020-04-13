@@ -26,13 +26,12 @@ export class FilterService {
     });
   }
 
-  requestDepartments(key, agrupamento = 1) {
+  requestDepartments(agrupamento = 1) {
     const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
-    const filter: Filter = JSON.parse(this.getFilters(key));
 
     return this.httpClient.post(
       url,
-      { dataProgramadaInicio: filter.startDate, dataProgramadaTermino: filter.endDate },
+      { dataProgramadaInicio: '', dataProgramadaTermino: '' },
       {
         headers: this.authenticationService.getAuthorizationHeaders()
       }

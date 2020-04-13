@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 
 @Component({
@@ -10,17 +11,6 @@ import { SelectableFilter } from '@shared/models/Filter';
 export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [
     {
-      title: 'Categorias',
-      id: 'categories',
-      options: [
-        {
-          name: 'Todas as categorias',
-          value: 'all'
-        }
-      ]
-    },
-    {
-      title: 'Serviços',
       id: 'services',
       options: [
         {
@@ -29,100 +19,41 @@ export class AnalyticsComponent implements OnInit {
         },
         {
           name: 'DAS - Guia Simples Nacional',
-          value: 'DAS'
+          value: 'das'
         },
         {
-          name: '01 - Definição dos Requisitos / Planejamento',
-          value: '1'
-        },
-        {
-          name: '02 - Prototipação de Tela',
-          value: '2'
-        },
-        {
-          name: '03 - Desenvolvimento',
-          value: '3'
-        },
-        {
-          name: '04 - Testes / Homologações',
-          value: '4'
-        },
-        {
-          name: '05 - Em BETA (Produção)',
-          value: '5'
-        },
-        {
-          name: '06 - Não sei o que é o 6',
-          value: '6'
-        },
-        {
-          name: '07 - Liberar projeto para produção',
-          value: '07'
+          name: '03. Desenvolvimento',
+          value: '03'
         }
-      ]
+      ],
+      title: 'Serviços',
+      multiple: true
     },
     {
-      title: 'Unidades de Negócio',
-      id: 'product',
+      id: 'unidades',
+      title: 'Un. de Negócio',
       options: [
         {
-          name: 'Todas as Un. de negócio',
-          value: 'all'
-        },
-        {
           name: 'Bússola Contábil 3.0',
-          value: 'bussola3'
+          value: 'bussola'
         },
         {
           name: 'OIC 3.0',
-          value: 'oic3'
+          value: 'oic'
         },
         {
           name: 'CS - Sugestão de Melhoria',
           value: 'cssm'
-        },
-        {
-          name: 'CS - Status Report',
-          value: 'cssr'
-        },
-        {
-          name: 'CS - Cockpit Indicadores',
-          value: 'csci'
-        },
-        {
-          name: 'Micro Serviços',
-          value: 'micro_services'
         }
       ]
-    },
-    {
-      id: 'name',
-      title: 'Nomes',
-      options: [
-        {
-          name: 'Diogo',
-          value: '01'
-        },
-        {
-          name: 'Lucas',
-          value: 'be-2'
-        },
-        {
-          name: 'Ruan',
-          value: 'fe-1'
-        },
-        {
-          name: 'Rodrigo',
-          value: 'fe-2'
-        }
-      ],
-      multiple: true
     }
   ];
 
-  constructor() {}
+  constructor(private _filterService: FilterService) {}
 
-  ngOnInit() {}
-
-  abaporu(event: any) {}
+  ngOnInit() {
+    this._filterService.requestIndicators().subscribe(a => console.log(a));
+    this._filterService.requestCategorias().subscribe(a => console.log(a));
+    this._filterService.requestDepartments().subscribe(a => console.log(a));
+  }
 }
