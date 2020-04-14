@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 
@@ -35,7 +43,6 @@ export class SideFilterComponent implements OnInit {
   constructor(private _storageService: StorageService) {}
 
   ngOnInit(): void {
-    this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
     this.selects.forEach(sel => {
       if (sel.id.includes(' ')) {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
@@ -103,6 +110,11 @@ export class SideFilterComponent implements OnInit {
   select(event: { id: string; value: string | string[] }) {
     this.selecteds[event.id] = event.value;
     this.emit();
+  }
+
+  activate() {
+    this.opened = !this.opened;
+    this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
   }
 
   private _store() {
