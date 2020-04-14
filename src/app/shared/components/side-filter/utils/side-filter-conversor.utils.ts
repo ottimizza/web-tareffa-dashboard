@@ -1,6 +1,4 @@
-import { Indicator } from '@shared/models/Indicator';
 import { SelectableFilter } from '@shared/models/Filter';
-import { Department } from '@shared/models/Department';
 
 export class SideFilterConversorUtils {
   public static parse(

@@ -1,12 +1,13 @@
 .btn-filter {
   padding: calc(1% + 8px);
-  background-color: #009da0;
+  background-color: #1e88e5;
   color: white;
   position: fixed;
-  transition: 70ms;
+  transition: 200ms;
   bottom: 2%;
   right: 2%;
   z-index: 9;
+  box-shadow: 0 0 5px 4px rgba(0, 0, 0, 0.2);
   &:hover {
     background-color: #4b4279;
   }
@@ -42,4 +43,17 @@ button {
   margin: 3%;
   border-radius: 10px;
   padding: 5px;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile {
+    display: inline-block;
+  }
+  .desktop {
+    display: none;
+  }
 }
