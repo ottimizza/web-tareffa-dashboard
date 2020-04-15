@@ -1,6 +1,7 @@
 .btn-filter {
   padding: calc(1% + 8px);
-  background-color: #1e88e5;
+  // background-color: #1e88e5;
+  background-color: #4b4279;
   color: white;
   position: fixed;
   transition: 200ms;
@@ -9,7 +10,7 @@
   z-index: 9;
   box-shadow: 0 0 5px 4px rgba(0, 0, 0, 0.2);
   &:hover {
-    background-color: #4b4279;
+    background-color: #d9587f;
   }
 }
 
