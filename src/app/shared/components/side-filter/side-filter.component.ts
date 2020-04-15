@@ -39,11 +39,6 @@ export class SideFilterComponent implements OnInit {
       if (sel.id.includes(' ')) {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
-      sel.options.forEach(opt => {
-        if (opt.value.includes(' ')) {
-          LoggerUtils.throw(new Error('O value das opções do select não pode conter espaços'));
-        }
-      });
     });
 
     if (this.STORAGE_KEY) {
