@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { UpdateService } from '@app/services/update.service';
 import { MessagingService } from '@app/services/messaging.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-
+import { FilterService } from '@app/services/filter.service';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +12,13 @@ import { LoggerUtils } from '@shared/utils/logger.utils';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   public updateAvailable = false;
 
   constructor(
     @Inject(DOCUMENT) public document: Document,
     private events: RxEvent,
     private updateService: UpdateService,
-    private messagingService: MessagingService
+    private filterService: FilterService
   ) {
     this.updateService.checkForUpdates();
     this.events.subscribe('sw::update', () => {
@@ -44,5 +43,4 @@ export class AppComponent implements OnInit {
     // this.messagingService.receiveMessage();
     // this.messagingService.currentMessage.subscribe(msg => LoggerUtils.log(msg));
   }
-
 }

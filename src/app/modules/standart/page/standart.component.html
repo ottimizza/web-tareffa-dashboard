@@ -1,0 +1,10 @@
+<app-side-filter></app-side-filter>
+
+<div class="row w-100 m-0">
+  <div class="col">
+    <app-doughnut [data]="openData" [labels]="chartLabels" title="ABERTOS" [colors]="chartColors"></app-doughnut>
+  </div>
+  <div class="col">
+    <app-doughnut [data]="closedData" [labels]="chartLabels" title="FECHADOS" [colors]="chartColors"></app-doughnut>
+  </div>
+</div>

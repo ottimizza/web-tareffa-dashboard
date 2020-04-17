@@ -1,0 +1,60 @@
+.btn-filter {
+  padding: calc(1% + 8px);
+  // background-color: #1e88e5;
+  background-color: #4b4279;
+  color: white;
+  position: fixed;
+  transition: 200ms;
+  bottom: 2%;
+  right: 2%;
+  z-index: 9;
+  box-shadow: 0 0 5px 4px rgba(0, 0, 0, 0.2);
+  &:hover {
+    background-color: #d9587f;
+  }
+}
+
+.side-filter {
+  width: 32%;
+  min-width: 250px;
+  background-color: white;
+  position: fixed;
+  height: calc(100vh - 70px);
+  z-index: 8;
+  right: 0;
+  top: 70px;
+  max-height: calc(100vh - 70px);
+  overflow: auto;
+}
+
+.btn-filter-activate {
+  right: calc(250px + 15%);
+}
+
+.example-additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+.mat-form-field {
+  margin: 0 auto;
+}
+
+button {
+  margin: 3%;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile {
+    display: inline-block;
+  }
+  .desktop {
+    display: none;
+  }
+}
