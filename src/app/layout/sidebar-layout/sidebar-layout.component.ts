@@ -29,7 +29,10 @@ export class SidebarLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = User.fromLocalStorage();
-    this.items = [{ icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' }];
+    this.items = [
+      { icon: 'fad fa-chart-pie', label: 'Padrão', url: '/dashboard/standart' },
+      { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' }
+    ];
   }
 
   // public openSiginAsModal() {

@@ -14,11 +14,6 @@ export class SideFilterConversorUtils {
         return { name: item.nomeDepartamento, value: `${item.id}` };
       }
     });
-    return {
-      id,
-      title,
-      multiple,
-      options
-    };
+    return { id, title, multiple, options };
   }
 }
