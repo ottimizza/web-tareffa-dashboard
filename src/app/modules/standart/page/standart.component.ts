@@ -8,7 +8,15 @@ import { Label, MultiDataSet } from 'ng2-charts';
 export class StandartComponent {
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
   chartColors = ['#00acc1', '#e53935'];
-  chartData: MultiDataSet = [
+
+  openData = [
+    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
+    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
+    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
+    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
+    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]
+  ];
+  closedData = [
     [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
     [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
     [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
