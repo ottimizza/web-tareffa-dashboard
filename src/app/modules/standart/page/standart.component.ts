@@ -13,30 +13,21 @@ export class StandartComponent implements OnInit {
 
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
   chartColors = ['#00acc1', '#e53935'];
-  openData = [
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]
-  ];
-  closedData = [
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)],
-    [Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]
-  ];
+  openData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
+  closedData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
 
   constructor(private _filterService: FilterService) {}
 
   ngOnInit(): void {
-    this._filterService.requestCategorias().subscribe(subs => {
-      this._parse(subs, 'Categorias', 'categories');
-    });
-    this._filterService.requestDepartments().subscribe(subs => {
-      this._parse(subs, 'Departamentos', 'departments', true);
-    });
-    this._filterService.requestIndicators().subscribe(subs => {
-      this._parse(subs, 'Unidades de negócio', 'indicator');
-    });
-    // throw new Error('Method not implemented.');
+    this._filterService
+      .requestCategorias()
+      .subscribe(subs => this._parse(subs, 'Categorias', 'categories'));
+    this._filterService
+      .requestDepartments()
+      .subscribe(subs => this._parse(subs, 'Departamentos', 'departments', true));
+    this._filterService
+      .requestIndicators()
+      .subscribe(subs => this._parse(subs, 'Unidades de negócio', 'indicators'));
   }
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
