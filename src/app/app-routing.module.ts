@@ -23,7 +23,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'analytics',
+        redirectTo: 'standart',
         pathMatch: 'full'
       },
 
@@ -34,6 +34,14 @@ const routes: Routes = [
         },
         loadChildren: () =>
           import('@modules/analytics/analytics.module').then(m => m.AnalyticsModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'standart',
+        data: {
+          breadcrumb: 'Padrão'
+        },
+        loadChildren: () => import('@modules/standart/standart.module').then(m => m.StandartModule),
         canActivate: [AuthGuard]
       },
       {

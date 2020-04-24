@@ -1,3 +1,5 @@
+import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
@@ -20,9 +22,24 @@ import { DateUtils } from '@shared/utils/date.utils';
 export class SideFilterComponent implements OnInit {
   @Input() STORAGE_KEY: string;
   @Input() mustHaveDateFilter = true;
-  @Input() selects: SelectableFilter[] = [];
+
+  // tslint:disable-next-line: variable-name
+  _selects: SelectableFilter[] = [];
+
+  @Input('selects')
+  set selects(selects) {
+    this._selects = selects;
+    console.log(selects);
+
+    this.emit();
+  }
+
+  get selects() {
+    return this._selects;
+  }
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
+
   @Output() encodedFilters: EventEmitter<string> = new EventEmitter();
 
   opened = false;
@@ -32,29 +49,33 @@ export class SideFilterComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-  constructor(private _storageService: StorageService) {}
+  filterSubject = new Subject();
+
+  constructor(private storageService: StorageService) {
+    this.filterSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.filters.emit(this.selecteds);
+      // console.log(this.selecteds);
+    });
+  }
 
   ngOnInit(): void {
     this.selects.forEach(sel => {
       if (sel.id.includes(' ')) {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
-      sel.options.forEach(opt => {
-        if (opt.value.includes(' ')) {
-          LoggerUtils.throw(new Error('O value das opções do select não pode conter espaços'));
-        }
-      });
     });
 
     if (this.STORAGE_KEY) {
       this._restore();
     }
+
+    this.emit();
   }
 
   emit() {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
-    this.filters.emit(this.selecteds);
+    this.filterSubject.next();
     this._encode(this.selecteds);
     this._store();
   }
@@ -104,22 +125,31 @@ export class SideFilterComponent implements OnInit {
     this.emit();
   }
 
+  activate() {
+    this.opened = !this.opened;
+    this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
+  }
+
   private _store() {
     if (this.STORAGE_KEY) {
-      this._storageService.destroy(this.STORAGE_KEY).then(() => {
-        this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
+      this.storageService.destroy(this.STORAGE_KEY).then(() => {
+        this.storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
       });
     }
   }
 
   private _restore() {
-    this._storageService.fetch(this.STORAGE_KEY).then(json => {
-      const cache = JSON.parse(json);
-      this.startDate = cache.startDate;
-      this.endDate = cache.endDate;
-      delete cache.startDate;
-      delete cache.endDate;
-      this.cache = cache;
+    this.storageService.fetch(this.STORAGE_KEY).then(json => {
+      if (json) {
+        const cache = JSON.parse(json);
+        this.startDate = cache.startDate;
+        this.endDate = cache.endDate;
+        delete cache.startDate;
+        delete cache.endDate;
+        this.cache = cache;
+      } else {
+        this.thisMonth();
+      }
     });
   }
 

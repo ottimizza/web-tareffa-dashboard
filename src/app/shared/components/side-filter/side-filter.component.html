@@ -1,4 +1,4 @@
-<a class="cursor-pointer" (click)="opened = !opened">
+<a class="cursor-pointer" (click)="activate()">
   <i class="fa fa-filter btn-filter btn-rounded" [ngClass]="{'btn-filter-activate': opened}"></i>
 </a>
 
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="row m-2">
+    <div class="row m-2 desktop">
       <mat-form-field class="col-12 col-md-6">
         <mat-label>De</mat-label>
         <input (keyup)="emit()" [(ngModel)]="startDate" matInput [matDatepicker]="pickerStart" />
@@ -32,6 +32,22 @@
         <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEnd" />
         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
         <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="row m-2 mobile">
+      <mat-form-field class="col-12 col-md-6">
+        <mat-label>De</mat-label>
+        <input (keyup)="emit()" [(ngModel)]="startDate" matInput [matDatepicker]="pickerStartMobile" />
+        <mat-datepicker-toggle matSuffix [for]="pickerStartMobile"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #pickerStartMobile></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="col-12 col-md-6">
+        <mat-label>Até</mat-label>
+        <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEndMobile" />
+        <mat-datepicker-toggle matSuffix [for]="pickerEndMobile"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #pickerEndMobile></mat-datepicker>
       </mat-form-field>
     </div>
 

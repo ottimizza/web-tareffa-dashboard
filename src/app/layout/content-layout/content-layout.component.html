@@ -1,6 +1,9 @@
 <div class="position-relative d-flex flex-column m-0 p-0 w-100 h-100">
   <app-navbar-layout></app-navbar-layout>
-  <div class="d-flex flex-column flex-grow-1 overflow-auto " style="margin-top: 70px;">
+  <div
+    class="d-flex flex-column flex-grow-1 overflow-auto "
+    style="margin-top: 70px; overflow-x: hidden !important;"
+  >
     <app-sidebar-layout></app-sidebar-layout>
     <div class="page-wrapper bg-white">
       <router-outlet></router-outlet>
