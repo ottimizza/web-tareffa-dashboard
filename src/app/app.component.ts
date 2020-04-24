@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { UpdateService } from '@app/services/update.service';
 import { MessagingService } from '@app/services/messaging.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-import { FilterService } from '@app/services/filter.service';
+import { DYNAMIC_TYPE } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) public document: Document,
     private events: RxEvent,
     private updateService: UpdateService,
-    private filterService: FilterService
+    private messagingService: MessagingService
   ) {
     this.updateService.checkForUpdates();
     this.events.subscribe('sw::update', () => {
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
   public ngOnInit() {
     // this.messagingService.requestPermission();
-    // this.messagingService.receiveMessage();
-    // this.messagingService.currentMessage.subscribe(msg => LoggerUtils.log(msg));
+    this.messagingService.receiveMessage();
+    this.messagingService.currentMessage.subscribe(msg => LoggerUtils.log(msg));
   }
 }

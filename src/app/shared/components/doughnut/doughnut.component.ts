@@ -15,7 +15,7 @@ export class DoughnutComponent implements OnInit {
   @Input() options: ChartOptions = {
     title: {
       display: true,
-      fontColor: 'rebeccapurple',
+      fontColor: 'green',
       position: 'top'
     }
   };
