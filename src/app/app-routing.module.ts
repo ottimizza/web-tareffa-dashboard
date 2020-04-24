@@ -26,6 +26,7 @@ const routes: Routes = [
         redirectTo: 'analytics',
         pathMatch: 'full'
       },
+
       {
         path: 'analytics',
         data: {
@@ -33,6 +34,15 @@ const routes: Routes = [
         },
         loadChildren: () =>
           import('@modules/analytics/analytics.module').then(m => m.AnalyticsModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'indicators',
+        data: {
+          breadcrumb: 'Indicadores'
+        },
+        loadChildren: () =>
+          import('@modules/indicators/indicators.module').then(m => m.IndicatorsModule),
         canActivate: [AuthGuard]
       }
     ]
