@@ -1,1 +1,47 @@
-<app-side-filter [selects]="selects" STORAGE_KEY="filtro-analytics"></app-side-filter>
+<app-side-filter
+  [selects]="selects"
+  (filters)="onFilterChange($event)"
+  STORAGE_KEY="filtro-analytics"
+></app-side-filter>
+<div *ngIf="charts.length > 0" class="content-">
+  <ngx-slick-carousel
+    class="carousel w-100"
+    #slickModal="slick-carousel"
+    [config]="slideConfig"
+    (init)="slickInit($event)"
+    (breakpoint)="breakpoint($event)"
+    (afterChange)="afterChange($event)"
+  >
+    <!-- Slides with pictures -->
+    <!-- <div ngxSlickItem *ngFor="let slide of slides" class="slide">
+      <div class="img-container">
+        <img src="{{ slide.img }}" alt="" width="100%" />
+      </div>
+    </div> -->
+
+    <!-- Slides with ng2-charts -->
+    <div ngxSlickItem *ngFor="let chart of charts; let i = index" class="slide p-3">
+      <h1>{{ chart[0].label }}</h1>
+      <div style="display: block;">
+        <canvas
+          baseChart
+          width="100"
+          height="100"
+          [datasets]="chart"
+          [labels]="labels"
+          [legend]="false"
+          [chartType]="'doughnut'"
+        >
+        </canvas>
+      </div>
+      <div class="float-left text-center">
+        <h3>{{ data[i].abertoNoPrazo + data[i].abertoAtrasado }}</h3>
+        <span>Aberto</span>
+      </div>
+      <div class="float-right text-center">
+        <h3>{{ data[i].encerradoNoPrazo + data[i].encerradoAtrasado }}</h3>
+        <span>Fechado</span>
+      </div>
+    </div>
+  </ngx-slick-carousel>
+</div>
