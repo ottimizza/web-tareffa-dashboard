@@ -7,7 +7,6 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map, timeout, debounceTime } from 'rxjs/operators';
-import { SlickCarouselComponent } from 'ngx-slick-carousel';
 
 @Component({
   selector: 'app-analytics',
@@ -107,7 +106,6 @@ export class AnalyticsComponent implements OnInit {
           .concat(this.data)
           .concat([data[0], data[1], data[2]]);
       }
-      console.log(this.data);
 
       this.data.forEach(indicator => {
         this.charts.push([
@@ -121,12 +119,6 @@ export class AnalyticsComponent implements OnInit {
           }
         ]);
       });
-
-      const charts = this.charts;
-      this.charts = [];
-      setTimeout(() => {
-        this.charts = charts;
-      }, 1);
     });
   }
 
