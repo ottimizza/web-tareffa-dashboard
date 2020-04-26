@@ -24,6 +24,8 @@ export class AnalyticsComponent implements OnInit {
   slideConfig = {
     centerMode: true,
     slidesToShow: 3,
+    autoplay: true,
+    autoplaySpeed: 2000,
     responsive: [
       {
         breakpoint: 480,
@@ -47,6 +49,8 @@ export class AnalyticsComponent implements OnInit {
   charts: ChartDataSets[][] = [];
   data = [];
 
+  auto = true;
+
   constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
     this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
       const s = this.selects;
@@ -64,23 +68,14 @@ export class AnalyticsComponent implements OnInit {
     combineLatest([indicators$, departments$])
       .pipe(map(([indicators, departments]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
-        // console.log(filterRequest);
         this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
         this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
       });
   }
 
-  // .subscribe(a => this.parse(a, 'Indicadores', 'indicators'));
-  //     .subscribe(a => this.parse(a, 'Categorias', 'categories'));
-  //     .subscribe(a => this.parse(a, 'Departamentos', 'departments', true));
-
   slickInit(e) {
     e.slick.currentSlide = 3;
     e.slick.refresh();
-  }
-
-  breakpoint(e) {
-    // console.log('breakpoint');
   }
 
   afterChange(e) {
@@ -111,7 +106,6 @@ export class AnalyticsComponent implements OnInit {
           .concat(this.data)
           .concat([data[0], data[1], data[2]]);
       }
-      console.log(this.data);
 
       this.data.forEach(indicator => {
         this.charts.push([
