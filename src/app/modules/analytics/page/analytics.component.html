@@ -4,12 +4,21 @@
   STORAGE_KEY="filtro-analytics"
 ></app-side-filter>
 <div *ngIf="charts.length > 0" class="content-">
+  <section class="m-3">
+    <mat-slide-toggle
+      #toggle
+      [(ngModel)]="auto"
+      (change)="auto ? slickModal.slickPlay() : slickModal.slickPause()"
+    >
+      Girar carrossel manual/automático
+    </mat-slide-toggle>
+  </section>
+
   <ngx-slick-carousel
     class="carousel w-100"
     #slickModal="slick-carousel"
     [config]="slideConfig"
     (init)="slickInit($event)"
-    (breakpoint)="breakpoint($event)"
     (afterChange)="afterChange($event)"
   >
     <!-- Slides with pictures -->
