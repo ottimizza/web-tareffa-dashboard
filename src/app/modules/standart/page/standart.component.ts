@@ -12,7 +12,7 @@ export class StandartComponent implements OnInit {
   selects: SelectableFilter[] = [];
 
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
-  chartColors = ['#00acc1', '#e53935'];
+  chartColors = ['#4b4279', 'lightgray'];
   openData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
   closedData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
 

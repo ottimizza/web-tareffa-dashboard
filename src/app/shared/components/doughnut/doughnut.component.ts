@@ -17,7 +17,8 @@ export class DoughnutComponent implements OnInit {
       display: true,
       fontColor: 'green',
       position: 'top'
-    }
+    },
+    cutoutPercentage: 85
   };
 
   chartColors = [];
