@@ -1,4 +1,4 @@
-<app-side-filter [selects]="selects" STORAGE_KEY="standart-filter"></app-side-filter>
+<app-side-filter [selects]="selects" STORAGE_KEY="standart-filter" (filters)="filters = $event"></app-side-filter>
 
 <div class="row w-100 m-0">
   <div class="col">
@@ -8,3 +8,5 @@
     <app-doughnut [data]="closedData" [labels]="chartLabels" title="FECHADOS" [colors]="chartColors"></app-doughnut>
   </div>
 </div>
+
+<button (click)="fetch()">AAAA</button>
