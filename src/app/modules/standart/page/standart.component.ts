@@ -33,8 +33,6 @@ export class StandartComponent implements OnInit {
     this._filterService
       .requestIndicators()
       .subscribe(subs => this._parse(subs, 'Unidades de negócio', 'indicators'));
-
-    const url = `${environment.apiTareffaSpring}/servico/programado`;
   }
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
