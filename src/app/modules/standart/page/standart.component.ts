@@ -3,9 +3,7 @@ import { Label } from 'ng2-charts';
 import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
-import { environment } from '@env';
 import { IndicatorService } from '@app/services/indicator.service';
-import { filter } from 'rxjs/operators';
 
 @Component({
   templateUrl: './standart.component.html',
@@ -40,6 +38,12 @@ export class StandartComponent implements OnInit {
   }
 
   fetch() {
-    this._indicatorService.getServicoProgramado(this.filters).subscribe(a => console.log(a));
+    this._indicatorService.getServicoProgramado(this.filters).subscribe((results: any) => {
+      console.log(results);
+      this.openData = [[results.records[0].abertoNoPrazo, results.records[0].abertoAtrasado]];
+      this.closedData = [
+        [results.records[0].encerradoNoPrazo, results.records[0].encerradoAtrasado]
+      ];
+    });
   }
 }

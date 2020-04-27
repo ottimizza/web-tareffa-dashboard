@@ -120,6 +120,7 @@ export class SideFilterComponent implements OnInit {
       delete cache.startDate;
       delete cache.endDate;
       this.cache = cache;
+      this.emit();
     });
   }
 
