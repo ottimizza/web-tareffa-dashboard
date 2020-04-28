@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env';
 import { AuthenticationService } from '@app/authentication/authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { Filter } from '@shared/models/Filter';
-import { Department } from '@shared/models/Department';
-import { Indicator } from '@shared/models/Indicator';
 
 const FILTER_KEY = 'filter';
 

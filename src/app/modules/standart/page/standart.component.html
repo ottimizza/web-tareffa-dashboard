@@ -1,7 +1,7 @@
 <app-side-filter
   [selects]="selects"
   STORAGE_KEY="standart-filter"
-  (filters)="filters = $event">
+  (filters)="setFilter($event)">
 </app-side-filter>
 
 <button (click)="fetch()">Fetch</button>

@@ -5,6 +5,7 @@ import { StorageService } from '@app/services/storage.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { DateUtils } from '@shared/utils/date.utils';
+import { SideFilterConversorUtils } from './utils/side-filter-conversor.utils';
 
 @Component({
   selector: 'app-side-filter',
@@ -38,6 +39,13 @@ export class SideFilterComponent implements OnInit {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
     });
+
+    if (this.STORAGE_KEY) {
+      this._storageService.fetch(this.STORAGE_KEY).then(json => {
+        const cache = JSON.parse(json);
+        this.filters.emit(SideFilterConversorUtils.convertToDashboardRequest(cache));
+      });
+    }
   }
 
   emit() {
@@ -113,7 +121,7 @@ export class SideFilterComponent implements OnInit {
 
   private _restore() {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
-      if (json) {
+      if (json && json !== '{}') {
         const cache = JSON.parse(json);
         this.startDate = cache.startDate;
         this.endDate = cache.endDate;

@@ -35,7 +35,8 @@ import {
   MatList,
   MatListModule,
   MatSelectModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -90,6 +91,7 @@ import {
     ReactiveFormsModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatSnackBarModule,
 
     // Custom material based modules
     MatSelectFilterModule

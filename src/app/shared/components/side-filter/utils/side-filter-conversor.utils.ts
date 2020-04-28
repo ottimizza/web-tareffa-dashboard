@@ -16,4 +16,22 @@ export class SideFilterConversorUtils {
     });
     return { id, title, multiple, options };
   }
+
+  public static convertToDashboardRequest(filter: any) {
+    if (!filter) {
+      filter = {};
+    }
+    if (filter.startDate) {
+      filter.dataProgramadaInicio = filter.startDate;
+      delete filter.startDate;
+    }
+    if (filter.endDate) {
+      filter.dataProgramadaTermino = filter.endDate;
+      delete filter.endDate;
+    }
+    if (filter.departamento && filter.departamento.length) {
+      filter.departamento = filter.departamento.map(dep => +`${dep}`);
+    }
+    return filter;
+  }
 }
