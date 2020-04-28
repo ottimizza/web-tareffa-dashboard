@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Label } from 'ng2-charts';
 import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
@@ -14,8 +14,8 @@ export class StandartComponent implements OnInit {
 
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
   chartColors = ['#4b4279', 'lightgray'];
-  openData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
-  closedData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
+  openData = [[]];
+  closedData = [[]];
 
   filters: any;
 
@@ -25,9 +25,10 @@ export class StandartComponent implements OnInit {
     this._filterService
       .requestCategorias()
       .subscribe(subs => this._parse(subs, 'Categorias', 'categories'));
-    this._filterService
-      .requestDepartments()
-      .subscribe(subs => this._parse(subs, 'Departamentos', 'departments', true));
+    this._filterService.requestDepartments().subscribe(subs => {
+      console.log(subs);
+      this._parse(subs, 'Departamentos', 'departments', true);
+    });
     this._filterService
       .requestIndicators()
       .subscribe(subs => this._parse(subs, 'Unidades de negócio', 'indicators'));

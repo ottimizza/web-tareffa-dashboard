@@ -38,10 +38,6 @@ export class SideFilterComponent implements OnInit {
         LoggerUtils.throw(new Error('ID inválido para o select de filtros'));
       }
     });
-
-    if (this.STORAGE_KEY) {
-      this._restore();
-    }
   }
 
   emit() {
@@ -102,6 +98,9 @@ export class SideFilterComponent implements OnInit {
   activate() {
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
     this.opened = !this.opened;
+    if (this.opened && this.STORAGE_KEY) {
+      this._restore();
+    }
   }
 
   private _store() {
@@ -114,13 +113,16 @@ export class SideFilterComponent implements OnInit {
 
   private _restore() {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
-      const cache = JSON.parse(json);
-      this.startDate = cache.startDate;
-      this.endDate = cache.endDate;
-      delete cache.startDate;
-      delete cache.endDate;
-      this.cache = cache;
-      this.emit();
+      if (json) {
+        const cache = JSON.parse(json);
+        this.startDate = cache.startDate;
+        this.endDate = cache.endDate;
+        delete cache.startDate;
+        delete cache.endDate;
+        this.cache = cache;
+      } else {
+        this.thisMonth();
+      }
     });
   }
 
