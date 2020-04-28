@@ -1,9 +1,8 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Label } from 'ng2-charts';
 import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
-import { IndicatorService } from '@app/services/indicator.service';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ScheduledService } from '@app/http/scheduled.service';

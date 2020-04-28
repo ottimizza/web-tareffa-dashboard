@@ -17,21 +17,27 @@ export class SideFilterConversorUtils {
     return { id, title, multiple, options };
   }
 
-  public static convertToDashboardRequest(filter: any) {
-    if (!filter) {
-      filter = {};
-    }
-    if (filter.startDate) {
-      filter.dataProgramadaInicio = filter.startDate;
-      delete filter.startDate;
-    }
-    if (filter.endDate) {
-      filter.dataProgramadaTermino = filter.endDate;
-      delete filter.endDate;
-    }
-    if (filter.departamento && filter.departamento.length) {
-      filter.departamento = filter.departamento.map(dep => +`${dep}`);
-    }
+  public static convertToDashboardRequest(oldFilter: any) {
+    const filter: any = {};
+
+    filter.dataProgramadaInicio = oldFilter.startDate
+      ? new Date(oldFilter.startDate).getTime()
+      : null;
+    filter.dataProgramadaTermino = oldFilter.endDate ? new Date(oldFilter.endDate).getTime() : null;
+    filter.departamento = oldFilter.departamento?.length
+      ? oldFilter.departamento.map(dep => +`${dep}`)
+      : null;
+    filter.servico = oldFilter.servico ? +`${oldFilter.servico}` : null;
+    filter.categoria = oldFilter.categoria ? +`${oldFilter.categoria}` : null;
+    filter.caracteristica = oldFilter.caracteristica ? +`${oldFilter.caracteristica}` : null;
+
     return filter;
+
+    // dataProgramadaInicio
+    // dataProgramadaTermino
+    // departamento
+    // servico
+    // categoria
+    // caracteristica // Un. de Negócio
   }
 }

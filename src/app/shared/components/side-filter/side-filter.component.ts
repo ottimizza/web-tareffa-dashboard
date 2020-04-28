@@ -45,6 +45,8 @@ export class SideFilterComponent implements OnInit {
         const cache = JSON.parse(json);
         this.filters.emit(SideFilterConversorUtils.convertToDashboardRequest(cache));
       });
+    } else {
+      this.thisMonth();
     }
   }
 

@@ -4,8 +4,6 @@
   (filters)="setFilter($event)">
 </app-side-filter>
 
-<button (click)="fetch()">Fetch</button>
-
 <div class="row w-100 m-0">
   <div class="col">
     <app-doughnut [data]="openData" [labels]="chartLabels" title="ABERTOS" [colors]="chartColors"></app-doughnut>
