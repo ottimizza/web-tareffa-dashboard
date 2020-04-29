@@ -1,0 +1,27 @@
+<div class="form-group row w-100 m-0">
+  <div class="input-group col-12 p-0 position-relative">
+    <input
+      class="form-control"
+      [(ngModel)]="input"
+      [placeholder]="placeholder"
+      [disabled]="!editing && !isScheduleInput"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn border fa fa-pencil"
+        *ngIf="!isScheduleInput && !editing"
+        (click)="switchAction(true)"
+      ></button>
+      <button
+        class="btn border fa fa-save text-success"
+        *ngIf="editing || isScheduleInput"
+        (click)="changeValue(input); switchAction(false)"
+      ></button>
+      <button
+        class="btn border fa fa-times text-danger"
+        *ngIf="editing || isScheduleInput"
+        (click)="switchAction(false); isScheduleInput ? clearInput() : removeValue()"
+      ></button>
+    </div>
+  </div>
+</div>
