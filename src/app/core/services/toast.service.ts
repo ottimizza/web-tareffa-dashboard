@@ -11,15 +11,12 @@ export class ToastService {
 
   private primary = ['alert', 'bg-primary', 'text-white', 'f-size'];
   private success = ['alert', 'bg-success', 'text-white', 'f-size'];
-  private warning = ['alert', 'bg-warning', 'text-white', 'f-size'];
+  private warning = ['alert', 'bg-warning', 'text-dark', 'f-size'];
   private danger = ['alert', 'bg-danger', 'text-white', 'f-size'];
 
   constructor(public snackbar: MatSnackBar) {}
 
-  public show(
-    message: string,
-    color?: 'primary' | 'success' | 'danger' | 'warning'
-  ) {
+  public show(message: string, color?: 'primary' | 'success' | 'danger' | 'warning') {
     this.snackbar.open(message, '', {
       duration: 3000,
       verticalPosition: 'top',

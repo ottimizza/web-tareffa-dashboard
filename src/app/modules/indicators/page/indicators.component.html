@@ -1,3 +1,98 @@
-<p>
-  page works!
-</p>
+<div class="container mt-3">
+  <div class="row">
+    <!-- Creating Indicators and Graphs -->
+    <section class="col-6">
+      <div class="box border shadow-sm w-100">
+        <div class="pb-2">
+          <app-editable-input
+            placeholder="Nome do Indicador:"
+            [isScheduleInput]="true"
+            (onValueChange)="createIndicator($event)"
+          ></app-editable-input>
+        </div>
+
+        <div class="list">
+          <div
+            class="selecting-indicator"
+            *ngFor="let indicator of indicators; let i = index"
+            (click)="selectedIndicatorIndex = i; getGraphs()"
+            [class.active]="indicators.indexOf(indicator) === selectedIndicatorIndex"
+          >
+            <app-editable-input
+              placeholder="Nome do Indicador:"
+              [id]="indicator.descricao + i"
+              [input]="indicator.descricao"
+              (onValueRemoved)="deleteIndicators(indicator.id)"
+              (onValueChange)="indicator.descricao = $event; editIndicator(indicator)"
+            ></app-editable-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="box border shadow-sm w-100" *ngIf="showGraphsCard()">
+        <div class="pb-2">
+          <app-editable-input
+            placeholder="Nome do Gráfico:"
+            [isScheduleInput]="true"
+            (onValueChange)="createGraph($event)"
+          ></app-editable-input>
+        </div>
+
+        <div class="list">
+          <h5
+            class="h-100 mb-0 centralize text-center"
+            *ngIf="graphs.length === 0 && !isLoadingGraphs; else showGraphs"
+          >
+            Esse Indicador não possui gráficos
+          </h5>
+          <ng-template #showGraphs>
+            <div
+              class="selecting-graph"
+              *ngFor="let graph of graphs; let i = index"
+              (click)="selectedGraphIndex = i; showTagsAndServices()"
+              [class.active]="graphs.indexOf(graph) === selectedGraphIndex"
+            >
+              <app-editable-input
+                placeholder="Nome do Gráfico:"
+                [input]="graph.nomeGrafico"
+                (onValueRemoved)="selectedGraphIndex = null; deleteGraph(graph.id)"
+                (onValueChange)="graph.nomeGrafico = $event; editGraph(graph)"
+              ></app-editable-input>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scheduling informations -->
+    <section class="col-6" *ngIf="selectedGraphIndex !== null && selectedGraphIndex !== undefined">
+      <div class="box border shadow-sm w-100">
+        <div class="pt-1 mb-3 border-bottom">
+          <h6>Unidades de Negócio</h6>
+        </div>
+
+        <div class="list">
+          <div *ngFor="let tag of tags; let i = index">
+            <mat-checkbox class="fit-label" (change)="updateTag($event, tag)">{{
+              tag.descricao
+            }}</mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <div class="box border shadow-sm w-100">
+        <div class="pt-1 mb-3 border-bottom">
+          <h6>Serviços</h6>
+        </div>
+
+        <div class="list">
+          <div class="w-100" *ngFor="let service of services; let i = index">
+            <mat-checkbox class="fit-label px-2" (change)="updateService($event, service)">{{
+              service.nome
+            }}</mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
