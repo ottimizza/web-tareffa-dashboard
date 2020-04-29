@@ -30,7 +30,7 @@ export class FilterService {
 
     return this.httpClient.post(
       url,
-      { dataProgramadaInicio: '', dataProgramadaTermino: '' },
+      { dataProgramadaInicio: 1583064907949, dataProgramadaTermino: 1585656907949 },
       {
         headers: this.authenticationService.getAuthorizationHeaders()
       }
@@ -39,6 +39,13 @@ export class FilterService {
 
   requestIndicators() {
     const url = `${environment.apiTareffaSpring}/indicador`;
+    return this.httpClient.get(url, {
+      headers: this.authenticationService.getAuthorizationHeaders()
+    });
+  }
+
+  requestCaracteristicas() {
+    const url = `${environment.apiTareffaSpring}/caracteristicas?description=04`;
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
     });

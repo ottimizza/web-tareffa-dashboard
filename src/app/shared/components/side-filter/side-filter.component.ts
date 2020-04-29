@@ -5,7 +5,6 @@ import { StorageService } from '@app/services/storage.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { DateUtils } from '@shared/utils/date.utils';
-import { SideFilterConversorUtils } from './utils/side-filter-conversor.utils';
 
 @Component({
   selector: 'app-side-filter',
@@ -43,10 +42,11 @@ export class SideFilterComponent implements OnInit {
     if (this.STORAGE_KEY) {
       this._storageService.fetch(this.STORAGE_KEY).then(json => {
         const cache = JSON.parse(json);
-        this.filters.emit(SideFilterConversorUtils.convertToDashboardRequest(cache));
+        this.filters.emit(cache);
       });
     } else {
       this.thisMonth();
+      this.emit();
     }
   }
 

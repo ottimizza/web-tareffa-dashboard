@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Label } from 'ng2-charts';
-import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { combineLatest } from 'rxjs';
@@ -21,28 +20,36 @@ export class StandartComponent implements OnInit {
   openData = [[]];
   closedData = [[]];
 
+  encerradoNoPrazo = 0;
+  encerradoAtrasado = 0;
+  abertoNoPrazo = 0;
+  abertoAtrasado = 0;
+
   filters: any;
 
-  constructor(
-    private _filterService: FilterService,
-    private _scheduledService: ScheduledService,
-    private _toastService: ToastService
-  ) {}
+  constructor(private _service: ScheduledService, private _toastService: ToastService) {}
 
   ngOnInit(): void {
-    const categories$ = this._filterService.requestCategorias();
-    const departments$ = this._filterService.requestDepartments();
-    const indicators$ = this._filterService.requestIndicators();
+    const departments$ = this._service.getGroupedScheduled(1);
+    const categories$ = this._service.getCategory();
+    const caracteristics$ = this._service.getCharacteristic();
+    const services$ = this._service.getGroupedScheduled(0);
 
-    combineLatest([categories$, departments$, indicators$])
+    combineLatest([categories$, departments$, services$, caracteristics$])
       .pipe(
-        map(([categories, departments, indicators]) => ({ categories, departments, indicators }))
+        map(([categories, departments, services, caracteristics]: any[]) => ({
+          categories,
+          departments,
+          services,
+          caracteristics
+        }))
       )
       .subscribe(
         filterRequest => {
-          this._parse(filterRequest.categories, 'Categorias', 'categoria');
-          this._parse(filterRequest.indicators, 'Indicadores', 'indicador');
           this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+          this._parse(filterRequest.categories, 'Categorias', 'categoria');
+          this._parse(filterRequest.services, 'Serviços', 'servico', true);
+          this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
         },
         err => {
           this._error('Não foi possível iniciar o filtro', err);
@@ -51,7 +58,7 @@ export class StandartComponent implements OnInit {
   }
 
   setFilter(event: any) {
-    this.filters = event;
+    this.filters = SideFilterConversorUtils.convertToDashboardRequest(event);
     this.fetch();
   }
 
@@ -59,13 +66,17 @@ export class StandartComponent implements OnInit {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
   }
 
-  fetch() {
-    const filter = SideFilterConversorUtils.convertToDashboardRequest(this.filters);
-    this._scheduledService.getServicoProgramado(filter).subscribe(
+  fetch(filters = this.filters) {
+    this._service.getServicoProgramado(filters).subscribe(
       (results: any) => {
         const rec = results.records;
         this.openData = [rec.abertoNoPrazo, rec.abertoAtrasado];
         this.closedData = [rec.encerradoNoPrazo, rec.encerradoAtrasado];
+
+        this.abertoNoPrazo = rec.abertoNoPrazo ?? 0;
+        this.abertoAtrasado = rec.abertoAtrasado ?? 0;
+        this.encerradoAtrasado = rec.encerradoAtrasado ?? 0;
+        this.encerradoNoPrazo = rec.encerradoNoPrazo ?? 0;
       },
       err => {
         this._error('Falha ao obter os serviços programados', err);

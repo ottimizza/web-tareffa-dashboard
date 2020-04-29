@@ -1,10 +1,14 @@
-<div class="d-block">
+
+<div class="text-center">
+  <div class="graph-percentage">
+    <ng-content></ng-content>
+  </div>
   <canvas baseChart
     [options]="options"
     [data]="data"
     [labels]="labels"
     [colors]="chartColors"
-    chartType="doughnut">
-    asdasddasdas
+    chartType="doughnut"
+    class="m-w-100">
   </canvas>
 </div>
