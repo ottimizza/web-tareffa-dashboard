@@ -1,11 +1,17 @@
 .m-w-100 {
   max-width: 100%;
 }
+
 .graph-percentage {
-  left: 0;
   width: 100%;
   text-align: center;
-  position: absolute;
-  z-index: 3;
-  top: 49%;
+}
+
+@media (min-width: 768px) {
+  .graph-percentage {
+    left: 0;
+    position: absolute;
+    z-index: 3;
+    top: 49%;
+  }
 }

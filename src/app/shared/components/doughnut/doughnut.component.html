@@ -1,8 +1,5 @@
 
 <div class="text-center">
-  <div class="graph-percentage">
-    <ng-content></ng-content>
-  </div>
   <canvas baseChart
     [options]="options"
     [data]="data"
@@ -11,4 +8,7 @@
     chartType="doughnut"
     class="m-w-100">
   </canvas>
+  <div class="graph-percentage">
+    <ng-content></ng-content>
+  </div>
 </div>
