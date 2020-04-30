@@ -7,8 +7,8 @@
   <section class="m-3">
     <mat-slide-toggle
       #toggle
-      [(ngModel)]="auto"
-      (change)="auto ? slickModal.slickPlay() : slickModal.slickPause()"
+      [(ngModel)]="slideConfig.autoplay"
+      (change)="slideConfig.autoplay ? slickModal.slickPlay() : slickModal.slickPause()"
     >
       Girar carrossel manual/automático
     </mat-slide-toggle>
@@ -30,7 +30,7 @@
 
     <!-- Slides with ng2-charts -->
     <div ngxSlickItem *ngFor="let chart of charts; let i = index" class="slide p-3">
-      <h1>{{ chart[0].label }}</h1>
+      <h2>{{ chart[0].label }}</h2>
       <div style="display: block;">
         <canvas
           baseChart
@@ -40,7 +40,9 @@
           [labels]="labels"
           [legend]="false"
           [chartType]="'doughnut'"
+          [plugins]="doughnutChartPlugins"
         >
+          <span>20%</span>
         </canvas>
       </div>
       <div class="float-left text-center">
@@ -53,4 +55,44 @@
       </div>
     </div>
   </ngx-slick-carousel>
+</div>
+
+<div *ngIf="selectedIndicator" class="container">
+  <h2>{{ selectedIndicator.nomeGrafico }}</h2>
+
+  <div class="row w-100 m-0 justify-content-center">
+    <div
+      *ngFor="let user of users[selectedIndicator.id]"
+      class="row m-1 justify-content-center"
+      style="height: 150px; width: 150px;"
+    >
+      <img
+        class="img-thumbnail rounded-circle my-1"
+        [src]="user.info.urlFoto || './assets/images/Portrait_Placeholder.png'"
+        style="width: 100px !important; height: 100px !important;"
+        onError="this.src='./assets/images/Portrait_Placeholder.png';"
+      />
+
+      <span class="text-truncate text-center" style="width: 90%; font-size: 80%">
+        {{ user.info.nome }}
+      </span>
+
+      <div style="width: 90%;">
+        <div class="progress" style="background-color: #ccc;">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [attr.aria-valuenow]="user.percentage"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style="font-weight: 500;"
+            [style.width]="user.percentage + '%'"
+            [style.background]="'#1cbcd8'"
+          >
+            {{ user.percentage }}%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
