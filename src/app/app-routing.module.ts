@@ -26,6 +26,7 @@ const routes: Routes = [
         redirectTo: 'standart',
         pathMatch: 'full'
       },
+
       {
         path: 'analytics',
         data: {
@@ -42,6 +43,15 @@ const routes: Routes = [
         },
         loadChildren: () => import('@modules/standart/standart.module').then(m => m.StandartModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'indicators',
+        data: {
+          breadcrumb: 'Indicadores'
+        },
+        loadChildren: () =>
+          import('@modules/indicators/indicators.module').then(m => m.IndicatorsModule),
+        canActivate: [AuthGuard]
       }
     ]
   },
@@ -49,6 +59,11 @@ const routes: Routes = [
     path: 'auth',
     component: AuthLayoutComponent,
     loadChildren: () => import('@modules/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard/standart',
+    pathMatch: 'full'
   }
 ];
 

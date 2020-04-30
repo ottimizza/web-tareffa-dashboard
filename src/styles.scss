@@ -580,6 +580,17 @@ $default-sidebar-width: 240px;
   box-shadow: none;
 }
 
+input:hover,
+input:active,
+input:focus,
+button:focus,
+button:active,
+button:hover {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+
 .nav-tabs {
   .nav-item {
     .nav-link {
@@ -590,6 +601,11 @@ $default-sidebar-width: 240px;
   }
 }
 
+.centralize {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .tareffa-pink-color {
   color: #d9587f;
@@ -602,7 +618,7 @@ $default-sidebar-width: 240px;
 .lightgray-color {
   color: lightgray;
 }
-  
+
 ///////////////////////////////
 ///// SLICK CAROUSEL AREA /////
 ///////////////////////////////

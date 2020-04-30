@@ -31,7 +31,8 @@ export class SidebarLayoutComponent implements OnInit {
     this.currentUser = User.fromLocalStorage();
     this.items = [
       { icon: 'fad fa-chart-pie', label: 'Padrão', url: '/dashboard/standart' },
-      { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' }
+      { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' },
+      { icon: 'fad fa-edit', label: 'Parametrização', url: '/dashboard/indicators' }
     ];
   }
 
