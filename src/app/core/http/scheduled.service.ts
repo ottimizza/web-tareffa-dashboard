@@ -26,9 +26,14 @@ export class ScheduledService {
     return this._http.get(url, this._headers);
   }
 
-  getGroupedScheduled(grouping = 0) {
+  getGroupedScheduled(grouping: number, body = this._thisMonth) {
     const url = `${BASE_URL}/servico/programado/agrupamento/${grouping}`;
-    return this._http.post(url, this._thisMonth, this._headers);
+    return this._http.post(url, body, this._headers);
+  }
+
+  getInformations(id: number, filter: any) {
+    const url = `${BASE_URL}/servico/programado/${id}/informacao?limit=20`;
+    return this._http.post(url, filter, this._headers);
   }
 
   private get _headers() {

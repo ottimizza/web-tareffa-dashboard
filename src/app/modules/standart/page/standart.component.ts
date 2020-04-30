@@ -7,6 +7,8 @@ import { map } from 'rxjs/operators';
 import { ScheduledService } from '@app/http/scheduled.service';
 import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
+import { MatDialog } from '@angular/material';
+import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
 
 @Component({
   templateUrl: './standart.component.html',
@@ -29,7 +31,15 @@ export class StandartComponent implements OnInit, OnDestroy {
 
   interval: Subscription;
 
-  constructor(private _service: ScheduledService, private _toastService: ToastService) {}
+  itemList: any[] = [];
+  selectedCard: number;
+  term: [0] | [1, 2];
+
+  constructor(
+    private _service: ScheduledService,
+    private _toastService: ToastService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnDestroy(): void {
     this.interval.unsubscribe();
@@ -75,6 +85,52 @@ export class StandartComponent implements OnInit, OnDestroy {
   setFilter(event: any) {
     this.filters = SideFilterConversorUtils.convertToDashboardRequest(event);
     this.fetch();
+  }
+
+  openDialog(id: number, date: string, title: string): void {
+    const dates = date.split('/');
+    const filter = this.filters;
+    filter.prazo = this.term;
+    filter.situacao = this.selectedCard;
+    const body = {
+      dataProgramada: new Date(`${dates[2]}-${dates[1]}-${dates[0]}`).getTime(),
+      filtro: filter
+    };
+    this._service.getInformations(id, body).subscribe((aa: any) => {
+      const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
+        width: '568px',
+        data: { title, records: aa.records }
+      });
+      dialogRef.afterClosed().subscribe();
+    });
+  }
+
+  getGrouped(term: [0] | [1, 2], situation: 1 | 2) {
+    const filter = this.filters;
+    filter.prazo = term;
+    filter.situacao = situation;
+
+    this._service.getGroupedScheduled(2, filter).subscribe((results: any) => {
+      this.selectedCard = situation;
+      this.term = term;
+      const dateList = results.records.map(rec => rec.dataProgramada);
+      this.itemList = dateList.map(date => {
+        const dates = date.split('-');
+        const items = results.records.filter(rec => rec.dataProgramada === date);
+        return {
+          data: `${dates[2]}/${dates[1]}/${dates[0]}`,
+          value: items.map(item => {
+            return {
+              servicosProgramadosContagem: item.servicosProgramadosContagem,
+              nomeServico: item.nomeServico,
+              id: item.id
+            };
+          })
+        };
+      });
+      // console.log(results);
+      // this.itemList = results.records;
+    });
   }
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {

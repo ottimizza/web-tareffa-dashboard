@@ -36,24 +36,26 @@ export class SideFilterConversorUtils {
     filter.tipoBaixa = null;
     filter.usuario = null;
 
-    filter.dataProgramadaInicio = oldFilter.startDate
+    filter.dataProgramadaInicio = oldFilter?.startDate
       ? new Date(oldFilter.startDate).getTime()
       : null;
-    filter.dataProgramadaTermino = oldFilter.endDate ? new Date(oldFilter.endDate).getTime() : null;
+    filter.dataProgramadaTermino = oldFilter?.endDate
+      ? new Date(oldFilter.endDate).getTime()
+      : null;
 
-    filter.caracteristica = oldFilter.caracteristica
+    filter.caracteristica = oldFilter?.caracteristica
       ? { id: +`${oldFilter.caracteristica}` }
       : null;
 
-    filter.categoria = oldFilter.categoria ? { id: +`${oldFilter.categoria}` } : null;
+    filter.categoria = oldFilter?.categoria ? { id: +`${oldFilter.categoria}` } : null;
 
     filter.servico =
-      oldFilter.servico && oldFilter.servico.length
+      oldFilter?.servico && oldFilter.servico.length
         ? oldFilter.servico.map(svc => ({ id: +`${svc}` }))
         : null;
 
     filter.departamento =
-      oldFilter.departamento && oldFilter.departamento.length
+      oldFilter?.departamento && oldFilter.departamento.length
         ? oldFilter.departamento.map(dep => JSON.parse(dep))
         : null;
 

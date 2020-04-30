@@ -5,9 +5,21 @@ import { SideFilterModule } from '@shared/components/side-filter/side-filter.mod
 import { ChartsModule } from 'ng2-charts';
 import { StandartRoutingModule } from './standart.routing';
 import { DoughnutModule } from '@shared/components/doughnut/doughnut.module';
+import { MatListModule, MatDialogModule, MatButtonModule } from '@angular/material';
+import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/collaborator-list-dialog.component';
 
 @NgModule({
-  declarations: [StandartComponent],
-  imports: [CommonModule, SideFilterModule, ChartsModule, StandartRoutingModule, DoughnutModule]
+  declarations: [StandartComponent, CollaboratorListDialogComponent],
+  imports: [
+    CommonModule,
+    SideFilterModule,
+    ChartsModule,
+    StandartRoutingModule,
+    DoughnutModule,
+    MatListModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
+  entryComponents: [CollaboratorListDialogComponent]
 })
 export class StandartModule {}
