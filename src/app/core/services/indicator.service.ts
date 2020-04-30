@@ -12,9 +12,7 @@ export class IndicatorService {
 
   getIndicators() {
     const url = `${environment.apiTareffaSpring}/indicador`;
-    return this.httpClient.get(url, {
-      headers: this.authenticationService.getAuthorizationHeaders()
-    });
+    return this.httpClient.get(url, this._headers);
   }
 
   getServicoProgramado(filter) {
@@ -22,12 +20,17 @@ export class IndicatorService {
     return this.httpClient.post(
       url,
       {
-        dataProgramadaInicio: filter.startDate.getTime() || null,
-        dataProgramadaTermino: filter.endDate.getTime() || null,
+        dataProgramadaInicio: new Date(filter.startDate).getTime() || null,
+        dataProgramadaTermino: new Date(filter.endDate).getTime() || null,
         departamento: filter.departamento || []
       },
-      { headers: this.authenticationService.getAuthorizationHeaders() }
+      this._headers
     );
+  }
+
+  private get _headers() {
+    const headers = this.authenticationService.getAuthorizationHeaders();
+    return { headers };
   }
 
   getUsers(filter, indicatorId) {

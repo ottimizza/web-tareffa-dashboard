@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env';
 import { AuthenticationService } from '@app/authentication/authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { Filter } from '@shared/models/Filter';
-import { Department } from '@shared/models/Department';
-import { Indicator } from '@shared/models/Indicator';
 
 const FILTER_KEY = 'filter';
 
@@ -33,7 +30,7 @@ export class FilterService {
 
     return this.httpClient.post(
       url,
-      { dataProgramadaInicio: '', dataProgramadaTermino: '' },
+      { dataProgramadaInicio: 1583064907949, dataProgramadaTermino: 1585656907949 },
       {
         headers: this.authenticationService.getAuthorizationHeaders()
       }
@@ -42,6 +39,13 @@ export class FilterService {
 
   requestIndicators() {
     const url = `${environment.apiTareffaSpring}/indicador`;
+    return this.httpClient.get(url, {
+      headers: this.authenticationService.getAuthorizationHeaders()
+    });
+  }
+
+  requestCaracteristicas() {
+    const url = `${environment.apiTareffaSpring}/caracteristicas?description=04`;
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
     });

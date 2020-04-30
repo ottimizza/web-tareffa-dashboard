@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   apiTareffaSpring: 'https://development-api-tareffa-spring.herokuapp.com',
   oauthBaseUrl: 'https://development-oauth-server.herokuapp.com',
   tareffaOauthService: 'https://development-api-oauth-tareffa.herokuapp.com/services',

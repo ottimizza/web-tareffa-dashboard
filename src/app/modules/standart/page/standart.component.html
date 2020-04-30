@@ -1,10 +1,62 @@
-<app-side-filter [selects]="selects"></app-side-filter>
+<app-side-filter
+  [selects]="selects"
+  STORAGE_KEY="standart-filter"
+  (filters)="setFilter($event)">
+</app-side-filter>
 
-<div class="row w-100 m-0">
-  <div class="col">
-    <app-doughnut [data]="openData" [labels]="chartLabels" title="ABERTOS" [colors]="chartColors"></app-doughnut>
+<div class="row full-height m-0 text-center">
+  <div class="col-md p-4 pb-0">
+    <div class="card p-3">
+
+      <div class="card-header">
+        <h3 class="tareffa-pink-color">Abertos</h3>
+        <h2>{{ abertoNoPrazo + abertoAtrasado }}</h2>
+      </div>
+
+      <div class="card-body">
+        <app-doughnut [data]="openData" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
+          <h4 class="tareffa-purple-color">{{ ((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+        </app-doughnut>
+      </div>
+
+      <div class="card-rodape d-inline-block">
+        <div class="float-left">
+          <strong>No Prazo</strong>
+          <h2 class="tareffa-purple-color text-bold">{{ abertoNoPrazo }}</h2>
+        </div>
+        <div class="float-right">
+          <strong>Atrasado</strong>
+          <h2 class="lightgray-color text-bold">{{ abertoAtrasado }}</h2>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <div class="col">
-    <app-doughnut [data]="closedData" [labels]="chartLabels" title="FECHADOS" [colors]="chartColors"></app-doughnut>
+  <div class="col-md p-4">
+    <div class="card p-3">
+
+      <div class="card-header">
+        <h3 class="tareffa-pink-color">Fechados</h3>
+        <h2>{{ encerradoAtrasado + encerradoNoPrazo }}</h2>
+      </div>
+
+      <div class="card-body">
+        <app-doughnut [data]="closedData" [labels]="chartLabels" [colors]="chartColors">
+          <h4 class="tareffa-purple-color">{{ ((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+        </app-doughnut>
+      </div>
+
+      <div class="card-rodape d-inline-block">
+        <div class="float-left">
+          <strong>No Prazo</strong>
+          <h2 class="tareffa-purple-color text-bold">{{ encerradoNoPrazo }}</h2>
+        </div>
+        <div class="float-right">
+          <strong>Atrasado</strong>
+          <h2 class="lightgray-color text-bold">{{ encerradoAtrasado }}</h2>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
