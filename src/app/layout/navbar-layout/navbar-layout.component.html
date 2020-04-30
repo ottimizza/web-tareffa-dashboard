@@ -68,24 +68,23 @@
             />
           </a>
           <mat-menu #menu="matMenu">
-            <a
-              [href]="'https://accounts.ottimizza.com.br/dashboard/users/' + currentUser.id"
-              class="dropdown-header dropdown-item text-center mt-0 py-3"
-            >
+            <a class="dropdown-header dropdown-item text-center mt-0 py-3">
+              <!-- [href]="APP_URL + '/dashboard/users/' + currentUser.id" -->
               <h6 class="text-dark overflow-ellipsis m-0">
                 {{ currentUser.firstName + ' ' + currentUser.lastName }}
               </h6>
               <small class="text-muted text-lowercase">{{ currentUser.email }}</small>
             </a>
-            <!-- <a mat-menu-item (click)="allowNotifications()">
+            <a mat-menu-item (click)="allowNotifications()">
               <i class="fas fa-bell" aria-hidden="true"></i>&nbsp;&nbsp;
               <span>Habilitar Notificações</span>
-            </!-->
-            -->
-            <a mat-menu-item href="https://accounts.ottimizza.com.br/dashboard">
-              <i class="fas fa-undo-alt" aria-hidden="true"></i>&nbsp;&nbsp;
-              <span>Voltar para Aplicativos</span>
             </a>
+
+            <!-- <a mat-menu-item [href]="APP_URL + '/dashboard/products/'"> </a> -->
+
+            <i class="fas fa-undo-alt" aria-hidden="true"></i>&nbsp;&nbsp;
+            <span>Voltar para Aplicativos</span>
+
             <a mat-menu-item (click)="logout()">
               <i class="fas fa-sign-out-alt" aria-hidden="true"></i>&nbsp;&nbsp;<span>Sair</span>
             </a>

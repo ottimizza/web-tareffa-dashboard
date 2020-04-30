@@ -1,36 +1,106 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Label } from 'ng2-charts';
-import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
+import { combineLatest, Subscription, interval } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ScheduledService } from '@app/http/scheduled.service';
+import { ToastService } from '@app/services/toast.service';
+import { LoggerUtils } from '@shared/utils/logger.utils';
 
 @Component({
   templateUrl: './standart.component.html',
   styleUrls: ['./standart.component.scss']
 })
-export class StandartComponent implements OnInit {
+export class StandartComponent implements OnInit, OnDestroy {
   selects: SelectableFilter[] = [];
 
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
-  chartColors = ['#00acc1', '#e53935'];
-  openData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
-  closedData = [[Math.round(Math.random() * 2000), Math.round(Math.random() * 2000)]];
+  chartColors = ['#4b4279', 'lightgray'];
+  openData = [[]];
+  closedData = [[]];
 
-  constructor(private _filterService: FilterService) {}
+  encerradoNoPrazo = 0;
+  encerradoAtrasado = 0;
+  abertoNoPrazo = 0;
+  abertoAtrasado = 0;
+
+  filters: any;
+
+  interval: Subscription;
+
+  constructor(private _service: ScheduledService, private _toastService: ToastService) {}
+
+  ngOnDestroy(): void {
+    this.interval.unsubscribe();
+  }
 
   ngOnInit(): void {
-    this._filterService
-      .requestCategorias()
-      .subscribe(subs => this._parse(subs, 'Categorias', 'categories'));
-    this._filterService
-      .requestDepartments()
-      .subscribe(subs => this._parse(subs, 'Departamentos', 'departments', true));
-    this._filterService
-      .requestIndicators()
-      .subscribe(subs => this._parse(subs, 'Unidades de negócio', 'indicators'));
+    this.interval = interval(30 * 60 * 1000) // 30 minutos
+      .subscribe(() => {
+        const date = new Date();
+        console.log(
+          `Tentando obter os serviços programados: ${date.getHours()}:${date.getMinutes()}`
+        );
+        this.fetch();
+      });
+
+    const categories$ = this._service.getCategory();
+    const services$ = this._service.getGroupedScheduled(0);
+    const departments$ = this._service.getGroupedScheduled(1);
+    const caracteristics$ = this._service.getCharacteristic();
+
+    combineLatest([categories$, departments$, services$, caracteristics$])
+      .pipe(
+        map(([categories, departments, services, caracteristics]: any[]) => ({
+          categories,
+          departments,
+          services,
+          caracteristics
+        }))
+      )
+      .subscribe(
+        filterRequest => {
+          this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+          this._parse(filterRequest.categories, 'Categorias', 'categoria');
+          this._parse(filterRequest.services, 'Serviços', 'servico', true);
+          this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
+        },
+        err => {
+          this._error('Não foi possível iniciar o filtro', err);
+        }
+      );
+  }
+
+  setFilter(event: any) {
+    this.filters = SideFilterConversorUtils.convertToDashboardRequest(event);
+    this.fetch();
   }
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
+  }
+
+  fetch(filters = this.filters) {
+    this._service.getServicoProgramado(filters).subscribe(
+      (results: any) => {
+        const rec = results.records;
+        this.openData = [rec.abertoNoPrazo, rec.abertoAtrasado];
+        this.closedData = [rec.encerradoNoPrazo, rec.encerradoAtrasado];
+
+        this.abertoNoPrazo = rec.abertoNoPrazo ?? 0;
+        this.abertoAtrasado = rec.abertoAtrasado ?? 0;
+        this.encerradoAtrasado = rec.encerradoAtrasado ?? 0;
+        this.encerradoNoPrazo = rec.encerradoNoPrazo ?? 0;
+      },
+      err => {
+        this._error('Falha ao obter os serviços programados', err);
+      }
+    );
+  }
+
+  private _error(message: string, error: any) {
+    this._toastService.show(message, 'danger');
+    LoggerUtils.throw(error);
   }
 }

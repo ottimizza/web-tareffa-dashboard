@@ -1,9 +1,5 @@
-import { debounceTime } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
-
 import { AppDateAdapter, APP_DATE_FORMATS } from './providers/format-datepicker';
 import { StorageService } from '@app/services/storage.service';
 import { SelectableFilter } from '@shared/models/Filter';
@@ -22,24 +18,9 @@ import { DateUtils } from '@shared/utils/date.utils';
 export class SideFilterComponent implements OnInit {
   @Input() STORAGE_KEY: string;
   @Input() mustHaveDateFilter = true;
-
-  // tslint:disable-next-line: variable-name
-  _selects: SelectableFilter[] = [];
-
-  @Input('selects')
-  set selects(selects) {
-    this._selects = selects;
-    console.log(selects);
-
-    this.emit();
-  }
-
-  get selects() {
-    return this._selects;
-  }
+  @Input() selects: SelectableFilter[] = [];
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
-
   @Output() encodedFilters: EventEmitter<string> = new EventEmitter();
 
   opened = false;
@@ -49,14 +30,7 @@ export class SideFilterComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-  filterSubject = new Subject();
-
-  constructor(private storageService: StorageService) {
-    this.filterSubject.pipe(debounceTime(300)).subscribe(() => {
-      this.filters.emit(this.selecteds);
-      // console.log(this.selecteds);
-    });
-  }
+  constructor(private _storageService: StorageService) {}
 
   ngOnInit(): void {
     this.selects.forEach(sel => {
@@ -66,16 +40,19 @@ export class SideFilterComponent implements OnInit {
     });
 
     if (this.STORAGE_KEY) {
-      this._restore();
+      this._storageService.fetch(this.STORAGE_KEY).then(json => {
+        const cache = JSON.parse(json);
+        this.filters.emit(cache);
+      });
+    } else {
+      this.thisMonth();
     }
-
-    this.emit();
   }
 
   emit() {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
-    this.filterSubject.next();
+    this.filters.emit(this.selecteds);
     this._encode(this.selecteds);
     this._store();
   }
@@ -96,6 +73,7 @@ export class SideFilterComponent implements OnInit {
     const reference = new Date();
 
     this.startDate = DateUtils.iterateDays(-1, date => date.getDate() === 1);
+
     const endDate = DateUtils.iterateDays(1, date => {
       return (
         date.getDate() === 1 &&
@@ -115,6 +93,7 @@ export class SideFilterComponent implements OnInit {
         (date.getMonth() === reference.getMonth() - 1 || date.getMonth() === 11)
       );
     });
+
     const endDate = DateUtils.iterateDays(-1, date => date.getDate() === 1);
     this.endDate = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
     this.emit();
@@ -126,21 +105,24 @@ export class SideFilterComponent implements OnInit {
   }
 
   activate() {
-    this.opened = !this.opened;
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
+    this.opened = !this.opened;
+    if (this.opened && this.STORAGE_KEY) {
+      this._restore();
+    }
   }
 
   private _store() {
     if (this.STORAGE_KEY) {
-      this.storageService.destroy(this.STORAGE_KEY).then(() => {
-        this.storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
+      this._storageService.destroy(this.STORAGE_KEY).then(() => {
+        this._storageService.store(this.STORAGE_KEY, JSON.stringify(this.selecteds));
       });
     }
   }
 
   private _restore() {
-    this.storageService.fetch(this.STORAGE_KEY).then(json => {
-      if (json) {
+    this._storageService.fetch(this.STORAGE_KEY).then(json => {
+      if (json && json !== '{}') {
         const cache = JSON.parse(json);
         this.startDate = cache.startDate;
         this.endDate = cache.endDate;
