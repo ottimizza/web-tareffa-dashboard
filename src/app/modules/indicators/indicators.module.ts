@@ -4,10 +4,19 @@ import { IndicatorsComponent } from './page/indicators.component';
 import { IndicatorsRoutingModule } from './indicators.routing';
 import { EditableInputModule } from '@shared/components/editable-input/editable-input.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [IndicatorsComponent],
-  imports: [CommonModule, IndicatorsRoutingModule, EditableInputModule, MatCheckboxModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IndicatorsRoutingModule,
+    EditableInputModule,
+    MatCheckboxModule,
+    MatTooltipModule
+  ],
   exports: [IndicatorsComponent]
 })
 export class IndicatorsModule {}

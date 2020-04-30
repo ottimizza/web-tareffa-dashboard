@@ -7,18 +7,46 @@
 .selecting-indicator,
 .selecting-graph {
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(75, 66, 121, 0.06) !important;
   }
   &.active {
-    background-color: #ccc;
+    background-color: rgba(75, 66, 121, 0.1) !important;
   }
 }
 
 .list {
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   height: calc(100% - 2.8rem);
 }
 
 .mat-radio-label-content {
   white-space: normal !important;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+    background-color: #4b4279 !important;
+  }
+
+  .mat-checkbox-background,
+  .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #4b4279;
+  }
+}
+
+::ng-deep .mat-checkbox.mat-accent {
+  .mat-checkbox-ripple .mat-ripple-element {
+    background-color: rgba(102, 51, 153, 0.1) !important;
+  }
+}
+
+::ng-deep .checkbox-ellipsis * {
+  max-width: 95%;
+
+  .mat-checkbox-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

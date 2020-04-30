@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IndicatorService } from '@app/services/indicator.service';
 import { ToastService } from '@app/services/toast.service';
 import { finalize } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-indicators',
@@ -20,19 +20,24 @@ export class IndicatorsComponent implements OnInit {
   tags = [];
   services = [];
 
+  subscriptionActiveTag: Subscription = new Subscription();
+  subscriptionInactiveTag: Subscription = new Subscription();
+  subscriptionActiveService: Subscription = new Subscription();
+  subscriptionInactiveService: Subscription = new Subscription();
+
+  searchInput = '';
+
   constructor(private indicatorService: IndicatorService, private toast: ToastService) {}
 
   ngOnInit() {
     this.getIndicators();
   }
 
-  showGraphsCard() {
-    return this.selectedIndicatorIndex !== null && this.selectedIndicatorIndex !== undefined;
-  }
-
   deleteIndicators(id: number) {
     this.indicatorService.deleteIndicators(id).subscribe((response: any) => {
       if (response.status === 'success') {
+        this.selectedGraphIndex = null;
+        this.selectedIndicatorIndex = null;
         this.toast.show(response.message, 'success');
         this.getIndicators();
       } else if (response.status === 'error') {
@@ -44,6 +49,7 @@ export class IndicatorsComponent implements OnInit {
   deleteGraph(id: number) {
     this.indicatorService.deleteGraph(id).subscribe((response: any) => {
       if (response.status === 'success') {
+        this.selectedGraphIndex = null;
         this.toast.show(response.message, 'success');
         this.getGraphs();
       } else if (response.status === 'error') {
@@ -56,23 +62,27 @@ export class IndicatorsComponent implements OnInit {
   // -- Business Unity and Services -- \\
   // --------------------------------- \\
 
-  updateTag(checked, tag) {
-    if (checked) {
-      this.update(tag.id, 'tag', checked);
+  editTag(tag) {
+    const subject = new Subject();
+
+    subject.subscribe({
+      next: (response: any) => {
+        this.toast.show(response.message, 'success');
+      }
+    });
+
+    if (tag.isChecked) {
+      this.indicatorService
+        .addTagToGraph(this.graphs[this.selectedGraphIndex].id, tag.id)
+        .subscribe(subject);
     } else {
-      this.update(tag.id, 'tag', checked);
+      this.indicatorService
+        .removeTagFromGraph(this.graphs[this.selectedGraphIndex].id, tag.id)
+        .subscribe(subject);
     }
   }
 
-  updateService(checked, service) {
-    if (checked) {
-      this.update(service.id, 'service', checked);
-    } else {
-      this.update(service.id, 'service', checked);
-    }
-  }
-
-  update(value: number, input: 'service' | 'tag', checked) {
+  editService(service) {
     const subject = new Subject();
     subject.subscribe({
       next: (response: any) => {
@@ -80,33 +90,18 @@ export class IndicatorsComponent implements OnInit {
       }
     });
 
-    // Check if is adding or removing services/tags
-    if (checked) {
-      if (input === 'service') {
-        this.indicatorService
-          .addServiceToGraph(this.graphs[this.selectedGraphIndex].id, value)
-          .subscribe(subject);
-      } else if (input === 'tag') {
-        this.indicatorService
-          .addTagToGraph(this.graphs[this.selectedGraphIndex].id, value)
-          .subscribe(subject);
-      }
+    if (service.isChecked) {
+      this.indicatorService
+        .addServiceToGraph(this.graphs[this.selectedGraphIndex].id, service.id)
+        .subscribe(subject);
     } else {
-      if (input === 'service') {
-        this.indicatorService
-          .removeServiceFromGraph(this.graphs[this.selectedGraphIndex].id, value)
-          .subscribe(subject);
-      } else if (input === 'tag') {
-        this.indicatorService
-          .removeTagFromGraph(this.graphs[this.selectedGraphIndex].id, value)
-          .subscribe(subject);
-      }
+      this.indicatorService
+        .removeServiceFromGraph(this.graphs[this.selectedGraphIndex].id, service.id)
+        .subscribe(subject);
     }
   }
 
   showTagsAndServices() {
-    console.log(this.selectedGraphIndex);
-
     this.tags = [];
     this.services = [];
     this.getTagsActives().then(() => {
@@ -118,19 +113,23 @@ export class IndicatorsComponent implements OnInit {
     });
   }
 
+  searchServices(input) {
+    this.services = [];
+    this.getServiceActives(input).then(() => {
+      this.getServicesInactive(input);
+    });
+  }
+
   getTagsActives(): Promise<any> {
+    this.subscriptionActiveTag.unsubscribe();
+
     return new Promise((resolve, subject) => {
-      this.indicatorService
+      this.subscriptionActiveTag = this.indicatorService
         .getTags(this.graphs[this.selectedGraphIndex].id)
         .subscribe((response: any) => {
           if (response.status === 'success') {
             response.records.forEach(element => {
-              const obj = {
-                descricao: element.descricao,
-                id: element.id,
-                isChecked: true
-              };
-              this.tags.push(obj);
+              this.tags.push({ descricao: element.descricao, id: element.id, isChecked: true });
             });
           } else {
             this.toast.show(response.message, 'danger');
@@ -141,18 +140,19 @@ export class IndicatorsComponent implements OnInit {
   }
 
   getTagsInactive(): Promise<any> {
+    this.subscriptionInactiveTag.unsubscribe();
+
     return new Promise((resolve, reject) => {
-      this.indicatorService
+      this.subscriptionInactiveTag = this.indicatorService
         .getTags(this.graphs[this.selectedGraphIndex].id, true)
         .subscribe((response: any) => {
           if (response.status === 'success') {
             response.records.forEach(element => {
-              const obj = {
+              this.tags.push({
                 descricao: element.descricao,
                 id: element.id,
                 isChecked: false
-              };
-              this.tags.push(obj);
+              });
             });
           } else {
             this.toast.show(response.message, 'danger');
@@ -162,9 +162,13 @@ export class IndicatorsComponent implements OnInit {
     });
   }
 
-  getServiceActives(findService = ''): Promise<any> {
+  getServiceActives(findService = this.searchInput): Promise<any> {
+    console.log(this.searchInput);
+
+    this.subscriptionActiveService.unsubscribe();
+
     return new Promise((resolve, subject) => {
-      this.indicatorService
+      this.subscriptionActiveService = this.indicatorService
         .getServices(this.graphs[this.selectedGraphIndex].id, null, findService)
         .subscribe((response: any) => {
           if (response.status === 'success') {
@@ -184,9 +188,11 @@ export class IndicatorsComponent implements OnInit {
     });
   }
 
-  getServicesInactive(findService = ''): Promise<any> {
+  getServicesInactive(findService = this.searchInput): Promise<any> {
+    this.subscriptionInactiveService.unsubscribe();
+
     return new Promise((resolve, reject) => {
-      this.indicatorService
+      this.subscriptionInactiveService = this.indicatorService
         .getServices(this.graphs[this.selectedGraphIndex].id, true, findService)
         .subscribe((response: any) => {
           if (response.status === 'success') {
@@ -219,6 +225,8 @@ export class IndicatorsComponent implements OnInit {
       .createGraph(input, this.indicators[this.selectedIndicatorIndex].id)
       .subscribe((response: any) => {
         if (response.status === 'success') {
+          this.selectedGraphIndex = null;
+          this.toast.show(response.message, 'success');
           this.getGraphs();
         } else {
           this.toast.show(response.message, 'danger');
@@ -268,6 +276,7 @@ export class IndicatorsComponent implements OnInit {
     }
     this.indicatorService.createIndicators(input).subscribe((response: any) => {
       if (response.status === 'success') {
+        this.toast.show(response.message, 'success');
         this.getIndicators();
       } else {
         this.toast.show(response.message, 'danger');
