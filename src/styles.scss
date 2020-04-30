@@ -590,6 +590,7 @@ $default-sidebar-width: 240px;
   }
 }
 
+
 .tareffa-pink-color {
   color: #d9587f;
 }
@@ -600,4 +601,23 @@ $default-sidebar-width: 240px;
 
 .lightgray-color {
   color: lightgray;
+}
+  
+///////////////////////////////
+///// SLICK CAROUSEL AREA /////
+///////////////////////////////
+
+.slick-cloned {
+  height: 1px !important;
+}
+
+.slick-slide {
+  opacity: 60%;
+  transition: ease 500ms;
+}
+
+.slick-center {
+  background: #fafafa;
+  border-radius: 1rem;
+  opacity: 100% !important;
 }

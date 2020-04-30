@@ -4,7 +4,7 @@ import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map, timeout, debounceTime } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ import { map, timeout, debounceTime } from 'rxjs/operators';
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [];
@@ -24,6 +24,8 @@ export class AnalyticsComponent implements OnInit {
   slideConfig = {
     centerMode: true,
     slidesToShow: 3,
+    autoplay: true,
+    autoplaySpeed: 30000,
     responsive: [
       {
         breakpoint: 480,
@@ -42,10 +44,43 @@ export class AnalyticsComponent implements OnInit {
     }
   };
 
+  // PLUGIN PARA INSERIR TEXTO DENTRO DO DOUGHNUT CHART
+  public doughnutChartPlugins: PluginServiceGlobalRegistrationAndOptions[] = [
+    {
+      beforeDraw(chart: any) {
+        const ctx = chart.ctx;
+
+        // DADOS DO GRÁFICO
+        const data = chart.config.data.datasets[0].data;
+
+        // REGRA DE 3 PRA DESCOBRIR A PORCENTAGEM DE ENCERRADOS
+        const txt = `${(data[0] * 100) / data.reduce((a, b) => a + b, 0)}%`;
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+        const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+        ctx.font = '80px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        ctx.fillStyle = '#4b4279';
+
+        // Draw text in center
+        ctx.fillText(txt, centerX, centerY);
+      }
+    }
+  ];
+
   selectsSubject = new Subject();
 
-  charts: ChartDataSets[][] = [];
+  // Dados dos indicadores
   data = [];
+
+  // Dados dos indicadores só que formatados para gráfico
+  charts: ChartDataSets[][] = [];
+
+  users = [];
+
+  selectedIndicator: any;
 
   constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
     this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
@@ -64,23 +99,17 @@ export class AnalyticsComponent implements OnInit {
     combineLatest([indicators$, departments$])
       .pipe(map(([indicators, departments]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
-        // console.log(filterRequest);
         this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
         this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
       });
-  }
 
-  // .subscribe(a => this.parse(a, 'Indicadores', 'indicators'));
-  //     .subscribe(a => this.parse(a, 'Categorias', 'categories'));
-  //     .subscribe(a => this.parse(a, 'Departamentos', 'departments', true));
+    window.sessionStorage.removeItem('user-refresh-time');
+  }
 
   slickInit(e) {
     e.slick.currentSlide = 3;
     e.slick.refresh();
-  }
-
-  breakpoint(e) {
-    // console.log('breakpoint');
+    this.selectedIndicator = this.data[3];
   }
 
   afterChange(e) {
@@ -92,6 +121,8 @@ export class AnalyticsComponent implements OnInit {
       e.slick.currentSlide = this.charts.length - 4;
       e.slick.refresh();
     }
+    this.selectedIndicator = this.data[e.slick.currentSlide];
+    this.checkUserRefreshTime();
   }
 
   getInfo() {
@@ -111,7 +142,6 @@ export class AnalyticsComponent implements OnInit {
           .concat(this.data)
           .concat([data[0], data[1], data[2]]);
       }
-      console.log(this.data);
 
       this.data.forEach(indicator => {
         this.charts.push([
@@ -126,6 +156,41 @@ export class AnalyticsComponent implements OnInit {
         ]);
       });
     });
+  }
+
+  updateUsers() {
+    this.data.forEach(indicator => {
+      this.indicatorService.getUsers(this.filter, indicator.id).subscribe((res: any) => {
+        const users = [];
+        res.records.forEach(user => {
+          users.push({
+            info: user,
+            // REGRA DE 3. SOMA OS ENCERRADOS, MULTIPLICA POR 100 E DIVIDE PELA SOMA DOS ABERTOS + ENCERRADOS
+            percentage:
+              ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
+              (user.abertoAtrasado +
+                user.abertoNoPrazo +
+                user.encerradoAtrasado +
+                user.encerradoNoPrazo)
+          });
+        });
+        this.users[indicator.id] = users;
+      });
+    });
+
+    // Marca a hora foi feito o request dos usuarios
+    window.sessionStorage.setItem('user-refresh-time', new Date().getTime().toString());
+  }
+
+  // Método chamado sempre que muda o slide para verificar se deve atualizar a lista de usuarioss
+  checkUserRefreshTime() {
+    const previousTime = +window.sessionStorage.getItem('user-refresh-time');
+    const newTime = new Date().getTime();
+
+    // Verifica se já passou 10 minutos desde a ultima atualização da lista de usuarios
+    if (newTime - previousTime > 600000) {
+      this.updateUsers();
+    }
   }
 
   onFilterChange(filter: any) {

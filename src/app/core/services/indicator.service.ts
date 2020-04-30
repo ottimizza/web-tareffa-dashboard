@@ -15,10 +15,8 @@ export class IndicatorService {
     return this.httpClient.get(url, this._headers);
   }
 
-  getServicoProgramado(filter: any) {
-    console.log(filter);
-
-    const url = `${environment.apiTareffaSpring}/indicador/${filter.indicators}/servico/programado/count`;
+  getServicoProgramado(filter) {
+    const url = `${environment.apiTareffaSpring}/indicador/${filter.indicador}/servico/programado/count`;
     return this.httpClient.post(
       url,
       {
@@ -33,5 +31,19 @@ export class IndicatorService {
   private get _headers() {
     const headers = this.authenticationService.getAuthorizationHeaders();
     return { headers };
+  }
+
+  getUsers(filter, indicatorId) {
+    const url = `${environment.apiTareffaSpring}/grafico/${indicatorId}/usuarios`;
+
+    return this.httpClient.post(
+      url,
+      {
+        dataProgramadaInicio: filter.startDate.getTime() || null,
+        dataProgramadaTermino: filter.endDate.getTime() || null,
+        departamento: filter.departamento || []
+      },
+      { headers: this.authenticationService.getAuthorizationHeaders() }
+    );
   }
 }
