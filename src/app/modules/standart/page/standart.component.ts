@@ -36,7 +36,7 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.interval = interval(5 * 60 * 1000) // 5 minutos
+    this.interval = interval(30 * 60 * 1000) // 30 minutos
       .subscribe(() => {
         const date = new Date();
         console.log(
