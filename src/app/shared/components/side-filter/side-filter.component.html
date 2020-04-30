@@ -1,68 +1,98 @@
-<a class="cursor-pointer" (click)="activate()">
-  <i class="fa fa-filter btn-filter btn-rounded" [ngClass]="{'btn-filter-activate': opened}"></i>
-</a>
+<div class="master" [ngClass]="{ 'master-active': opened }">
+  <a class="cursor-pointer centralize btn-filter btn-rounded" (click)="activate()">
+    <i class="fa fa-filter"></i>
+  </a>
 
-<div class="side-filter border shadow text-center m-0" *ngIf="opened">
-  <h3 class="mt-3">Filtro</h3>
+  <div class="side-filter border shadow text-center m-0">
+    <h3 class="mt-3">Filtro</h3>
 
-  <hr>
+    <hr />
 
-  <div *ngIf="mustHaveDateFilter">
-    <div class="container m-1">
-      <div class="row m-0">
-        <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="today()">Hoje</button>
-        <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="thisWeek()">Esta semana</button>
+    <div *ngIf="mustHaveDateFilter">
+      <div class="container">
+        <div class="row m-0">
+          <button
+            mat-stroked-button
+            class="btn-info col"
+            style="background-color: #4b4279;"
+            (click)="today()"
+          >
+            Hoje
+          </button>
+          <button
+            mat-stroked-button
+            class="btn-info col"
+            style="background-color: #4b4279;"
+            (click)="thisWeek()"
+          >
+            Esta semana
+          </button>
+        </div>
+        <div class="row m-0">
+          <button
+            mat-stroked-button
+            class="btn-info col"
+            style="background-color: #4b4279;"
+            (click)="thisMonth()"
+          >
+            Este mês
+          </button>
+          <button
+            mat-stroked-button
+            class="btn-info col"
+            style="background-color: #4b4279;"
+            (click)="lastMonth()"
+          >
+            Mês passado
+          </button>
+        </div>
       </div>
-      <div class="row m-0">
-        <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="thisMonth()">Este mês</button>
-        <button mat-stroked-button class="btn-info col-md col-lg col-xl" (click)="lastMonth()">Mês passado</button>
+
+      <div class="container">
+        <div class="row m-0">
+          <mat-form-field class="col-12 col-md-6">
+            <mat-label>De</mat-label>
+            <input
+              (keyup)="emit()"
+              [(ngModel)]="startDate"
+              matInput
+              [matDatepicker]="pickerStart"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart [touchUi]="getScreenSize()"></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="col-12 col-md-6">
+            <mat-label>Até</mat-label>
+            <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEnd" />
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd [touchUi]="getScreenSize()"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <hr class="m-2" />
       </div>
     </div>
 
-    <div class="row m-2 desktop">
-      <mat-form-field class="col-12 col-md-6">
-        <mat-label>De</mat-label>
-        <input (keyup)="emit()" [(ngModel)]="startDate" matInput [matDatepicker]="pickerStart" />
-        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-        <mat-datepicker #pickerStart></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field class="col-12 col-md-6">
-        <mat-label>Até</mat-label>
-        <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEnd" />
-        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-        <mat-datepicker #pickerEnd></mat-datepicker>
-      </mat-form-field>
+    <div class="container">
+      <div class="row m-0 text-center" *ngFor="let item of selects">
+        <div class="col-12">
+          <app-sf-select
+            class="w-100 m-auto"
+            *ngIf="!item.multiple"
+            [item]="item"
+            [cache]="cache"
+            (filter)="select($event)"
+          ></app-sf-select>
+          <app-sf-multiple
+            class="w-100 m-auto"
+            *ngIf="item.multiple"
+            [item]="item"
+            [cache]="cache"
+            (filter)="select($event)"
+          ></app-sf-multiple>
+        </div>
+      </div>
     </div>
-
-    <div class="row m-2 mobile">
-      <mat-form-field class="col-12 col-md-6">
-        <mat-label>De</mat-label>
-        <input (keyup)="emit()" [(ngModel)]="startDate" matInput [matDatepicker]="pickerStartMobile" />
-        <mat-datepicker-toggle matSuffix [for]="pickerStartMobile"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #pickerStartMobile></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field class="col-12 col-md-6">
-        <mat-label>Até</mat-label>
-        <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEndMobile" />
-        <mat-datepicker-toggle matSuffix [for]="pickerEndMobile"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #pickerEndMobile></mat-datepicker>
-      </mat-form-field>
-    </div>
-
-    <hr class="m-2">
   </div>
-
-  <div class="container">
-
-    <div class="row m-0 text-center" *ngFor="let item of selects">
-
-      <app-sf-select class="w-75 m-auto" *ngIf="!item.multiple" [item]="item" [cache]="cache" (filter)="select($event)"></app-sf-select>
-      <app-sf-multiple class="w-75 m-auto" *ngIf="item.multiple" [item]="item" [cache]="cache" (filter)="select($event)"></app-sf-multiple>
-
-    </div>
-
-  </div>
-
 </div>

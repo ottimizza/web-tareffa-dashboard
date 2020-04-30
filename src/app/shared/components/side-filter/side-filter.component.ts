@@ -49,6 +49,15 @@ export class SideFilterComponent implements OnInit {
     }
   }
 
+  getScreenSize(): boolean {
+    // mobile
+    if (screen.width < 768) {
+      return true;
+    }
+    // table, iPad, pc, note...
+    return false;
+  }
+
   emit() {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
@@ -124,8 +133,8 @@ export class SideFilterComponent implements OnInit {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
       if (json && json !== '{}') {
         const cache = JSON.parse(json);
-        this.startDate = cache.startDate;
-        this.endDate = cache.endDate;
+        this.startDate = new Date(cache.startDate);
+        this.endDate = new Date(cache.endDate);
         delete cache.startDate;
         delete cache.endDate;
         this.cache = cache;
