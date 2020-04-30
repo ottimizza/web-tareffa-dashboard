@@ -14,7 +14,7 @@
         <div class="p-3 item-list" *ngFor="let item of itemList">
           <strong class="tareffa-purple-color">{{ item.data }}:</strong>
           <ul>
-            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id)">
+            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
               <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
             </li>
@@ -58,7 +58,7 @@
         <div class="p-3 item-list" *ngFor="let item of itemList">
           <strong class="tareffa-purple-color">{{ item.data }}:</strong>
           <ul>
-            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id)">
+            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
               <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
             </li>

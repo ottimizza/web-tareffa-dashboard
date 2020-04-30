@@ -87,19 +87,19 @@ export class StandartComponent implements OnInit, OnDestroy {
     this.fetch();
   }
 
-  openDialog(id: number): void {
+  openDialog(id: number, date: string, title: string): void {
+    const dates = date.split('/');
     const filter = this.filters;
     filter.prazo = this.term;
     filter.situacao = this.selectedCard;
     const body = {
-      dataProgramada: new Date(filter.dataProgramadaInicio),
+      dataProgramada: new Date(`${dates[2]}-${dates[1]}-${dates[0]}`).getTime(),
       filtro: filter
     };
     this._service.getInformations(id, body).subscribe((aa: any) => {
-      console.log(aa);
       const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
         width: '568px',
-        data: aa.records
+        data: { title, records: aa.records }
       });
       dialogRef.afterClosed().subscribe();
     });

@@ -11,21 +11,26 @@ export class CollaboratorListDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<CollaboratorListDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      codigoErpEmpresa: string;
-      dataTermino: string;
-      fotoResponsavel: string;
-      nomeResponsavel: string;
-      razaoSocialEmpresa: string;
-      servicoProgramadoId: number;
-    }[]
+      title: string;
+      records: {
+        codigoErpEmpresa: string;
+        dataTermino: string;
+        fotoResponsavel: string;
+        nomeResponsavel: string;
+        razaoSocialEmpresa: string;
+        servicoProgramadoId: number;
+      }[];
+    }
   ) {}
 
-  ngOnInit(): void {
-    const body = {
-      dataProgramada: new Date(this.data.filter.dataProgramadaInicio),
-      filtro: this.data.filter
-    };
-    this.scheduledService.getInformations(this.data.id, body).subscribe(a => console.log(a));
+  ngOnInit() {
+    // for (let i = 0; i < 5; i++) {
+    //   this.data.push({
+    //     codigoErpEmpresa: '3123',
+    //     dataTermino: '22-22-2222',
+    //     fotoResponsavel: 'https://i.picsum.photos/id/829/200/200.jpg';
+    //   })
+    // }
   }
 
   onNoClick(): void {

@@ -1,8 +1,20 @@
-<!-- <h1 mat-dialog-title>Hi {{data.name}}</h1> -->
+<h1 mat-dialog-title> {{ data.title }} </h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
+
+  <div class="container">
+    <div class="row w-100" *ngFor="let rec of data.records">
+      <div class="col-4" *ngIf="rec.fotoResponsavel">
+        <img [src]="rec.fotoResponsavel" width="70px" height="70px">
+      </div>
+      <div class="col">
+        <h5>{{ rec.nomeResponsavel }}</h5>
+        <span>({{ rec.codigoErpEmpresa }}) {{ rec.razaoSocialEmpresa }}</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <!-- <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button> -->
+  <button mat-button [mat-dialog-close] cdkFocusInitial>Ok</button>
 </div>

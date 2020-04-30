@@ -5,7 +5,7 @@ import { SideFilterModule } from '@shared/components/side-filter/side-filter.mod
 import { ChartsModule } from 'ng2-charts';
 import { StandartRoutingModule } from './standart.routing';
 import { DoughnutModule } from '@shared/components/doughnut/doughnut.module';
-import { MatListModule, MatDialogModule } from '@angular/material';
+import { MatListModule, MatDialogModule, MatButtonModule } from '@angular/material';
 import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/collaborator-list-dialog.component';
 
 @NgModule({
@@ -17,7 +17,8 @@ import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/col
     StandartRoutingModule,
     DoughnutModule,
     MatListModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   entryComponents: [CollaboratorListDialogComponent]
 })
