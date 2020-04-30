@@ -18,9 +18,21 @@ export class IndicatorService {
   }
 
   getServicoProgramado(filter) {
-    console.log(filter);
-
     const url = `${environment.apiTareffaSpring}/indicador/${filter.indicador}/servico/programado/count`;
+    return this.httpClient.post(
+      url,
+      {
+        dataProgramadaInicio: filter.startDate.getTime() || null,
+        dataProgramadaTermino: filter.endDate.getTime() || null,
+        departamento: filter.departamento || []
+      },
+      { headers: this.authenticationService.getAuthorizationHeaders() }
+    );
+  }
+
+  getUsers(filter, indicatorId) {
+    const url = `${environment.apiTareffaSpring}/grafico/${indicatorId}/usuarios`;
+
     return this.httpClient.post(
       url,
       {
