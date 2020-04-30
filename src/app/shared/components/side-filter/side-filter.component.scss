@@ -1,12 +1,11 @@
 .btn-filter {
-  padding: calc(1% + 8px);
-  // background-color: #1e88e5;
+  height: 65px;
+  width: 65px;
+  margin: 10px;
+  align-self: flex-end;
   background-color: #4b4279;
-  color: white;
-  position: fixed;
+  color: white !important;
   transition: 200ms;
-  bottom: 2%;
-  right: 2%;
   z-index: 9;
   box-shadow: 0 0 5px 4px rgba(0, 0, 0, 0.2);
   &:hover {
@@ -15,25 +14,14 @@
 }
 
 .side-filter {
-  width: 32%;
-  min-width: 250px;
+  width: calc(100% - 85px);
+  height: 100%;
   background-color: white;
-  position: fixed;
-  height: calc(100vh - 70px);
-  z-index: 8;
-  right: 0;
-  top: 70px;
-  max-height: calc(100vh - 70px);
   overflow: auto;
 }
 
 .btn-filter-activate {
   right: calc(250px + 15%);
-}
-
-.example-additional-selection {
-  opacity: 0.75;
-  font-size: 0.75em;
 }
 
 .mat-form-field {
@@ -46,15 +34,24 @@ button {
   padding: 5px;
 }
 
-.mobile {
-  display: none;
+.master {
+  display: flex;
+  position: fixed;
+  top: 70px;
+  right: -325px;
+  width: 410px;
+  z-index: 8;
+  height: calc(100vh - 70px);
+  max-height: calc(100vh - 70px);
+  transition: 200ms;
+
+  &-active {
+    right: 0;
+  }
 }
 
-@media (max-width: 767px) {
-  .mobile {
-    display: inline-block;
-  }
-  .desktop {
-    display: none;
+@media (max-width: 576px) {
+  .master-active {
+    width: 100% !important;
   }
 }
