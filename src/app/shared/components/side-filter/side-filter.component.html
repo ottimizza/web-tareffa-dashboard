@@ -1,6 +1,7 @@
 <div class="master" [ngClass]="{ 'master-active': opened }">
   <a class="cursor-pointer centralize btn-filter btn-rounded" (click)="activate()">
-    <i class="fa fa-filter"></i>
+    <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
+    <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
   </a>
 
   <div class="side-filter border shadow text-center m-0">
