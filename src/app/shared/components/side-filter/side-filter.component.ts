@@ -46,7 +46,6 @@ export class SideFilterComponent implements OnInit {
       });
     } else {
       this.thisMonth();
-      this.emit();
     }
   }
 

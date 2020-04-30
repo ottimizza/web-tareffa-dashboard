@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Label } from 'ng2-charts';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ScheduledService } from '@app/http/scheduled.service';
 import { ToastService } from '@app/services/toast.service';
@@ -12,7 +12,7 @@ import { LoggerUtils } from '@shared/utils/logger.utils';
   templateUrl: './standart.component.html',
   styleUrls: ['./standart.component.scss']
 })
-export class StandartComponent implements OnInit {
+export class StandartComponent implements OnInit, OnDestroy {
   selects: SelectableFilter[] = [];
 
   chartLabels: Label[] = ['No Praso', 'Atrasados'];
@@ -27,13 +27,28 @@ export class StandartComponent implements OnInit {
 
   filters: any;
 
+  interval: Subscription;
+
   constructor(private _service: ScheduledService, private _toastService: ToastService) {}
 
+  ngOnDestroy(): void {
+    this.interval.unsubscribe();
+  }
+
   ngOnInit(): void {
-    const departments$ = this._service.getGroupedScheduled(1);
+    this.interval = interval(5 * 60 * 1000) // 5 minutos
+      .subscribe(() => {
+        const date = new Date();
+        console.log(
+          `Tentando obter os serviços programados: ${date.getHours()}:${date.getMinutes()}`
+        );
+        this.fetch();
+      });
+
     const categories$ = this._service.getCategory();
-    const caracteristics$ = this._service.getCharacteristic();
     const services$ = this._service.getGroupedScheduled(0);
+    const departments$ = this._service.getGroupedScheduled(1);
+    const caracteristics$ = this._service.getCharacteristic();
 
     combineLatest([categories$, departments$, services$, caracteristics$])
       .pipe(
