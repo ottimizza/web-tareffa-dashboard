@@ -95,14 +95,14 @@ export class StandartComponent implements OnInit, OnDestroy {
       dataProgramada: new Date(filter.dataProgramadaInicio),
       filtro: filter
     };
-    this._service.getInformations(id, body).subscribe(aa => {
+    this._service.getInformations(id, body).subscribe((aa: any) => {
       console.log(aa);
+      const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
+        width: '568px',
+        data: aa.records
+      });
+      dialogRef.afterClosed().subscribe();
     });
-    // const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
-    //   width: '568px',
-    //   data: { id, filter }
-    // });
-    // dialogRef.afterClosed().subscribe();
   }
 
   getGrouped(term: [0] | [1, 2], situation: 1 | 2) {

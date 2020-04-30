@@ -9,7 +9,15 @@ export class CollaboratorListDialogComponent implements OnInit {
   constructor(
     public scheduledService: ScheduledService,
     public dialogRef: MatDialogRef<CollaboratorListDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id: number; filter: any }
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      codigoErpEmpresa: string;
+      dataTermino: string;
+      fotoResponsavel: string;
+      nomeResponsavel: string;
+      razaoSocialEmpresa: string;
+      servicoProgramadoId: number;
+    }[]
   ) {}
 
   ngOnInit(): void {
