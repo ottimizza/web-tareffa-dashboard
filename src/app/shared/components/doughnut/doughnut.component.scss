@@ -2,25 +2,25 @@
   max-width: 100%;
 }
 
-// .graph-percentage {
-//   width: 100%;
-//   text-align: center;
-// }
-
-// @media (min-width: 768px) {
-//   .graph-percentage {
-//     left: 0;
-//     position: absolute;
-//     z-index: 3;
-//     top: 49%;
-//   }
-// }
-
 .graph-percentage {
   width: 100%;
   text-align: center;
-  left: 0;
-  position: absolute;
-  z-index: 3;
-  top: 49%;
 }
+
+@media (min-width: 768px) {
+  .graph-percentage {
+    left: 0;
+    position: absolute;
+    z-index: 3;
+    top: 49%;
+  }
+}
+
+// .graph-percentage {
+//   width: 100%;
+//   text-align: center;
+//   left: 0;
+//   position: absolute;
+//   z-index: 3;
+//   top: 49%;
+// }
