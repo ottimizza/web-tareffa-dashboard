@@ -10,7 +10,7 @@ function getEnvironmentVariable(key, _default = '') {
 function createEnvironementFile() {
   return `export const environment = {
   production: true,
-  oauthBaseUrl: '${getEnvironmentVariable('OAUTH2_BASE_URL')}',
+  oauthBaseUrl: '${getEnvironmentVariable('API_OAUTH2_SERVICE')}',
   oauthClientId: '${getEnvironmentVariable('OAUTH2_CLIENT_ID')}',
   imageCompressionBaseUrl: '${getEnvironmentVariable('IMAGE_COMPRESSION_BASE_URL')}',
   storageBaseUrl: '${getEnvironmentVariable('STORAGE_BASE_URL')}',
