@@ -3,7 +3,9 @@ const fs = require('fs');
 // store a projects environment variables in a .gitignore'd file
 require('dotenv').config();
 
-function getEnvironmentVariable(key, _default = '') { return process.env[key] || _default; }
+function getEnvironmentVariable(key, _default = '') {
+  return process.env[key] || _default;
+}
 
 function createEnvironementFile() {
   return `export const environment = {
@@ -15,6 +17,7 @@ function createEnvironementFile() {
   storageApplicationId: '${getEnvironmentVariable('STORAGE_APPLICATION_ID', 'accounts-avatar')}',
   storageAccountingId: '${getEnvironmentVariable('STORAGE_ACCOUNTING_ID', 'ottimizza')}',
   applicationId: '${getEnvironmentVariable('APPLICATION_ID', 'ottimizza')}',
+  apiTareffaSpring: '${getEnvironmentVariable('API_TAREFFA_SPRING')}',
   firebase: {
     apiKey: '${getEnvironmentVariable('FIREBASE_API_KEY')}',
     authDomain: '${getEnvironmentVariable('FIREBASE_AUTH_DOMAIN')}',
@@ -38,7 +41,7 @@ console.log(`
   ${environmentFile}
 `);
 
-fs.writeFile(`./src/environments/environment.prod.ts`, environmentFile, (err) => {
+fs.writeFile(`./src/environments/environment.prod.ts`, environmentFile, err => {
   if (err) {
     console.log(err);
   }
