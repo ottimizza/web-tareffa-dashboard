@@ -40,10 +40,7 @@ export class SideFilterComponent implements OnInit {
     });
 
     if (this.STORAGE_KEY) {
-      this._storageService.fetch(this.STORAGE_KEY).then(json => {
-        const cache = JSON.parse(json);
-        this.filters.emit(cache);
-      });
+      this._restore();
     } else {
       this.thisMonth();
     }

@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row w-100 border-top border-bottom" *ngFor="let rec of data.records">
       <div class="col-3" *ngIf="rec.fotoResponsavel">
-        <img [src]="rec.fotoResponsavel" width="70px" height="70px">
+        <img [src]="rec.fotoResponsavel" class="rounded-circle" width="70px" height="70px">
       </div>
       <div class="col">
         <h5 class="mt-2">{{ rec.nomeResponsavel }}</h5>
