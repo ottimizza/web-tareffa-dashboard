@@ -1,13 +1,13 @@
 importScripts('https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.10.0/firebase-messaging.js');
 firebase.initializeApp({
-  apiKey: 'AIzaSyAPjrzkQyjYwq0eXRavaA9LS_rrt9p5XgE',
-  authDomain: 'portal-4c1f7.firebaseapp.com',
-  databaseURL: 'https://portal-4c1f7.firebaseio.com',
-  projectId: 'portal-4c1f7',
-  storageBucket: 'portal-4c1f7.appspot.com',
-  messagingSenderId: '92294481127',
-  appId: '1:92294481127:web:97256da8c44df6c0b48e42',
-  measurementId: 'G-ZLXKYRNY7Z'
+  apiKey: 'AIzaSyC7ZtQvtdnsdO4wJwM4EXvY1dTSqZpOzZc',
+  authDomain: 'tareffa-dashboard.firebaseapp.com',
+  databaseURL: 'https://tareffa-dashboard.firebaseio.com',
+  projectId: 'tareffa-dashboard',
+  storageBucket: 'tareffa-dashboard.appspot.com',
+  messagingSenderId: '419399937611',
+  appId: '1:419399937611:web:25edea397ab43a33c427ce',
+  measurementId: 'G-JCM3777XVR'
 });
 const messaging = firebase.messaging();
