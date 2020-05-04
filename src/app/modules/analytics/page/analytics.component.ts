@@ -7,6 +7,7 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map, timeout, debounceTime } from 'rxjs/operators';
+import { StorageService } from '@app/services/storage.service';
 
 @Component({
   selector: 'app-analytics',
@@ -82,7 +83,11 @@ export class AnalyticsComponent implements OnInit {
 
   selectedIndicator: any;
 
-  constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
+  constructor(
+    private filterService: FilterService,
+    private indicatorService: IndicatorService,
+    private storageService: StorageService
+  ) {
     this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
       const s = this.selects;
       this.selects = [];
@@ -97,10 +102,18 @@ export class AnalyticsComponent implements OnInit {
     const departments$ = this.filterService.requestDepartments();
 
     combineLatest([indicators$, departments$])
-      .pipe(map(([indicators, departments]) => ({ indicators, departments })))
+      .pipe(map(([indicators, departments]: any[]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
-        this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
-        this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+        this.storageService.fetch('filtro-analytics').then(json => {
+          const cache = JSON.parse(json);
+          if (!cache.indicador) {
+            cache.indicador = filterRequest.indicators.records[0].id;
+          }
+          this.storageService.store('filtro-analytics', JSON.stringify(cache)).then(() => {
+            this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
+            this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+          });
+        });
       });
 
     window.sessionStorage.removeItem('user-refresh-time');
