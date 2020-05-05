@@ -54,8 +54,8 @@ button {
   right: -325px;
   width: 410px;
   z-index: 8;
-  height: calc(100vh - 70px);
-  max-height: calc(100vh - 70px);
+  height: calc(100% - 70px);
+  max-height: calc(100% - 70px);
   transition: 200ms;
 
   &-active {
