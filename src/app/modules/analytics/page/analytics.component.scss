@@ -1,3 +1,17 @@
+.preloader {
+  z-index: auto !important;
+}
+
+.no-indicator-container {
+  padding: 15px;
+  height: 90vh;
+
+  h1 {
+    font-weight: 700;
+    color: darkgray;
+  }
+}
+
 @media (max-width: 480px) {
   section {
     display: none;

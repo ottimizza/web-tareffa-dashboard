@@ -4,16 +4,19 @@
   (filters)="onFilterChange($event)"
   STORAGE_KEY="filtro-analytics"
 ></app-side-filter>
-<div *ngIf="charts.length > 0" class="content-">
-  <section class="m-3">
+<div *ngIf="charts.length > 0 && !isLoading" class="content-">
+  <div class="row w-100 m-0">
+    <h1 class="mx-auto mb-0 mt-1" style="color: #4b4279;">{{ indicatorTitle }}</h1>
     <mat-slide-toggle
       #toggle
+      class="position-absolute mr-1 mt-2"
+      style="right: 1rem"
       [(ngModel)]="slideConfig.autoplay"
       (change)="slideConfig.autoplay ? slickModal.slickPlay() : slickModal.slickPause()"
     >
-      Girar carrossel manual/automático
+      Girar carrossel
     </mat-slide-toggle>
-  </section>
+  </div>
 
   <ngx-slick-carousel
     class="carousel w-100"
@@ -30,7 +33,7 @@
     </div> -->
 
     <!-- Slides with ng2-charts -->
-    <div ngxSlickItem *ngFor="let chart of charts; let i = index" class="slide p-3">
+    <div ngxSlickItem *ngFor="let chart of charts; let i = index" class="slide px-3 pt-2 pb-2">
       <h2>{{ chart[0].label }}</h2>
       <div style="display: block;">
         <canvas
@@ -49,20 +52,18 @@
         </canvas>
       </div>
       <div class="float-left text-center">
-        <h3>{{ data[i].abertoNoPrazo + data[i].abertoAtrasado }}</h3>
+        <h3>{{ data[i].abertoNoPrazo + data[i].abertoAtrasado | thousandSeparator }}</h3>
         <span>Aberto</span>
       </div>
       <div class="float-right text-center">
-        <h3>{{ data[i].encerradoNoPrazo + data[i].encerradoAtrasado }}</h3>
+        <h3>{{ data[i].encerradoNoPrazo + data[i].encerradoAtrasado | thousandSeparator }}</h3>
         <span>Fechado</span>
       </div>
     </div>
   </ngx-slick-carousel>
 </div>
 
-<div *ngIf="selectedIndicator" class="container">
-  <h2>{{ selectedIndicator.nomeGrafico }}</h2>
-
+<div *ngIf="selectedIndicator" class="container mt-2">
   <div class="row w-100 m-0 justify-content-center">
     <div
       *ngFor="let user of users[selectedIndicator.id]"
@@ -70,7 +71,7 @@
       style="height: 150px; width: 150px;"
     >
       <img
-        class="img-thumbnail rounded-circle my-1"
+        class="img-thumbnail rounded-circle p-0"
         [src]="user.info.urlFoto || './assets/images/Portrait_Placeholder.png'"
         style="width: 100px !important; height: 100px !important;"
         onError="this.src='./assets/images/Portrait_Placeholder.png';"
@@ -98,4 +99,24 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="isLoading" class="preloader">
+  <svg class="circular" viewBox="25 25 50 50">
+    <circle
+      class="path"
+      cx="50"
+      cy="50"
+      r="20"
+      fill="none"
+      stroke-width="2"
+      stroke-miterlimit="10"
+    ></circle>
+  </svg>
+</div>
+
+<div *ngIf="charts.length === 0 && !isLoading" class="row no-indicator-container text-center">
+  <h1 class="w-100 my-auto">
+    Nenhum indicador encontrado para o filtro selecionado
+  </h1>
 </div>

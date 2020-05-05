@@ -163,8 +163,6 @@ export class IndicatorsComponent implements OnInit {
   }
 
   getServiceActives(findService = this.searchInput): Promise<any> {
-    console.log(this.searchInput);
-
     this.subscriptionActiveService.unsubscribe();
 
     return new Promise((resolve, subject) => {
@@ -293,7 +291,6 @@ export class IndicatorsComponent implements OnInit {
     this.indicatorService
       .updateIndicator(indicator.id, indicator.descricao)
       .subscribe((response: any) => {
-        console.log(response);
         if (response.status === 'success') {
           this.toast.show(response.message, 'success');
         } else {
