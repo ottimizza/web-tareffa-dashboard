@@ -15,6 +15,17 @@
   }
 }
 
+.semi-btn-filter {
+  border-radius: 100%;
+  height: 65px;
+  width: 65px;
+  background-color: #4b4279;
+  color: white !important;
+  &:hover {
+    background-color: #d9587f;
+  }
+}
+
 .side-filter {
   width: calc(100% - 85px);
   height: 100%;
