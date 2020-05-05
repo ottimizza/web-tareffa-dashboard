@@ -114,7 +114,9 @@ export class StandartComponent implements OnInit, OnDestroy {
     filter.prazo = term;
     filter.situacao = situation;
 
+    this._toastService.showSnack('Obtendo detalhes');
     this._service.getGroupedScheduled(2, filter).subscribe((results: any) => {
+      this._toastService.hideSnack();
       this.selectedCard = situation;
       this.term = term;
       const dateList = results.records.map(rec => rec.dataProgramada);
@@ -142,8 +144,10 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   fetch(filters = this.filters) {
+    this._toastService.showSnack('Obtendo serviço programado');
     this._service.getServicoProgramado(filters).subscribe(
       (results: any) => {
+        this._toastService.hideSnack();
         const rec = results.records;
         this.openData = [rec.abertoNoPrazo, rec.abertoAtrasado];
         this.closedData = [rec.encerradoNoPrazo, rec.encerradoAtrasado];
