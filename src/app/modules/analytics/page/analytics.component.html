@@ -5,8 +5,8 @@
   STORAGE_KEY="filtro-analytics"
 ></app-side-filter>
 <div *ngIf="charts.length > 0 && !isLoading" class="content-">
-  <div class="row w-100 m-0">
-    <h1 class="mx-auto mb-0 mt-1" style="color: #4b4279;">{{ indicatorTitle }}</h1>
+  <div class="row w-100 m-0 text center">
+    <h2 class="my-2 text-center mx-auto" style="color: #4b4279;">{{ indicatorTitle }}</h2>
     <mat-slide-toggle
       #toggle
       class="position-absolute mr-1 mt-2"
@@ -63,7 +63,7 @@
   </ngx-slick-carousel>
 </div>
 
-<div *ngIf="selectedIndicator" class="container mt-2">
+<div *ngIf="selectedIndicator" class="mx-md-5 mt-2">
   <div class="row w-100 m-0 justify-content-center">
     <div
       *ngFor="let user of users[selectedIndicator.id]"
