@@ -4,7 +4,7 @@ import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
+import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map, timeout, debounceTime } from 'rxjs/operators';
 import { StorageService } from '@app/services/storage.service';
@@ -39,10 +39,18 @@ export class AnalyticsComponent implements OnInit {
   };
 
   public labels: Label[] = ['Encerrado', 'Aberto', 'Atrasado'];
+  public chartColors: Array<any> = [
+    {
+      backgroundColor: ['#4b4279', 'lightgrey', '#d9587f']
+    }
+  ];
+
   public chartOptions: ChartOptions = {
     legend: {
       display: false
-    }
+    },
+    cutoutPercentage: 85,
+    responsive: true
   };
 
   // PLUGIN PARA INSERIR TEXTO DENTRO DO DOUGHNUT CHART
@@ -55,7 +63,7 @@ export class AnalyticsComponent implements OnInit {
         const data = chart.config.data.datasets[0].data;
 
         // REGRA DE 3 PRA DESCOBRIR A PORCENTAGEM DE ENCERRADOS
-        const txt = `${(data[0] * 100) / data.reduce((a, b) => a + b, 0)}%`;
+        const txt = `${Math.round((data[0] * 100) / data.reduce((a, b) => a + b, 0))}%`;
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -179,12 +187,13 @@ export class AnalyticsComponent implements OnInit {
           users.push({
             info: user,
             // REGRA DE 3. SOMA OS ENCERRADOS, MULTIPLICA POR 100 E DIVIDE PELA SOMA DOS ABERTOS + ENCERRADOS
-            percentage:
+            percentage: Math.round(
               ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
-              (user.abertoAtrasado +
-                user.abertoNoPrazo +
-                user.encerradoAtrasado +
-                user.encerradoNoPrazo)
+                (user.abertoAtrasado +
+                  user.abertoNoPrazo +
+                  user.encerradoAtrasado +
+                  user.encerradoNoPrazo)
+            )
           });
         });
         this.users[indicator.id] = users;
