@@ -39,7 +39,9 @@
           [datasets]="chart"
           [labels]="labels"
           [legend]="false"
+          [colors]="chartColors"
           [chartType]="'doughnut'"
+          [options]="chartOptions"
           [plugins]="doughnutChartPlugins"
         >
           <span>20%</span>
@@ -87,7 +89,7 @@
             aria-valuemax="100"
             style="font-weight: 500;"
             [style.width]="user.percentage + '%'"
-            [style.background]="'#1cbcd8'"
+            [style.background]="'#4b4279'"
           >
             {{ user.percentage }}%
           </div>
