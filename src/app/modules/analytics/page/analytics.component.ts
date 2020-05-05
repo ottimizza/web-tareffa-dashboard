@@ -8,6 +8,7 @@ import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-cha
 import { combineLatest, Subject } from 'rxjs';
 import { map, timeout, debounceTime } from 'rxjs/operators';
 import { StorageService } from '@app/services/storage.service';
+import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 
 @Component({
   selector: 'app-analytics',
@@ -17,6 +18,20 @@ import { StorageService } from '@app/services/storage.service';
 })
 export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [];
+
+  filterInterceptor: {
+    place: SideFilterInterceptLocation;
+    function: (param?: any) => any | void;
+  } = {
+    place: SideFilterInterceptLocation.EMIT,
+    function: (selects: SelectableFilter[], param?: any) => {
+      if (!param.indicador) {
+        const indicators = selects.filter(sel => sel.id === 'indicador')[0];
+        param.indicador = indicators.options[0].value;
+      }
+      return param;
+    }
+  };
 
   filter: any;
 
@@ -112,16 +127,8 @@ export class AnalyticsComponent implements OnInit {
     combineLatest([indicators$, departments$])
       .pipe(map(([indicators, departments]: any[]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
-        this.storageService.fetch('filtro-analytics').then(json => {
-          const cache = JSON.parse(json);
-          if (!cache.indicador) {
-            cache.indicador = filterRequest.indicators.records[0].id;
-          }
-          this.storageService.store('filtro-analytics', JSON.stringify(cache)).then(() => {
-            this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
-            this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
-          });
-        });
+        this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
+        this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
       });
 
     window.sessionStorage.removeItem('user-refresh-time');
