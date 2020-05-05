@@ -25,15 +25,7 @@ export class CollaboratorListDialogComponent implements OnInit {
     }
   ) {}
 
-  ngOnInit() {
-    // for (let i = 0; i < 5; i++) {
-    //   this.data.push({
-    //     codigoErpEmpresa: '3123',
-    //     dataTermino: '22-22-2222',
-    //     fotoResponsavel: 'https://i.picsum.photos/id/829/200/200.jpg';
-    //   })
-    // }
-  }
+  ngOnInit() {}
 
   onNoClick(): void {
     this.dialogRef.close();
