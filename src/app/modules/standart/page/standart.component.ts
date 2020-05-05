@@ -105,6 +105,38 @@ export class StandartComponent implements OnInit, OnDestroy {
     });
   }
 
+  formatter(num: string) {
+    const nums = `${num}`.split('.');
+
+    const invert = (value: string) => {
+      let val = '';
+      value.split('').forEach(char => {
+        val = char + val;
+      });
+      return val;
+    };
+
+    const text = invert(nums[0]);
+
+    const array: string[] = [];
+    for (let start = 0; start < text.length; start = start + 3) {
+      array.push(text.substring(start, start + 3));
+    }
+
+    let newText = '';
+    array.forEach((arr, id) => {
+      newText += arr;
+      if (id < array.length - 1) {
+        newText += ' ';
+      }
+    });
+
+    if (!nums[1]) {
+      return invert(newText);
+    }
+    return `${invert(newText)},${nums[1]}`;
+  }
+
   getGrouped(term: [0] | [1, 2], situation: 1 | 2) {
     const filter = this.filters;
     filter.prazo = term;

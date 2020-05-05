@@ -1,4 +1,11 @@
 .full-height {
-  height: calc(100vh - 70px);
+  // height: calc(100vh - 70px);
   width: 100%;
+}
+
+@media (min-width: 768px) {
+  .full-height {
+    height: calc(100vh - 70px) !important;
+    max-height: calc(100vh - 70px) !important;
+  }
 }

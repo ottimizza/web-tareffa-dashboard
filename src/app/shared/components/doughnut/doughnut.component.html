@@ -1,12 +1,14 @@
-<div class="text-center">
+<div class="text-center w-100">
   <canvas
+    [width]="200"
+    [height]="200"
     baseChart
     [options]="options"
     [data]="data"
     [labels]="labels"
     [colors]="chartColors"
     chartType="doughnut"
-    class="m-w-100">
+    style="margin: 0 auto">
   </canvas>
   <div class="graph-percentage">
     <ng-content></ng-content>
