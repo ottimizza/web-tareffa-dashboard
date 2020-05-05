@@ -1,14 +1,15 @@
 .btn-filter {
   height: 65px;
   width: 65px;
-  margin: 10px;
+  margin: 4%;
+  margin-bottom: 4%;
   border-radius: 100%;
   align-self: flex-end;
   background-color: #4b4279;
   color: white !important;
   transition: 200ms;
   z-index: 9;
-  box-shadow: 0 0 5px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 3px 4px rgba(0, 0, 0, 0.2);
   &:hover {
     background-color: #d9587f;
   }
