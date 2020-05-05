@@ -29,7 +29,7 @@
 
         <div class="card-header">
           <h3 class="tareffa-pink-color">Abertos</h3>
-          <h2>{{ formatter(abertoNoPrazo + abertoAtrasado + '') }}</h2>
+          <h2>{{ formatter(abertoNoPrazo + abertoAtrasado) }}</h2>
         </div>
 
         <div class="card-body p-0">
@@ -41,11 +41,11 @@
         <div class="card-rodape d-inline-block">
           <div class="cursor-pointer float-left" (click)="getGrouped([0], 1)">
             <strong>No Prazo</strong>
-            <h2 class="tareffa-purple-color text-bold">{{ formatter(abertoNoPrazo + '') }}</h2>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(abertoNoPrazo) }}</h2>
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
             <strong>Atrasados</strong>
-            <h2 class="lightgray-color text-bold">{{ formatter(abertoAtrasado + '') }}</h2>
+            <h2 class="lightgray-color text-bold">{{ formatter(abertoAtrasado) }}</h2>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
 
         <div class="card-header">
           <h3 class="tareffa-pink-color">Fechados</h3>
-          <h2>{{ formatter(encerradoAtrasado + encerradoNoPrazo + '') }}</h2>
+          <h2>{{ formatter(encerradoAtrasado + encerradoNoPrazo) }}</h2>
         </div>
 
         <div class="card-body p-0">
@@ -85,11 +85,11 @@
         <div class="card-rodape d-inline-block">
           <div class="cursor-pointer float-left" (click)="getGrouped([0], 2)">
             <strong>No Prazo</strong>
-            <h2 class="tareffa-purple-color text-bold">{{ formatter(encerradoNoPrazo + '') }}</h2>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(encerradoNoPrazo) }}</h2>
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
             <strong>Atrasados</strong>
-            <h2 class="lightgray-color text-bold">{{ formatter(encerradoAtrasado + '') }}</h2>
+            <h2 class="lightgray-color text-bold">{{ formatter(encerradoAtrasado) }}</h2>
           </div>
         </div>
 
