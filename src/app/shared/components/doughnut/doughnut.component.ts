@@ -24,7 +24,7 @@ export class DoughnutComponent implements OnInit {
       display: false,
       position: 'bottom'
     },
-    responsive: true
+    responsive: false
   };
 
   chartColors = [];

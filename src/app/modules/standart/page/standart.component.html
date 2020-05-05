@@ -4,95 +4,98 @@
   (filters)="setFilter($event)">
 </app-side-filter>
 
-<div class="row full-height m-0 text-center">
-  <div class="col-md p-4 pb-0">
+<div class="my-container">
 
-    <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 1">
-      <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
-      <br><br>
-      <div class="active-card p-3">
-        <div class="p-3 item-list" *ngFor="let item of itemList">
-          <strong class="tareffa-purple-color">{{ item.data }}:</strong>
-          <ul>
-            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
-              <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
-              <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
-            </li>
-          </ul>
+  <div class="row full-height m-0 text-center">
+    <div class="col-md p-4 pb-0">
+
+      <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 1">
+        <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
+        <br><br>
+        <div class="active-card p-3">
+          <div class="p-3 item-list" *ngFor="let item of itemList">
+            <strong class="tareffa-purple-color">{{ item.data }}:</strong>
+            <ul>
+              <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
+                <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
+                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+
+      <div class="card p-3" *ngIf="selectedCard !== 1">
+
+        <div class="card-header">
+          <h3 class="tareffa-pink-color">Abertos</h3>
+          <h2>{{ formatter(abertoNoPrazo + abertoAtrasado + '') }}</h2>
+        </div>
+
+        <div class="card-body p-0">
+          <app-doughnut [data]="openData" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ ((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+          </app-doughnut>
+        </div>
+
+        <div class="card-rodape d-inline-block">
+          <div class="cursor-pointer float-left" (click)="getGrouped([0], 1)">
+            <strong>No Prazo</strong>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(abertoNoPrazo + '') }}</h2>
+          </div>
+          <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
+            <strong>Atrasados</strong>
+            <h2 class="lightgray-color text-bold">{{ formatter(abertoAtrasado + '') }}</h2>
+          </div>
+        </div>
+
       </div>
     </div>
+    <div class="col-md p-4">
 
-    <div class="card p-3" *ngIf="selectedCard !== 1">
-
-      <div class="card-header">
-        <h3 class="tareffa-pink-color">Abertos</h3>
-        <h2>{{ abertoNoPrazo + abertoAtrasado }}</h2>
-      </div>
-
-      <div class="card-body">
-        <app-doughnut [data]="openData" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
-          <h4 class="tareffa-purple-color">{{ ((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
-        </app-doughnut>
-      </div>
-
-      <div class="card-rodape d-inline-block">
-        <div class="cursor-pointer float-left" (click)="getGrouped([0], 1)">
-          <strong>No Prazo</strong>
-          <h2 class="tareffa-purple-color text-bold">{{ abertoNoPrazo }}</h2>
-        </div>
-        <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
-          <strong>Atrasado</strong>
-          <h2 class="lightgray-color text-bold">{{ abertoAtrasado }}</h2>
+      <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 2">
+        <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
+        <br><br>
+        <div class="active-card p-3">
+          <div class="p-3 item-list" *ngFor="let item of itemList">
+            <strong class="tareffa-purple-color">{{ item.data }}:</strong>
+            <ul>
+              <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
+                <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
+                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <div class="card p-3" *ngIf="selectedCard !== 2">
+
+        <div class="card-header">
+          <h3 class="tareffa-pink-color">Fechados</h3>
+          <h2>{{ formatter(encerradoAtrasado + encerradoNoPrazo + '') }}</h2>
+        </div>
+
+        <div class="card-body p-0">
+          <app-doughnut [data]="closedData" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ ((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+          </app-doughnut>
+        </div>
+
+        <div class="card-rodape d-inline-block">
+          <div class="cursor-pointer float-left" (click)="getGrouped([0], 2)">
+            <strong>No Prazo</strong>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(encerradoNoPrazo + '') }}</h2>
+          </div>
+          <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
+            <strong>Atrasados</strong>
+            <h2 class="lightgray-color text-bold">{{ formatter(encerradoAtrasado + '') }}</h2>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
-  <div class="col-md p-4">
 
-    <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 2">
-      <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
-      <br><br>
-      <div class="active-card p-3">
-        <div class="p-3 item-list" *ngFor="let item of itemList">
-          <strong class="tareffa-purple-color">{{ item.data }}:</strong>
-          <ul>
-            <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
-              <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
-              <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="card p-3" *ngIf="selectedCard !== 2">
-
-      <div class="card-header">
-        <h3 class="tareffa-pink-color">Fechados</h3>
-        <h2>{{ encerradoAtrasado + encerradoNoPrazo }}</h2>
-      </div>
-
-      <div class="card-body">
-        <app-doughnut [data]="closedData" [labels]="chartLabels" [colors]="chartColors">
-          <h4 class="tareffa-purple-color">{{ ((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
-        </app-doughnut>
-      </div>
-
-      <div class="card-rodape d-inline-block">
-        <div class="cursor-pointer float-left" (click)="getGrouped([0], 2)">
-          <strong>No Prazo</strong>
-          <h2 class="tareffa-purple-color text-bold">{{ encerradoNoPrazo }}</h2>
-        </div>
-        <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
-          <strong>Atrasado</strong>
-          <h2 class="lightgray-color text-bold">{{ encerradoAtrasado }}</h2>
-        </div>
-      </div>
-
-    </div>
-  </div>
 </div>
-
 
