@@ -6,6 +6,13 @@ import { SelectableFilter } from '@shared/models/Filter';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { DateUtils } from '@shared/utils/date.utils';
 
+export enum SideFilterInterceptLocation {
+  ON_INIT,
+  RESTORE,
+  EMIT,
+  ACTIVE
+}
+
 @Component({
   selector: 'app-side-filter',
   templateUrl: './side-filter.component.html',
@@ -19,6 +26,10 @@ export class SideFilterComponent implements OnInit {
   @Input() STORAGE_KEY: string;
   @Input() mustHaveDateFilter = true;
   @Input() selects: SelectableFilter[] = [];
+  @Input() intercept: {
+    place: SideFilterInterceptLocation;
+    function: (selects: SelectableFilter[], param?: any) => any | void;
+  };
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
   @Output() encodedFilters: EventEmitter<string> = new EventEmitter();
@@ -39,6 +50,10 @@ export class SideFilterComponent implements OnInit {
       }
     });
 
+    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.ON_INIT) {
+      this.intercept.function(this.selects);
+    }
+
     if (this.STORAGE_KEY) {
       this._restore();
     } else {
@@ -58,8 +73,12 @@ export class SideFilterComponent implements OnInit {
   emit() {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
-    this.filters.emit(this.selecteds);
-    this._encode(this.selecteds);
+    let selecteds = this.selecteds;
+    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.EMIT) {
+      selecteds = this.intercept.function(this.selects, selecteds);
+    }
+    this.filters.emit(selecteds);
+    this._encode(selecteds);
     this._store();
   }
 
@@ -112,6 +131,9 @@ export class SideFilterComponent implements OnInit {
 
   activate() {
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
+    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.ACTIVE) {
+      this.cache = this.intercept.function(this.selects, this.selecteds);
+    }
     this.opened = !this.opened;
     if (this.opened && this.STORAGE_KEY) {
       this._restore();
@@ -129,13 +151,19 @@ export class SideFilterComponent implements OnInit {
   private _restore() {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
       if (json && json !== '{}') {
-        const cache = JSON.parse(json);
+        let cache = JSON.parse(json);
+        if (this.intercept && this.intercept.place === SideFilterInterceptLocation.RESTORE) {
+          cache = this.intercept.function(this.selects, cache);
+        }
         this.startDate = new Date(cache.startDate);
         this.endDate = new Date(cache.endDate);
         delete cache.startDate;
         delete cache.endDate;
         this.cache = cache;
       } else {
+        if (this.intercept && this.intercept.place === SideFilterInterceptLocation.RESTORE) {
+          this.cache = this.intercept.function(this.selects, {});
+        }
         this.thisMonth();
       }
     });
