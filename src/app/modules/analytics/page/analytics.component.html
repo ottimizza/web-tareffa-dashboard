@@ -72,13 +72,13 @@
     >
       <img
         class="img-thumbnail rounded-circle p-0"
-        [src]="user.info.urlFoto || './assets/images/Portrait_Placeholder.png'"
+        [src]="user.urlFoto || './assets/images/Portrait_Placeholder.png'"
         style="width: 100px !important; height: 100px !important;"
         onError="this.src='./assets/images/Portrait_Placeholder.png';"
       />
 
       <span class="text-truncate text-center" style="width: 90%; font-size: 80%">
-        {{ user.info.nome }}
+        {{ user.nome }}
       </span>
 
       <div style="width: 90%;">
@@ -86,14 +86,14 @@
           <div
             class="progress-bar"
             role="progressbar"
-            [attr.aria-valuenow]="user.percentage"
+            [attr.aria-valuenow]="getPercentage(user)"
             aria-valuemin="0"
             aria-valuemax="100"
             style="font-weight: 500;"
-            [style.width]="user.percentage + '%'"
+            [style.width]="getPercentage(user) + '%'"
             [style.background]="'#4b4279'"
           >
-            {{ user.percentage }}%
+            {{ getPercentage(user) }}%
           </div>
         </div>
       </div>
