@@ -5,7 +5,7 @@ import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 
@@ -204,24 +204,17 @@ export class AnalyticsComponent implements OnInit {
     );
   }
 
+  getPercentage(user) {
+    return Math.round(
+      ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
+        (user.abertoAtrasado + user.abertoNoPrazo + user.encerradoAtrasado + user.encerradoNoPrazo)
+    );
+  }
+
   updateUsers() {
-    const users = [];
     this.data.forEach(indicator => {
       this.indicatorService.getUsers(this.filter, indicator.id).subscribe((res: any) => {
-        res.records.forEach(user => {
-          users.push({
-            info: user,
-            // REGRA DE 3. SOMA OS ENCERRADOS, MULTIPLICA POR 100 E DIVIDE PELA SOMA DOS ABERTOS + ENCERRADOS
-            percentage: Math.round(
-              ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
-                (user.abertoAtrasado +
-                  user.abertoNoPrazo +
-                  user.encerradoAtrasado +
-                  user.encerradoNoPrazo)
-            )
-          });
-        });
-        this.users[indicator.id] = users;
+        this.users[indicator.id] = res.records;
       });
     });
 
