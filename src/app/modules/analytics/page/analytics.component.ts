@@ -6,8 +6,7 @@ import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/s
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
-import { map, timeout, debounceTime } from 'rxjs/operators';
-import { StorageService } from '@app/services/storage.service';
+import { map, debounceTime } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 
 @Component({
@@ -18,6 +17,7 @@ import { SideFilterInterceptLocation } from '@shared/components/side-filter/side
 })
 export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [];
+  selectsSubject = new Subject();
 
   filterInterceptor: {
     place: SideFilterInterceptLocation;
@@ -94,7 +94,7 @@ export class AnalyticsComponent implements OnInit {
     }
   ];
 
-  selectsSubject = new Subject();
+  isLoading = true;
 
   // Dados dos indicadores
   data = [];
@@ -106,11 +106,9 @@ export class AnalyticsComponent implements OnInit {
 
   selectedIndicator: any;
 
-  constructor(
-    private filterService: FilterService,
-    private indicatorService: IndicatorService,
-    private storageService: StorageService
-  ) {
+  indicatorTitle: string;
+
+  constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
     this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
       const s = this.selects;
       this.selects = [];
@@ -154,42 +152,62 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getInfo() {
-    this.indicatorService.getServicoProgramado(this.filter).subscribe((indicador: any) => {
-      this.charts = [];
-      this.data = [];
-      this.data = indicador.records;
+    this.indicatorService
+      .getIndicatorById(this.filter.indicador)
+      .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
 
-      if (this.data.length > 1) {
-        if (this.data.length === 2) {
-          this.data = this.data.concat(this.data);
+    this.indicatorService.getServicoProgramado(this.filter).subscribe(
+      (indicador: any) => {
+        this.isLoading = true;
+        this.charts = [];
+        this.data = [];
+        this.data = indicador.records;
+
+        if (this.data.length > 1) {
+          if (this.data.length === 2) {
+            this.data = this.data.concat(this.data);
+          }
+
+          const data = this.data;
+
+          this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+            .concat(this.data)
+            .concat([data[0], data[1], data[2]]);
         }
 
-        const data = this.data;
+        const charts = [];
 
-        this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-          .concat(this.data)
-          .concat([data[0], data[1], data[2]]);
+        this.data.forEach(indicator => {
+          charts.push([
+            {
+              data: [
+                indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
+                indicator.abertoNoPrazo,
+                indicator.abertoAtrasado
+              ],
+              label: indicator.nomeGrafico
+            }
+          ]);
+        });
+
+        this.charts = charts;
+
+        this.updateUsers();
+
+        this.isLoading = false;
+      },
+      err => {
+        this.charts = [];
+        this.data = [];
+        this.isLoading = false;
       }
-
-      this.data.forEach(indicator => {
-        this.charts.push([
-          {
-            data: [
-              indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
-              indicator.abertoNoPrazo,
-              indicator.abertoAtrasado
-            ],
-            label: indicator.nomeGrafico
-          }
-        ]);
-      });
-    });
+    );
   }
 
   updateUsers() {
+    const users = [];
     this.data.forEach(indicator => {
       this.indicatorService.getUsers(this.filter, indicator.id).subscribe((res: any) => {
-        const users = [];
         res.records.forEach(user => {
           users.push({
             info: user,
