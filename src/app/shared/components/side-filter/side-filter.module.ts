@@ -8,7 +8,8 @@ import {
   MatInputModule,
   MatButtonModule,
   MatSelectModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatIconModule
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { SideFilterMultipleSelectComponent } from './side-filter-multiple-select/side-filter-multiple-select.component';
@@ -25,7 +26,9 @@ import { SideFilterSelectComponent } from './side-filter-select/side-filter-sele
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatIconModule
   ],
   exports: [SideFilterComponent]
 })

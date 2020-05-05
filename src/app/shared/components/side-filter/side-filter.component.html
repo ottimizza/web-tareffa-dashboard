@@ -1,8 +1,12 @@
 <div class="master" [ngClass]="{ 'master-active': opened }">
-  <a class="cursor-pointer centralize btn-filter btn-rounded" (click)="activate()">
+  <!-- <a class="cursor-pointer centralize btn-filter btn-rounded" (click)="activate()">
     <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
     <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
-  </a>
+  </a> -->
+  <button mat-fab class="btn-filter cursor-pointer" (click)="activate()">
+    <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
+    <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
+  </button>
 
   <div class="side-filter border shadow text-center m-0">
     <h3 class="mt-3">Filtro</h3>
