@@ -9,7 +9,8 @@ import {
   MatListModule,
   MatDialogModule,
   MatButtonModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatStepperModule
 } from '@angular/material';
 import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/collaborator-list-dialog.component';
 
@@ -24,7 +25,8 @@ import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/col
     MatListModule,
     MatDialogModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatStepperModule
   ],
   entryComponents: [CollaboratorListDialogComponent]
 })
