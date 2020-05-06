@@ -96,6 +96,8 @@ export class NavbarLayoutComponent implements OnInit {
       this.logo = avatar ? avatar : this.DEFAULT_LOGO;
     }
 
-    this.avatar = JSON.parse(localStorage.getItem('currentUser')).urlFoto;
+    if (localStorage.getItem('currentUser')) {
+      this.avatar = JSON.parse(localStorage.getItem('currentUser')).urlFoto;
+    }
   }
 }
