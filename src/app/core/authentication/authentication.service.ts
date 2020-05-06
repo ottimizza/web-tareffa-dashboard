@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { StorageService } from '@app/services/storage.service';
 
 import { environment } from '@env';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,14 @@ export class AuthenticationService {
     private http: HttpClient,
     public storageService: StorageService
   ) {}
+
+  public getTareffaUserInfo() {
+    const headers = this.getAuthorizationHeaders();
+
+    return this.http
+      .get(`${environment.serviceUrl}/oauth/info`, { headers })
+      .subscribe((response: any) => localStorage.setItem('currentUser', JSON.stringify(response)));
+  }
 
   public store(authSession: AuthSession): Promise<{}> {
     return new Promise<boolean>((resolve, reject) => {

@@ -44,6 +44,8 @@ export class AuthCallbackComponent implements OnInit {
               .then(async () => {
                 that.callbackFinished = true;
 
+                this.authenticationService.getTareffaUserInfo();
+
                 this.storageService.fetch('redirect_url').then(value => {
                   this.storageService.destroy('redirect_url');
                   if (value) {

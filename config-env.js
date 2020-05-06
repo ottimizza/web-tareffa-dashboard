@@ -12,6 +12,7 @@ function createEnvironementFile() {
   production: true,
   oauthBaseUrl: '${getEnvironmentVariable('API_OAUTH2_SERVICE')}',
   oauthClientId: '${getEnvironmentVariable('OAUTH2_CLIENT_ID')}',
+  serviceUrl: '${getEnvironmentVariable('SERVICE_URL')}',
   imageCompressionBaseUrl: '${getEnvironmentVariable('IMAGE_COMPRESSION_BASE_URL')}',
   storageBaseUrl: '${getEnvironmentVariable('STORAGE_BASE_URL')}',
   storageApplicationId: '${getEnvironmentVariable('STORAGE_APPLICATION_ID', 'accounts-avatar')}',
