@@ -66,14 +66,14 @@
           <mat-label>De</mat-label>
           <input (keyup)="emit()" [(ngModel)]="startDate" matInput [matDatepicker]="pickerStart" />
           <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-          <mat-datepicker #pickerStart [touchUi]="getScreenSize()"></mat-datepicker>
+          <mat-datepicker #pickerStart [touchUi]="getScreenSize()" (closed)="emit()"></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field class="col-12 col-md-6">
           <mat-label>Até</mat-label>
           <input (keyup)="emit()" [(ngModel)]="endDate" matInput [matDatepicker]="pickerEnd" />
           <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-          <mat-datepicker #pickerEnd [touchUi]="getScreenSize()"></mat-datepicker>
+          <mat-datepicker #pickerEnd [touchUi]="getScreenSize()" (closed)="emit()"></mat-datepicker>
         </mat-form-field>
       </div>
 

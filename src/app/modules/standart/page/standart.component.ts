@@ -9,6 +9,7 @@ import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { MatDialog } from '@angular/material';
 import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
+import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
   templateUrl: './standart.component.html',
@@ -143,6 +144,10 @@ export class StandartComponent implements OnInit, OnDestroy {
 
   floor(num: number) {
     return Math.floor(num);
+  }
+
+  dateFormat(date: any) {
+    return DateUtils.format(new Date(date));
   }
 
   fetch(filters = this.filters) {

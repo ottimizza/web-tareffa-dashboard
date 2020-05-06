@@ -9,3 +9,15 @@
     max-height: calc(100vh - 70px) !important;
   }
 }
+
+ul {
+  list-style-type: none;
+  position: relative;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
