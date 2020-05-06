@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ChartOptions, ChartDataSets } from 'chart.js';
 import { MultiDataSet, Label } from 'ng2-charts';
 
@@ -12,6 +12,7 @@ export class DoughnutComponent implements OnInit {
   @Input() labels: Label[];
   @Input() colors: string[];
   @Input() title: string;
+  @Input() chartTooltip: boolean;
 
   @Input() options: ChartOptions = {
     title: {
@@ -24,10 +25,17 @@ export class DoughnutComponent implements OnInit {
       display: false,
       position: 'bottom'
     },
-    responsive: false
+    responsive: false,
+    tooltips: {
+      enabled: this.chartTooltip ?? true
+    }
   };
 
   chartColors = [];
+
+  hover() {
+    this.options.tooltips.enabled = this.chartTooltip ?? true;
+  }
 
   ngOnInit(): void {
     this.options.title.text = this.title ?? '';

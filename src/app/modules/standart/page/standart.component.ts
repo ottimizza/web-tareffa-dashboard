@@ -134,13 +134,15 @@ export class StandartComponent implements OnInit, OnDestroy {
           })
         };
       });
-      // console.log(results);
-      // this.itemList = results.records;
     });
   }
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
+  }
+
+  floor(num: number) {
+    return Math.floor(num);
   }
 
   fetch(filters = this.filters) {

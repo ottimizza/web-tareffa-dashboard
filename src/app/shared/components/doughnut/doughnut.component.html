@@ -1,8 +1,9 @@
-<div class="text-center w-100">
+<div class="text-center w-100" (mouseover)="hover()">
   <canvas
     [width]="200"
     [height]="200"
     baseChart
+    (chartHover)="hover()"
     [options]="options"
     [data]="data"
     [labels]="labels"
