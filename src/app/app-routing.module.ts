@@ -23,7 +23,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'standart',
+        redirectTo: 'default',
         pathMatch: 'full'
       },
 
@@ -37,7 +37,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: 'standart',
+        path: 'default',
         data: {
           breadcrumb: 'Padrão'
         },
@@ -62,7 +62,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard/standart',
+    redirectTo: 'dashboard/default',
     pathMatch: 'full'
   }
 ];

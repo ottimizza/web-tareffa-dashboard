@@ -4,25 +4,33 @@
   (filters)="setFilter($event)">
 </app-side-filter>
 
+
 <div class="my-container">
+  <h3 class="text-bold m-3 mb-0 text-center">Período: {{ dateFormat(filters?.dataProgramadaInicio) }} - {{ dateFormat(filters?.dataProgramadaTermino) }}</h3>
 
   <div class="row full-height m-0 text-center">
     <div class="col-md p-4 pb-0">
 
-      <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 1">
-        <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
-        <br><br>
-        <div class="active-card p-3">
-          <div class="p-3 item-list" *ngFor="let item of itemList">
-            <strong class="tareffa-purple-color">{{ item.data }}:</strong>
-            <ul>
-              <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
-                <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
-                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
-              </li>
-            </ul>
-          </div>
+      <div class="card w-100 d-inline-block" *ngIf="selectedCard === 1">
+        <div style="position: sticky;">
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="selectedCard = 0"></i>
+          <br>
+          <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
+          <br>
         </div>
+        <mat-vertical-stepper [linear]="false" #stepper>
+          <mat-step *ngFor="let item of itemList" [label]="item.data">
+            <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
+              <div class="col-10">
+                <span class="tareffa-pink-color ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+              </div>
+              <div class="col-2">
+                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+              </div>
+              <br>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
       </div>
 
       <div class="card p-3" *ngIf="selectedCard !== 1">
@@ -33,8 +41,8 @@
         </div>
 
         <div class="card-body p-0">
-          <app-doughnut [data]="openData" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ ((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+          <app-doughnut [chartTooltip]="abertoAtrasado + abertoNoPrazo > 0" [data]="abertoAtrasado + abertoNoPrazo > 0 ? openData : [0, -1]" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor(((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100)) }}%</h4>
           </app-doughnut>
         </div>
 
@@ -53,20 +61,26 @@
     </div>
     <div class="col-md p-4">
 
-      <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 2">
-        <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
-        <br><br>
-        <div class="active-card p-3">
-          <div class="p-3 item-list" *ngFor="let item of itemList">
-            <strong class="tareffa-purple-color">{{ item.data }}:</strong>
-            <ul>
-              <li *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
-                <span class="tareffa-pink-color float-left">{{ val.nomeServico }}:</span>
-                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
-              </li>
-            </ul>
-          </div>
+      <div class="card w-100 d-inline-block" *ngIf="selectedCard === 2">
+        <div style="position: sticky;">
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="selectedCard = 0"></i>
+          <br>
+          <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
+          <br>
         </div>
+        <mat-vertical-stepper [linear]="false" #stepper>
+          <mat-step *ngFor="let item of itemList" [label]="item.data">
+            <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
+              <div class="col-10">
+                <span class="tareffa-pink-color ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+              </div>
+              <div class="col-2">
+                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+              </div>
+              <br>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
       </div>
 
       <div class="card p-3" *ngIf="selectedCard !== 2">
@@ -77,8 +91,8 @@
         </div>
 
         <div class="card-body p-0">
-          <app-doughnut [data]="closedData" [labels]="chartLabels" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ ((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100).toFixed(2) }}%</h4>
+          <app-doughnut [chartTooltip]="encerradoAtrasado + encerradoNoPrazo > 0" [data]="encerradoNoPrazo + encerradoAtrasado > 0 ? closedData : [0, -1]" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor(((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100)) }}%</h4>
           </app-doughnut>
         </div>
 
