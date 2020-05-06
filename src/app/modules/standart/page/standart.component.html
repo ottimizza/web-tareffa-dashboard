@@ -64,12 +64,18 @@
       <div class="card text-left w-100 d-inline-block" *ngIf="selectedCard === 2">
         <i class="fa fa-times float-right cursor-pointer m-3" (click)="selectedCard = 0"></i>
         <br><br>
-        <ul class="active-card p-5">
-          <li class="m-2 item-list" *ngFor="let item of itemList; let i = index" [ngClass]="{ 'd-none': item.data == itemList[i - 1]?.data }">
+        <ul class="active-card p-4">
+          <li class="m-1 item-list" *ngFor="let item of itemList; let i = index" [ngClass]="{ 'd-none': item.data == itemList[i - 1]?.data }">
+            <i class="far fa-circle mr-2"></i>
             <strong class="tareffa-purple-color">{{ item.data }}:</strong>
-              <div *ngFor="let val of item.value" class="cursor-pointer" (click)="openDialog(val.id, item.data, val.nomeServico)">
-                <span class="tareffa-pink-color float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
-                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+              <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
+                <i class="far fa-circle mr-2" style="visibility: hidden;"></i>
+                <div class="col-9">
+                  <span class="tareffa-pink-color ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+                </div>
+                <div class="col-2">
+                  <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+                </div>
                 <br>
               </div>
               <br><br>
