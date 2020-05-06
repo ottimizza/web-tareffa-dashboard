@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 const routes: Routes = [
   {
     path: '',
-    data: { breadcrumb: null, path: '/dashboard/standart' },
+    data: { breadcrumb: null, path: '/dashboard/default' },
     component: StandartComponent
   }
 ];
