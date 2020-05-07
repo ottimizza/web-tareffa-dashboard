@@ -118,7 +118,13 @@ export class StandartComponent implements OnInit, OnDestroy {
       this._toastService.hideSnack();
       this.selectedCard = situation;
       this.term = term;
-      const dateList = results.records.map(rec => rec.dataProgramada);
+      const primaryDateList = results.records.map(rec => rec.dataProgramada);
+      const dateList = [];
+      primaryDateList.forEach(date => {
+        if (!dateList.includes(date)) {
+          dateList.push(date);
+        }
+      });
       this.itemList = dateList.map(date => {
         const dates = date.split('-');
         const items = results.records.filter(rec => rec.dataProgramada === date);
