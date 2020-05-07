@@ -6,7 +6,9 @@
 
 
 <div class="my-container">
-  <span class="m-3 mb-0">Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}</span>
+  <div class="m-20-px">
+    <span>Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}</span>
+  </div>
 
   <div class="row full-height m-0 text-center">
     <div class="col-md p-4 pb-0">
