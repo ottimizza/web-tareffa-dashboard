@@ -23,6 +23,8 @@ export class NavbarLayoutComponent implements OnInit {
 
   logo: string = this.DEFAULT_LOGO;
 
+  avatar = '';
+
   constructor(
     @Inject(DOCUMENT) public document: Document,
     public dialog: MatDialog,
@@ -92,6 +94,10 @@ export class NavbarLayoutComponent implements OnInit {
     if (this.currentUser.organization) {
       const avatar = this.currentUser.organization.avatar;
       this.logo = avatar ? avatar : this.DEFAULT_LOGO;
+    }
+
+    if (localStorage.getItem('currentUser')) {
+      this.avatar = JSON.parse(localStorage.getItem('currentUser')).urlFoto;
     }
   }
 }

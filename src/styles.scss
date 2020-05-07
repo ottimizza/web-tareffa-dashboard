@@ -659,8 +659,8 @@ button:hover {
 .slick-slide {
   @media (min-width: 481px) {
     canvas {
-      width: 300px !important;
-      height: 300px !important;
+      max-width: 220px !important;
+      max-height: 220px !important;
       margin: auto;
     }
   }

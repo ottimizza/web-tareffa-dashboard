@@ -19,6 +19,8 @@ export class AnalyticsComponent implements OnInit {
   selects: SelectableFilter[] = [];
   selectsSubject = new Subject();
 
+  filter: any;
+  filterChangedSubject = new Subject<any>();
   filterInterceptor: {
     place: SideFilterInterceptLocation;
     function: (param?: any) => any | void;
@@ -32,8 +34,6 @@ export class AnalyticsComponent implements OnInit {
       return param;
     }
   };
-
-  filter: any;
 
   indicators = [];
 
@@ -85,7 +85,7 @@ export class AnalyticsComponent implements OnInit {
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
 
-        ctx.font = '80px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        ctx.font = '70px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         ctx.fillStyle = '#4b4279';
 
         // Draw text in center
@@ -104,7 +104,7 @@ export class AnalyticsComponent implements OnInit {
 
   users = [];
 
-  selectedIndicator: any;
+  selectedIndicator: any = { id: 'none' };
 
   indicatorTitle: string;
 
@@ -115,6 +115,13 @@ export class AnalyticsComponent implements OnInit {
       setTimeout(() => {
         this.selects = s;
       }, 1);
+    });
+
+    this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
+      this.filter = filter;
+      console.log(filter);
+
+      this.getInfo();
     });
   }
 
@@ -213,9 +220,12 @@ export class AnalyticsComponent implements OnInit {
 
   updateUsers() {
     this.data.forEach(indicator => {
-      this.indicatorService.getUsers(this.filter, indicator.id).subscribe((res: any) => {
-        this.users[indicator.id] = res.records;
-      });
+      this.indicatorService
+        .getUsers(this.filter, indicator.id)
+        .pipe(debounceTime(300))
+        .subscribe((res: any) => {
+          this.users[indicator.id] = res.records;
+        });
     });
 
     // Marca a hora foi feito o request dos usuarios
@@ -234,8 +244,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   onFilterChange(filter: any) {
-    this.filter = filter;
-    this.getInfo();
+    this.filterChangedSubject.next(filter);
   }
 
   private parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
