@@ -1,8 +1,8 @@
 <h1 mat-dialog-title> {{ data.title }} </h1>
-<div mat-dialog-content>
+<div mat-dialog-content appScrollTracker (scrollEnd)="nextPage()">
 
   <div class="container">
-    <div class="row w-100 border-top border-bottom p-2" *ngFor="let rec of data.records">
+    <div class="row w-100 border-top border-bottom p-2" *ngFor="let rec of records">
       <div class="col-3 d-none d-md-inline">
         <img [src]="rec.fotoResponsavel || PORTRAIT_PLACEHOLDER" class="img-thumbnail rounded-circle" width="70px" height="70px">
       </div>

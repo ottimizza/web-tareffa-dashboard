@@ -97,13 +97,11 @@ export class StandartComponent implements OnInit, OnDestroy {
       dataProgramada: new Date(`${dates[2]}-${dates[1]}-${dates[0]}`).getTime(),
       filtro: filter
     };
-    this._service.getInformations(id, body).subscribe((aa: any) => {
-      const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
-        width: '568px',
-        data: { title, records: aa.records }
-      });
-      dialogRef.afterClosed().subscribe();
+    const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
+      width: '568px',
+      data: { title, filter, id, body }
     });
+    dialogRef.afterClosed().subscribe();
   }
 
   formatter(n: number) {
