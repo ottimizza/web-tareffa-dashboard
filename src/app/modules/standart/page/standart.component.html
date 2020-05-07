@@ -23,7 +23,7 @@
           <br>
         </div>
         <mat-vertical-stepper [linear]="false" #stepper>
-          <mat-step *ngFor="let item of itemList" [label]="item.data">
+          <mat-step *ngFor="let item of itemList; let i = index" [label]="item.data">
             <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <div class="col-10">
                 <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
@@ -73,7 +73,7 @@
           <br>
         </div>
         <mat-vertical-stepper [linear]="false" #stepper>
-          <mat-step *ngFor="let item of itemList" [label]="item.data">
+          <mat-step *ngFor="let item of itemList; let i = index" [label]="item.data">
             <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <div class="col-10">
                 <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
