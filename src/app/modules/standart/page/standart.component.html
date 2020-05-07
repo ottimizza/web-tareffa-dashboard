@@ -6,8 +6,10 @@
 
 
 <div class="my-container">
-  <div class="m-20-px">
-    <span>Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}</span>
+  <div class="m-3">
+    <span class="d-none d-md-block my-auto">
+      Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}
+    </span>
   </div>
 
   <div class="row full-height m-0 text-center">
