@@ -13,6 +13,7 @@ import {
   MatStepperModule
 } from '@angular/material';
 import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/collaborator-list-dialog.component';
+import { ScrollTrackerModule } from '@shared/directives/scroll-tracker.module';
 
 @NgModule({
   declarations: [StandartComponent, CollaboratorListDialogComponent],
@@ -26,7 +27,8 @@ import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/col
     MatDialogModule,
     MatButtonModule,
     MatTooltipModule,
-    MatStepperModule
+    MatStepperModule,
+    ScrollTrackerModule
   ],
   entryComponents: [CollaboratorListDialogComponent]
 })

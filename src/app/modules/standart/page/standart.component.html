@@ -6,7 +6,7 @@
 
 
 <div class="my-container">
-  <h3 class="text-bold m-3 mb-0 text-center">Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}</h3>
+  <span class="m-3 mb-0">Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}</span>
 
   <div class="row full-height m-0 text-center">
     <div class="col-md p-4 pb-0">
@@ -22,10 +22,10 @@
           <mat-step *ngFor="let item of itemList" [label]="item.data">
             <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <div class="col-10">
-                <span class="tareffa-pink-color ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+                <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
               </div>
               <div class="col-2">
-                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+                <span class="float-right">{{ val.servicosProgramadosContagem }}</span>
               </div>
               <br>
             </div>
@@ -72,10 +72,10 @@
           <mat-step *ngFor="let item of itemList" [label]="item.data">
             <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
               <div class="col-10">
-                <span class="tareffa-pink-color ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+                <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
               </div>
               <div class="col-2">
-                <span class="tareffa-pink-color float-right">{{ val.servicosProgramadosContagem }}</span>
+                <span class="float-right">{{ val.servicosProgramadosContagem }}</span>
               </div>
               <br>
             </div>
