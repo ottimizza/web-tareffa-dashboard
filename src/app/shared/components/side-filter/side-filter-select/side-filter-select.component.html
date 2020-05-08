@@ -1,0 +1,9 @@
+<mat-form-field class="w-100">
+  <mat-label>{{ item.title }}</mat-label>
+  <input type="text" matInput [matAutocomplete]="auto" [value]="selectedName">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option (onSelectionChange)="select(option.value, option.name)" *ngFor="let option of item.options" [value]="option.name">
+      {{ option.name }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

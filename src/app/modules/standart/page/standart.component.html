@@ -1,0 +1,119 @@
+<app-side-filter
+  [selects]="selects"
+  STORAGE_KEY="standart-filter"
+  (filters)="setFilter($event)">
+</app-side-filter>
+
+
+<div class="my-container">
+  <div class="m-3">
+    <span class="d-none d-md-block my-auto">
+      Período: {{ filters?.dataProgramadaInicio | date: 'dd/MM/yyyy' }} - {{ filters?.dataProgramadaTermino | date: 'dd/MM/yyyy' }}
+    </span>
+  </div>
+
+  <div class="row full-height m-0 text-center">
+    <div class="col-md p-4 pb-0">
+
+      <div class="card w-100 d-inline-block" *ngIf="selectedCard === 1">
+        <div style="position: sticky;">
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="close()"></i>
+          <br>
+          <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
+          <br>
+        </div>
+        <mat-vertical-stepper [linear]="false" #stepper>
+          <mat-step *ngFor="let item of itemList; let i = index" [label]="item.data">
+            <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
+              <div class="col-10">
+                <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+              </div>
+              <div class="col-2">
+                <span class="float-right">{{ val.servicosProgramadosContagem }}</span>
+              </div>
+              <br>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </div>
+
+      <div class="card p-3" *ngIf="selectedCard !== 1">
+
+        <div class="card-header">
+          <h3 class="tareffa-pink-color">Abertos</h3>
+          <h2>{{ formatter(abertoNoPrazo + abertoAtrasado) }}</h2>
+        </div>
+
+        <div class="card-body p-0">
+          <app-doughnut [chartTooltip]="abertoAtrasado + abertoNoPrazo > 0" [data]="abertoAtrasado + abertoNoPrazo > 0 ? openData : [0, -1]" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor(((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100)) }}%</h4>
+          </app-doughnut>
+        </div>
+
+        <div class="card-rodape d-inline-block">
+          <div class="cursor-pointer float-left" (click)="getGrouped([0], 1)">
+            <strong>No Prazo</strong>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(abertoNoPrazo) }}</h2>
+          </div>
+          <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
+            <strong>Atrasados</strong>
+            <h2 class="lightgray-color text-bold">{{ formatter(abertoAtrasado) }}</h2>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md p-4">
+
+      <div class="card w-100 d-inline-block" *ngIf="selectedCard === 2">
+        <div style="position: sticky;">
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="close()"></i>
+          <br>
+          <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
+          <br>
+        </div>
+        <mat-vertical-stepper [linear]="false" #stepper>
+          <mat-step *ngFor="let item of itemList; let i = index" [label]="item.data">
+            <div *ngFor="let val of item.value" class="cursor-pointer row" (click)="openDialog(val.id, item.data, val.nomeServico)">
+              <div class="col-10">
+                <span class="ellipsis float-left" [matTooltip]="val.nomeServico">{{ val.nomeServico }}:</span>
+              </div>
+              <div class="col-2">
+                <span class="float-right">{{ val.servicosProgramadosContagem }}</span>
+              </div>
+              <br>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </div>
+
+      <div class="card p-3" *ngIf="selectedCard !== 2">
+
+        <div class="card-header">
+          <h3 class="tareffa-pink-color">Fechados</h3>
+          <h2>{{ formatter(encerradoAtrasado + encerradoNoPrazo) }}</h2>
+        </div>
+
+        <div class="card-body p-0">
+          <app-doughnut [chartTooltip]="encerradoAtrasado + encerradoNoPrazo > 0" [data]="encerradoNoPrazo + encerradoAtrasado > 0 ? closedData : [0, -1]" [labels]="chartLabels" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor(((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100)) }}%</h4>
+          </app-doughnut>
+        </div>
+
+        <div class="card-rodape d-inline-block">
+          <div class="cursor-pointer float-left" (click)="getGrouped([0], 2)">
+            <strong>No Prazo</strong>
+            <h2 class="tareffa-purple-color text-bold">{{ formatter(encerradoNoPrazo) }}</h2>
+          </div>
+          <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
+            <strong>Atrasados</strong>
+            <h2 class="lightgray-color text-bold">{{ formatter(encerradoAtrasado) }}</h2>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+

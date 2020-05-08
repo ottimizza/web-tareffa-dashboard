@@ -1,3 +1,133 @@
-<p>
-  analytics works!
-</p>
+<app-side-filter
+  [selects]="selects"
+  [intercept]="filterInterceptor"
+  (filters)="onFilterChange($event)"
+  STORAGE_KEY="filtro-analytics"
+></app-side-filter>
+<div *ngIf="charts.length > 0 && !isLoading" class="content-">
+  <div class="row w-100 m-0 text center">
+    <span class="d-none d-md-block col-3 my-auto"
+      >Período {{ filter.startDate | date: 'dd/MM/yyyy' }} -
+      {{ filter.endDate | date: 'dd/MM/yyyy' }}</span
+    >
+    <h2 class="my-2 text-center col-6" style="color: #4b4279;">{{ indicatorTitle }}</h2>
+    <div class="d-none d-md-block my-auto col-3">
+      <mat-slide-toggle
+        #toggle
+        class="float-right"
+        [(ngModel)]="slideConfig.autoplay"
+        (change)="slideConfig.autoplay ? slickModal.slickPlay() : slickModal.slickPause()"
+      >
+        Girar carrossel
+      </mat-slide-toggle>
+    </div>
+  </div>
+
+  <ngx-slick-carousel
+    class="carousel w-100"
+    #slickModal="slick-carousel"
+    [config]="slideConfig"
+    (init)="slickInit($event)"
+    (afterChange)="afterChange($event)"
+  >
+    <!-- Slides with pictures -->
+    <!-- <div ngxSlickItem *ngFor="let slide of slides" class="slide">
+      <div class="img-container">
+        <img src="{{ slide.img }}" alt="" width="100%" />
+      </div>
+    </div> -->
+
+    <!-- Slides with ng2-charts -->
+    <div ngxSlickItem *ngFor="let chart of charts; let i = index" class="slide py-2">
+      <h3 class="px-1 px-md-2 text-center">{{ chart[0].label }}</h3>
+      <div class="px-2 px-md-3 px-lg-5 ">
+        <div style="display: block;">
+          <canvas
+            baseChart
+            width="100"
+            height="100"
+            [datasets]="chart"
+            [labels]="labels"
+            [legend]="false"
+            [colors]="chartColors"
+            [chartType]="'doughnut'"
+            [options]="chartOptions"
+            [plugins]="doughnutChartPlugins"
+          >
+            <span>20%</span>
+          </canvas>
+        </div>
+        <div class="float-left text-center">
+          <h3 class="tareffa-pink-colorr m-0">
+            {{ data[i].abertoNoPrazo + data[i].abertoAtrasado | thousandSeparator }}
+          </h3>
+          <span>Aberto</span>
+        </div>
+        <div class="float-right text-center">
+          <h3 class="tareffa-purple-colorr m-0">
+            {{ data[i].encerradoNoPrazo + data[i].encerradoAtrasado | thousandSeparator }}
+          </h3>
+          <span>Fechado</span>
+        </div>
+      </div>
+    </div>
+  </ngx-slick-carousel>
+</div>
+
+<div *ngIf="users[selectedIndicator.id]" class="mx-md-5 mt-2">
+  <div class="row w-100 m-0 justify-content-center">
+    <div
+      *ngFor="let user of users[selectedIndicator.id]"
+      class="row m-3 m-md-1 justify-content-center"
+      style="height: 130px; width: 130px;"
+    >
+      <img
+        class="img-thumbnail rounded-circle p-0"
+        [src]="user.urlFoto || './assets/images/Portrait_Placeholder.png'"
+        style="width: 90px !important; height: 90px !important;"
+        onError="this.src='./assets/images/Portrait_Placeholder.png';"
+      />
+
+      <span class="text-truncate text-center" style="width: 90%; font-size: 80%">
+        {{ user.nome }}
+      </span>
+
+      <div style="width: 90%;">
+        <div class="progress" style="background-color: #ccc;">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [attr.aria-valuenow]="getPercentage(user)"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style="font-weight: 500;"
+            [style.width]="getPercentage(user) + '%'"
+            [style.background]="'#4b4279'"
+          >
+            {{ getPercentage(user) }}%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="preloader">
+  <svg class="circular" viewBox="25 25 50 50">
+    <circle
+      class="path"
+      cx="50"
+      cy="50"
+      r="20"
+      fill="none"
+      stroke-width="2"
+      stroke-miterlimit="10"
+    ></circle>
+  </svg>
+</div>
+
+<div *ngIf="charts.length === 0 && !isLoading" class="row no-indicator-container text-center">
+  <h1 class="w-100 my-auto">
+    Nenhum indicador encontrado para o filtro selecionado
+  </h1>
+</div>

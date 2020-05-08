@@ -5,6 +5,8 @@ import { AuthenticationService } from '@app/authentication/authentication.servic
 import { StorageService } from '@app/services/storage.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MessagingService } from '@app/services/messaging.service';
+import { environment } from '@env';
 // import { OverlayContainer } from '@angular/cdk/overlay';
 
 // import { ThemeService } from '@app/service/theme.service';
@@ -21,12 +23,15 @@ export class NavbarLayoutComponent implements OnInit {
 
   logo: string = this.DEFAULT_LOGO;
 
+  avatar = '';
+
   constructor(
     @Inject(DOCUMENT) public document: Document,
     public dialog: MatDialog,
     public router: Router,
     public storageService: StorageService,
-    public authorizationService: AuthenticationService
+    public authorizationService: AuthenticationService,
+    public messagingService: MessagingService
   ) {}
 
   public toggleSidebar() {
@@ -73,6 +78,10 @@ export class NavbarLayoutComponent implements OnInit {
   //   });
   // }
 
+  allowNotifications() {
+    this.messagingService.requestPermission();
+  }
+
   ngOnInit() {
     this.storageService.onStorage(AuthenticationService.STORAGE_KEY_USERINFO, (result: any) => {
       this.currentUser = User.fromLocalStorage();
@@ -85,6 +94,10 @@ export class NavbarLayoutComponent implements OnInit {
     if (this.currentUser.organization) {
       const avatar = this.currentUser.organization.avatar;
       this.logo = avatar ? avatar : this.DEFAULT_LOGO;
+    }
+
+    if (localStorage.getItem('currentUser')) {
+      this.avatar = JSON.parse(localStorage.getItem('currentUser')).urlFoto;
     }
   }
 }
