@@ -17,7 +17,7 @@
 
       <div class="card w-100 d-inline-block" *ngIf="selectedCard === 1">
         <div style="position: sticky;">
-          <i class="fa fa-times times-button cursor-pointer m-3" (click)="selectedCard = 0"></i>
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="close()"></i>
           <br>
           <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
           <br>
@@ -67,7 +67,7 @@
 
       <div class="card w-100 d-inline-block" *ngIf="selectedCard === 2">
         <div style="position: sticky;">
-          <i class="fa fa-times times-button cursor-pointer m-3" (click)="selectedCard = 0"></i>
+          <i class="fa fa-times times-button cursor-pointer m-3" (click)="close()"></i>
           <br>
           <h3>{{ term[0] === 0 ? 'No Prazo' : 'Atrasados' }}</h3>
           <br>

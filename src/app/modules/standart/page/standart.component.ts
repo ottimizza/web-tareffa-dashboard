@@ -146,6 +146,11 @@ export class StandartComponent implements OnInit, OnDestroy {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
   }
 
+  close() {
+    this.selectedCard = 0;
+    this.itemList = [];
+  }
+
   floor(num: number) {
     return Math.floor(num);
   }
