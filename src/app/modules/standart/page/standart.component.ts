@@ -97,13 +97,11 @@ export class StandartComponent implements OnInit, OnDestroy {
       dataProgramada: new Date(`${dates[2]}-${dates[1]}-${dates[0]}`).getTime(),
       filtro: filter
     };
-    this._service.getInformations(id, body).subscribe((aa: any) => {
-      const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
-        width: '568px',
-        data: { title, records: aa.records }
-      });
-      dialogRef.afterClosed().subscribe();
+    const dialogRef = this.dialog.open(CollaboratorListDialogComponent, {
+      width: '568px',
+      data: { title, filter, id, body }
     });
+    dialogRef.afterClosed().subscribe();
   }
 
   formatter(n: number) {
@@ -120,7 +118,13 @@ export class StandartComponent implements OnInit, OnDestroy {
       this._toastService.hideSnack();
       this.selectedCard = situation;
       this.term = term;
-      const dateList = results.records.map(rec => rec.dataProgramada);
+      const primaryDateList = results.records.map(rec => rec.dataProgramada);
+      const dateList = [];
+      primaryDateList.forEach(date => {
+        if (!dateList.includes(date)) {
+          dateList.push(date);
+        }
+      });
       this.itemList = dateList.map(date => {
         const dates = date.split('-');
         const items = results.records.filter(rec => rec.dataProgramada === date);
@@ -140,6 +144,11 @@ export class StandartComponent implements OnInit, OnDestroy {
 
   private _parse(subscriptions: any, title: string, id: string, multiple?: boolean) {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
+  }
+
+  close() {
+    this.selectedCard = 0;
+    this.itemList = [];
   }
 
   floor(num: number) {

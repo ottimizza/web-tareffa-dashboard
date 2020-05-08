@@ -31,3 +31,14 @@ ul {
   visibility: visible !important;
   height: 100% !important;
 }
+
+::ng-deep .mat-step-header .mat-step-icon-selected,
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: #4b4279;
+  color: #4b4279;
+}
+
+.m-20-px {
+  margin: 20px;
+  margin-bottom: 0;
+}

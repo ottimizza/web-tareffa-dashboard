@@ -31,8 +31,13 @@ export class ScheduledService {
     return this._http.post(url, body, this._headers);
   }
 
-  getInformations(id: number, filter: any) {
-    const url = `${BASE_URL}/servico/programado/${id}/informacao?limit=20`;
+  getInformations(id: number, filter: any, lastOrganizationERP?: string, lastUserId?: number) {
+    let url = `${BASE_URL}/servico/programado/${id}/informacao?limit=20`;
+
+    if (lastUserId && lastOrganizationERP) {
+      url += `&beforeServicoId=${lastUserId}&beforeCodigoErp=${lastOrganizationERP}`;
+    }
+
     return this._http.post(url, filter, this._headers);
   }
 
