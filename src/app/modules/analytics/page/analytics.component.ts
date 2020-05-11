@@ -41,7 +41,7 @@ export class AnalyticsComponent implements OnInit {
     centerMode: true,
     slidesToShow: 3,
     autoplay: true,
-    autoplaySpeed: 30000,
+    autoplaySpeed: 12000,
     responsive: [
       {
         breakpoint: 480,
@@ -119,7 +119,6 @@ export class AnalyticsComponent implements OnInit {
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
       this.filter = filter;
-      console.log(filter);
 
       this.getInfo();
     });

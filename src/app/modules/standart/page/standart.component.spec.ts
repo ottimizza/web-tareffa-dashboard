@@ -1,1 +1,1 @@
-describe('Página: Standart', () => {});
+describe('Página: Default', () => {});

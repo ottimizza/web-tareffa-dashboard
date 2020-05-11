@@ -93,7 +93,7 @@
       </span>
 
       <div style="width: 90%;">
-        <div class="progress" style="background-color: #ccc;">
+        <div class="progress position-relative" style="background-color: #ccc;">
           <div
             class="progress-bar"
             role="progressbar"
@@ -103,9 +103,10 @@
             style="font-weight: 500;"
             [style.width]="getPercentage(user) + '%'"
             [style.background]="'#4b4279'"
-          >
+          ></div>
+          <span class="position-absolute w-100 text-center text-white">
             {{ getPercentage(user) }}%
-          </div>
+          </span>
         </div>
       </div>
     </div>
