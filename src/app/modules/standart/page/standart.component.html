@@ -13,7 +13,7 @@
   </div>
 
   <div class="row full-height m-0 text-center">
-    <div class="col-md p-4 pb-0">
+    <div class="col-md p-4 pb-0 pt-0">
 
       <div class="card w-100 d-inline-block" *ngIf="selectedCard === 1">
         <div style="position: sticky;">
@@ -40,13 +40,13 @@
       <div class="card p-3" *ngIf="selectedCard !== 1">
 
         <div class="card-header">
-          <h3 class="tareffa-pink-color">Abertos</h3>
+          <h3 class="black-color">Abertos</h3>
           <h2>{{ formatter(abertoNoPrazo + abertoAtrasado) }}</h2>
         </div>
 
         <div class="card-body p-0">
-          <app-doughnut [chartTooltip]="abertoAtrasado + abertoNoPrazo > 0" [data]="abertoAtrasado + abertoNoPrazo > 0 ? openData : [0, -1]" [labels]="false" [labels]="chartLabels" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ floor(((abertoNoPrazo / ((abertoAtrasado + abertoNoPrazo) || 1)) * 100)) }}%</h4>
+          <app-doughnut [data]="getData(openData)" [labels]="['Abertos', 'Encerrados']" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor((aberto / (aberto + encerrado) || 1) * 100) }}%</h4>
           </app-doughnut>
         </div>
 
@@ -57,13 +57,13 @@
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
             <strong>Atrasados</strong>
-            <h2 class="lightgray-color text-bold">{{ formatter(abertoAtrasado) }}</h2>
+            <h2 class="tareffa-pink-color text-bold">{{ formatter(abertoAtrasado) }}</h2>
           </div>
         </div>
 
       </div>
     </div>
-    <div class="col-md p-4">
+    <div class="col-md p-4 pb-0">
 
       <div class="card w-100 d-inline-block" *ngIf="selectedCard === 2">
         <div style="position: sticky;">
@@ -90,13 +90,13 @@
       <div class="card p-3" *ngIf="selectedCard !== 2">
 
         <div class="card-header">
-          <h3 class="tareffa-pink-color">Fechados</h3>
+          <h3 class="black-color">Fechados</h3>
           <h2>{{ formatter(encerradoAtrasado + encerradoNoPrazo) }}</h2>
         </div>
 
         <div class="card-body p-0">
-          <app-doughnut [chartTooltip]="encerradoAtrasado + encerradoNoPrazo > 0" [data]="encerradoNoPrazo + encerradoAtrasado > 0 ? closedData : [0, -1]" [labels]="chartLabels" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ floor(((encerradoNoPrazo / ((encerradoAtrasado + encerradoNoPrazo) || 1)) * 100)) }}%</h4>
+          <app-doughnut [data]="getData(closedData)" [labels]="['Encerrados', 'Abertos']" [colors]="chartColors">
+            <h4 class="tareffa-purple-color">{{ floor((encerrado / (encerrado + aberto) || 1) * 100) }}%</h4>
           </app-doughnut>
         </div>
 
@@ -107,13 +107,33 @@
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
             <strong>Atrasados</strong>
-            <h2 class="lightgray-color text-bold">{{ formatter(encerradoAtrasado) }}</h2>
+            <h2 class="tareffa-pink-color text-bold">{{ formatter(encerradoAtrasado) }}</h2>
           </div>
         </div>
 
       </div>
     </div>
   </div>
+
+
+  <!-- <div class="row w-100 m-0">
+    <div class="col-sm-12 col-md-6 col-lg pl-4 pr-4">
+      <div class="card">
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg pl-4 pr-4">
+      <div class="card">
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg pl-4 pr-4">
+      <div class="card">
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg pl-4 pr-4">
+      <div class="card">
+      </div>
+    </div>
+  </div> -->
 
 </div>
 
