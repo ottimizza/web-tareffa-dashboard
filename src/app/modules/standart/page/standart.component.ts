@@ -18,15 +18,16 @@ import { DateUtils } from '@shared/utils/date.utils';
 export class StandartComponent implements OnInit, OnDestroy {
   selects: SelectableFilter[] = [];
 
-  chartLabels: Label[] = ['No Praso', 'Atrasados'];
   chartColors = ['#4b4279', 'lightgray'];
-  openData = [[]];
-  closedData = [[]];
+  openData = [];
+  closedData = [];
 
   encerradoNoPrazo = 0;
   encerradoAtrasado = 0;
   abertoNoPrazo = 0;
   abertoAtrasado = 0;
+  encerrado = 0;
+  aberto = 0;
 
   filters: any;
 
@@ -165,13 +166,18 @@ export class StandartComponent implements OnInit, OnDestroy {
       (results: any) => {
         this._toastService.hideSnack();
         const rec = results.records;
-        this.openData = [rec.abertoNoPrazo, rec.abertoAtrasado];
-        this.closedData = [rec.encerradoNoPrazo, rec.encerradoAtrasado];
+        const snv = this._safeNumberValue;
 
-        this.abertoNoPrazo = rec.abertoNoPrazo ?? 0;
-        this.abertoAtrasado = rec.abertoAtrasado ?? 0;
-        this.encerradoAtrasado = rec.encerradoAtrasado ?? 0;
-        this.encerradoNoPrazo = rec.encerradoNoPrazo ?? 0;
+        this.abertoNoPrazo = snv(rec.abertoNoPrazo);
+        this.abertoAtrasado = snv(rec.abertoAtrasado);
+        this.encerradoAtrasado = snv(rec.encerradoAtrasado);
+        this.encerradoNoPrazo = snv(rec.encerradoNoPrazo);
+
+        this.aberto = this.abertoNoPrazo + this.abertoAtrasado;
+        this.encerrado = this.encerradoAtrasado + this.encerradoNoPrazo;
+
+        this.openData = [this.aberto, this.encerrado];
+        this.closedData = [this.encerrado, this.aberto];
       },
       err => {
         this._error('Falha ao obter os serviços programados', err);
@@ -179,8 +185,22 @@ export class StandartComponent implements OnInit, OnDestroy {
     );
   }
 
+  getData(data: number[]) {
+    return this.abertoAtrasado +
+      this.encerradoAtrasado +
+      this.abertoNoPrazo +
+      this.encerradoNoPrazo >
+      0
+      ? data
+      : [0, -1];
+  }
+
   private _error(message: string, error: any) {
     this._toastService.show(message, 'danger');
     LoggerUtils.throw(error);
+  }
+
+  private _safeNumberValue(num: any) {
+    return +`${num || 0}`;
   }
 }
