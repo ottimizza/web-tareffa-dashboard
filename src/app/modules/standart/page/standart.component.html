@@ -46,7 +46,7 @@
 
         <div class="card-body p-0">
           <app-doughnut [data]="getData(openData)" [labels]="['Abertos', 'Encerrados']" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ floor((aberto / (aberto + encerrado) || 1) * 100) }}%</h4>
+            <h4 class="tareffa-purple-color">{{ floor((aberto / (aberto + encerrado)) * 100) || 0 }}%</h4>
           </app-doughnut>
         </div>
 
@@ -96,7 +96,7 @@
 
         <div class="card-body p-0">
           <app-doughnut [data]="getData(closedData)" [labels]="['Encerrados', 'Abertos']" [colors]="chartColors">
-            <h4 class="tareffa-purple-color">{{ floor((encerrado / (encerrado + aberto) || 1) * 100) }}%</h4>
+            <h4 class="tareffa-purple-color">{{ floor((encerrado / (encerrado + aberto)) * 100) || 0 }}%</h4>
           </app-doughnut>
         </div>
 
