@@ -5,6 +5,7 @@ import { AuthSession } from '@shared/models/AuthSession';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '@env';
 import { StorageService } from '@app/services/storage.service';
+import { FunctionAccessService } from '@app/services/function-access.service';
 
 // import { Project } from '../../../../data/schema/project';
 
@@ -18,13 +19,13 @@ export class AuthCallbackComponent implements OnInit {
   url = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.oauthBaseUrl}/logout`);
 
   public callbackCode: string;
-  public callbackFinished: boolean;
 
   constructor(
     public sanitizer: DomSanitizer,
     public router: Router,
     public route: ActivatedRoute,
     public storageService: StorageService,
+    private functionAccess: FunctionAccessService,
     public authenticationService: AuthenticationService
   ) {}
 
@@ -42,18 +43,29 @@ export class AuthCallbackComponent implements OnInit {
             AuthSession.fromOAuthResponse(response)
               .store()
               .then(async () => {
-                that.callbackFinished = true;
-
                 this.authenticationService.getTareffaUserInfo();
 
-                this.storageService.fetch('redirect_url').then(value => {
-                  this.storageService.destroy('redirect_url');
-                  if (value) {
-                    that.router.navigate([value]);
-                  } else {
-                    that.router.navigate(['/dashboard']);
+                // check permission
+                this.functionAccess.verifyFunction('dashboard-app-access').subscribe(
+                  res => {
+                    // on success redirect to dashboard app
+                    this.storageService.fetch('redirect_url').then(value => {
+                      this.storageService.destroy('redirect_url');
+                      if (value) {
+                        that.router.navigate([value]);
+                      } else {
+                        that.router.navigate(['/dashboard']);
+                      }
+                    });
+                  },
+                  err => {
+                    // on error redirect to login
+                    alert(
+                      'Sua conta não tem acesso à essa aplicação, verifique com seu administrador'
+                    );
+                    this.logout();
                   }
-                });
+                );
 
                 // const storeUserInfo = that.authenticationService.storeUserInfo();
                 // const storeTokenInfo = that.authenticationService.storeTokenInfo();
@@ -76,5 +88,12 @@ export class AuthCallbackComponent implements OnInit {
 
   pause(value = '') {
     prompt('App Pause', value);
+  }
+
+  public logout() {
+    this.authenticationService.revokeToken().subscribe((response: any) => {
+      this.authenticationService.clearStorage();
+      this.authenticationService.authorize();
+    });
   }
 }
