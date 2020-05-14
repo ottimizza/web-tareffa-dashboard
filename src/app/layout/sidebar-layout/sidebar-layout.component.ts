@@ -33,15 +33,7 @@ export class SidebarLayoutComponent implements OnInit {
       { icon: 'fad fa-chart-pie', label: 'Padrão', url: '/dashboard/default' },
       { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' },
       { icon: 'fad fa-edit', label: 'Parametrização', url: '/dashboard/indicators' }
+      // { icon: 'fad fa-comments', label: 'Comunicações', url: '/dashboard/communications' }
     ];
   }
-
-  // public openSiginAsModal() {
-  //   const dialogRef = this.dialog.open(SigninAsDialogComponent, {
-  //     width: '568px',
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //   });
-  // }
 }

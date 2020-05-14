@@ -18,8 +18,6 @@ export class StandartComponent implements OnInit, OnDestroy {
   selects: SelectableFilter[] = [];
 
   chartColors = ['#4b4279', 'lightgray'];
-  openData = [];
-  closedData = [];
 
   encerradoNoPrazo = 0;
   encerradoAtrasado = 0;
@@ -152,7 +150,10 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   floor(num: number) {
-    return Math.floor(num);
+    if (num.toString() === 'NaN') {
+      return '0,0';
+    }
+    return num.toFixed(1).replace(/\./g, ',') || '0,0';
   }
 
   dateFormat(date: any) {
@@ -174,9 +175,6 @@ export class StandartComponent implements OnInit, OnDestroy {
 
         this.aberto = this.abertoNoPrazo + this.abertoAtrasado;
         this.encerrado = this.encerradoAtrasado + this.encerradoNoPrazo;
-
-        this.openData = [this.aberto, this.encerrado];
-        this.closedData = [this.encerrado, this.aberto];
       },
       err => {
         this._error('Falha ao obter os serviços programados', err);

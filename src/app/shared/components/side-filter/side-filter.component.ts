@@ -62,12 +62,7 @@ export class SideFilterComponent implements OnInit {
   }
 
   getScreenSize(): boolean {
-    // mobile
-    if (screen.width < 768) {
-      return true;
-    }
-    // table, iPad, pc, note...
-    return false;
+    return screen.width < 768;
   }
 
   emit() {
