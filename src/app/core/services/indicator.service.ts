@@ -134,8 +134,9 @@ export class IndicatorService {
     return this.httpClient.get(url, this._headers);
   }
 
-  getServicoProgramado(filter) {
-    const url = `${environment.apiTareffaSpring}/indicador/${filter.indicador}/servico/programado/count`;
+  getServicoProgramado(filter, indicador?) {
+    const url = `${environment.apiTareffaSpring}/indicador/${indicador ||
+      filter.indicador}/servico/programado/count`;
     return this.httpClient.post(
       url,
       {
