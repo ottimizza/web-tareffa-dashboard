@@ -90,6 +90,7 @@
           [item]="item"
           [cache]="cache"
           (filter)="select($event)"
+          (scrollEnd)="onScrollEnd($event)"
         ></app-sf-select>
         <app-sf-multiple
           class="w-100 m-auto"
@@ -97,6 +98,7 @@
           [item]="item"
           [cache]="cache"
           (filter)="select($event)"
+          (scrollEnd)="onScrollEnd($event)"
         ></app-sf-multiple>
       </div>
     </div>
