@@ -32,7 +32,7 @@ export class SideFilterComponent implements OnInit {
   };
 
   @Output() filters: EventEmitter<any> = new EventEmitter();
-  @Output() encodedFilters: EventEmitter<string> = new EventEmitter();
+  @Output() paginate: EventEmitter<string> = new EventEmitter();
 
   opened = false;
   selecteds: any = {};
@@ -50,7 +50,7 @@ export class SideFilterComponent implements OnInit {
       }
     });
 
-    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.ON_INIT) {
+    if (this._intercept(SideFilterInterceptLocation.ON_INIT)) {
       this.intercept.function(this.selects);
     }
 
@@ -58,6 +58,13 @@ export class SideFilterComponent implements OnInit {
       this._restore();
     } else {
       this.thisMonth();
+    }
+  }
+
+  onScrollEnd(event: string) {
+    const select = this.selects.filter(sel => sel.id === event)[0];
+    if (select.paginable) {
+      this.paginate.emit(event);
     }
   }
 
@@ -71,11 +78,10 @@ export class SideFilterComponent implements OnInit {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
     let selecteds = this.selecteds;
-    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.EMIT) {
+    if (this._intercept(SideFilterInterceptLocation.EMIT)) {
       selecteds = this.intercept.function(this.selects, selecteds);
     }
     this.filters.emit(selecteds);
-    this._encode(selecteds);
     this._store();
   }
 
@@ -128,7 +134,7 @@ export class SideFilterComponent implements OnInit {
 
   activate() {
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
-    if (this.intercept && this.intercept.place === SideFilterInterceptLocation.ACTIVE) {
+    if (this._intercept(SideFilterInterceptLocation.ACTIVE)) {
       this.cache = this.intercept.function(this.selects, this.selecteds);
     }
     this.opened = !this.opened;
@@ -149,7 +155,7 @@ export class SideFilterComponent implements OnInit {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
       if (json && json !== '{}') {
         let cache = JSON.parse(json);
-        if (this.intercept && this.intercept.place === SideFilterInterceptLocation.RESTORE) {
+        if (this._intercept(SideFilterInterceptLocation.RESTORE)) {
           cache = this.intercept.function(this.selects, cache);
         }
         this.startDate = new Date(cache.startDate);
@@ -158,7 +164,7 @@ export class SideFilterComponent implements OnInit {
         delete cache.endDate;
         this.cache = cache;
       } else {
-        if (this.intercept && this.intercept.place === SideFilterInterceptLocation.RESTORE) {
+        if (this._intercept(SideFilterInterceptLocation.RESTORE)) {
           this.cache = this.intercept.function(this.selects, {});
         }
         this.thisMonth();
@@ -166,13 +172,7 @@ export class SideFilterComponent implements OnInit {
     });
   }
 
-  private _encode(params: any): void {
-    const multiples = Object.values(params).map(val => Array.isArray(val));
-    if (!multiples.includes(true)) {
-      const code = Object.keys(params)
-        .map(key => [key, params[key]].map(encodeURIComponent).join('='))
-        .join('&');
-      this.encodedFilters.emit(code);
-    }
+  private _intercept(place: SideFilterInterceptLocation) {
+    return this.intercept && this.intercept.place === place;
   }
 }

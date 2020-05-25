@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartOptions } from 'chart.js';
-import { MultiDataSet, Label } from 'ng2-charts';
+import { MultiDataSet, Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 
 @Component({
   selector: 'app-doughnut',
@@ -13,6 +13,7 @@ export class DoughnutComponent implements OnInit {
   @Input() colors: string[];
   @Input() title: string;
   @Input() chartTooltip: boolean;
+  @Input() plugins: PluginServiceGlobalRegistrationAndOptions;
 
   @Input() options: ChartOptions = {
     title: {

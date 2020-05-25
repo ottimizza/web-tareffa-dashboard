@@ -22,7 +22,7 @@ export class AnalyticsComponent implements OnInit {
   filter: any;
   filterChangedSubject = new Subject<any>();
   filterInterceptor: {
-    place: SideFilterInterceptLocation;
+    place: SideFilterInterceptLocation.EMIT;
     function: (param?: any) => any | void;
   } = {
     place: SideFilterInterceptLocation.EMIT,

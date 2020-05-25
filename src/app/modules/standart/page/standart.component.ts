@@ -150,10 +150,9 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   floor(num: number) {
-    if (num.toString() === 'NaN') {
-      return '0,0';
-    }
-    return num.toFixed(1).replace(/\./g, ',') || '0,0';
+    return this._safeNumberValue(num)
+      .toFixed(1)
+      .replace(/\./g, ',');
   }
 
   dateFormat(date: any) {
@@ -198,6 +197,6 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   private _safeNumberValue(num: any) {
-    return +`${num || 0}`;
+    return +`${num || 0}` || 0;
   }
 }

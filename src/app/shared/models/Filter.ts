@@ -9,4 +9,5 @@ export class SelectableFilter {
   id: string;
   options: { name: string; value: string }[];
   multiple?: boolean;
+  paginable?: boolean;
 }

@@ -10,6 +10,7 @@ export class SideFilterMultipleSelectComponent implements OnInit {
   @Input() cache: any;
 
   @Output() filter: EventEmitter<{ id: string; value: string[] }> = new EventEmitter();
+  @Output() scrollEnd: EventEmitter<string> = new EventEmitter();
 
   selecteds: string[];
   labels: string[] = [];
