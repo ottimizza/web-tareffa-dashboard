@@ -56,31 +56,17 @@ export class StandartComponent implements OnInit, OnDestroy {
         this.fetch();
       });
 
-    const categories$ = this._service.getCategory();
-    const services$ = this._service.getGroupedScheduled(0);
-    const departments$ = this._service.getGroupedScheduled(1);
-    const caracteristics$ = this._service.getCharacteristic();
-
-    combineLatest([categories$, departments$, services$, caracteristics$])
-      .pipe(
-        map(([categories, departments, services, caracteristics]: any[]) => ({
-          categories,
-          departments,
-          services,
-          caracteristics
-        }))
-      )
-      .subscribe(
-        filterRequest => {
-          this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
-          this._parse(filterRequest.categories, 'Categorias', 'categoria');
-          this._parse(filterRequest.services, 'Serviços', 'servico', true);
-          this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
-        },
-        err => {
-          this._error('Não foi possível iniciar o filtro', err);
-        }
-      );
+    this._service.getFilters().subscribe(
+      filterRequest => {
+        this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+        this._parse(filterRequest.categories, 'Categorias', 'categoria');
+        this._parse(filterRequest.services, 'Serviços', 'servico', true);
+        this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
+      },
+      err => {
+        this._error('Não foi possível iniciar o filtro', err);
+      }
+    );
   }
 
   setFilter(event: any) {
