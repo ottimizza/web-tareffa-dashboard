@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SelectableFilter } from '@shared/models/Filter';
-import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { combineLatest, Subscription, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { MatDialog } from '@angular/material';
+
+import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
+import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ScheduledService } from '@app/http/scheduled.service';
 import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-import { MatDialog } from '@angular/material';
-import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
+import { SelectableFilter } from '@shared/models/Filter';
 import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
