@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SelectableFilter } from '@shared/models/Filter';
-import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { combineLatest, Subscription, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { MatDialog } from '@angular/material';
+
+import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
+import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ScheduledService } from '@app/http/scheduled.service';
 import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-import { MatDialog } from '@angular/material';
-import { CollaboratorListDialogComponent } from '../dialogs/collaborator-list/collaborator-list-dialog.component';
+import { SelectableFilter } from '@shared/models/Filter';
 import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
@@ -54,31 +56,17 @@ export class StandartComponent implements OnInit, OnDestroy {
         this.fetch();
       });
 
-    const categories$ = this._service.getCategory();
-    const services$ = this._service.getGroupedScheduled(0);
-    const departments$ = this._service.getGroupedScheduled(1);
-    const caracteristics$ = this._service.getCharacteristic();
-
-    combineLatest([categories$, departments$, services$, caracteristics$])
-      .pipe(
-        map(([categories, departments, services, caracteristics]: any[]) => ({
-          categories,
-          departments,
-          services,
-          caracteristics
-        }))
-      )
-      .subscribe(
-        filterRequest => {
-          this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
-          this._parse(filterRequest.categories, 'Categorias', 'categoria');
-          this._parse(filterRequest.services, 'Serviços', 'servico', true);
-          this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
-        },
-        err => {
-          this._error('Não foi possível iniciar o filtro', err);
-        }
-      );
+    this._service.getFilters().subscribe(
+      filterRequest => {
+        this._parse(filterRequest.departments, 'Departamentos', 'departamento', true);
+        this._parse(filterRequest.categories, 'Categorias', 'categoria');
+        this._parse(filterRequest.services, 'Serviços', 'servico', true);
+        this._parse(filterRequest.caracteristics, 'Un. de Negócio', 'caracteristica');
+      },
+      err => {
+        this._error('Não foi possível iniciar o filtro', err);
+      }
+    );
   }
 
   setFilter(event: any) {
@@ -150,10 +138,9 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   floor(num: number) {
-    if (num.toString() === 'NaN') {
-      return '0,0';
-    }
-    return num.toFixed(1).replace(/\./g, ',') || '0,0';
+    return this._safeNumberValue(num)
+      .toFixed(1)
+      .replace(/\./g, ',');
   }
 
   dateFormat(date: any) {
@@ -198,6 +185,6 @@ export class StandartComponent implements OnInit, OnDestroy {
   }
 
   private _safeNumberValue(num: any) {
-    return +`${num || 0}`;
+    return +`${num || 0}` || 0;
   }
 }

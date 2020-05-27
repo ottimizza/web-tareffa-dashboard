@@ -6,7 +6,7 @@ import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/s
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, delay, timeout } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 
 @Component({
@@ -22,12 +22,12 @@ export class AnalyticsComponent implements OnInit {
   filter: any;
   filterChangedSubject = new Subject<any>();
   filterInterceptor: {
-    place: SideFilterInterceptLocation;
+    place: SideFilterInterceptLocation.EMIT;
     function: (param?: any) => any | void;
   } = {
     place: SideFilterInterceptLocation.EMIT,
     function: (selects: SelectableFilter[], param?: any) => {
-      if (!param.indicador) {
+      if (!param.indicador && param.indicador !== '') {
         const indicators = selects.filter(sel => sel.id === 'indicador')[0];
         param.indicador = indicators.options[0].value;
       }
@@ -131,6 +131,7 @@ export class AnalyticsComponent implements OnInit {
     combineLatest([indicators$, departments$])
       .pipe(map(([indicators, departments]: any[]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
+        this.indicators = filterRequest.indicators.records;
         this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
         this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
       });
@@ -139,9 +140,13 @@ export class AnalyticsComponent implements OnInit {
   }
 
   slickInit(e) {
-    e.slick.currentSlide = 3;
-    e.slick.refresh();
-    this.selectedIndicator = this.data[3];
+    if (this.data.length > 1) {
+      e.slick.currentSlide = 3;
+      e.slick.refresh();
+      this.selectedIndicator = this.data[3];
+    } else {
+      this.selectedIndicator = this.data[0];
+    }
   }
 
   afterChange(e) {
@@ -158,56 +163,69 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getInfo() {
-    this.indicatorService
-      .getIndicatorById(this.filter.indicador)
-      .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
+    this.isLoading = true;
+    this.charts = [];
+    this.data = [];
 
-    this.indicatorService.getServicoProgramado(this.filter).subscribe(
-      (indicador: any) => {
-        this.isLoading = true;
-        this.charts = [];
-        this.data = [];
-        this.data = indicador.records;
+    const length = this.filter.indicador === '' ? this.indicators.length : 1;
 
-        if (this.data.length > 1) {
-          if (this.data.length === 2) {
-            this.data = this.data.concat(this.data);
-          }
+    if (length === 1) {
+      this.indicatorService
+        .getIndicatorById(this.filter.indicador)
+        .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
+    } else {
+      this.indicatorTitle = 'TODOS OS INDICADORES';
+    }
 
-          const data = this.data;
+    for (let index = 0; index < length; index++) {
+      this.indicatorService
+        .getServicoProgramado(this.filter, length > 1 ? this.indicators[index].id : null)
+        .subscribe(
+          (indicador: any) => {
+            this.data = this.data.concat(indicador.records);
 
-          this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-            .concat(this.data)
-            .concat([data[0], data[1], data[2]]);
-        }
+            if (this.data.length > 1 && index === length - 1) {
+              if (this.data.length === 2) {
+                this.data = this.data.concat(this.data);
+              }
 
-        const charts = [];
+              const data = this.data;
 
-        this.data.forEach(indicator => {
-          charts.push([
-            {
-              data: [
-                indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
-                indicator.abertoNoPrazo,
-                indicator.abertoAtrasado
-              ],
-              label: indicator.nomeGrafico
+              this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+                .concat(this.data)
+                .concat([data[0], data[1], data[2]]);
             }
-          ]);
-        });
 
-        this.charts = charts;
+            const charts = [];
 
-        this.updateUsers();
+            this.data.forEach(indicator => {
+              charts.push([
+                {
+                  data: [
+                    indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
+                    indicator.abertoNoPrazo,
+                    indicator.abertoAtrasado
+                  ],
+                  label: indicator.nomeGrafico
+                }
+              ]);
+            });
 
-        this.isLoading = false;
-      },
-      err => {
-        this.charts = [];
-        this.data = [];
-        this.isLoading = false;
-      }
-    );
+            this.charts = charts;
+          },
+          err => {
+            this.charts = [];
+            this.data = [];
+            this.isLoading = false;
+          },
+          () => {
+            setTimeout(() => {
+              this.isLoading = false;
+              this.updateUsers();
+            }, 300);
+          }
+        );
+    }
   }
 
   getPercentage(user) {

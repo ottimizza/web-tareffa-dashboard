@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ChartsModule } from 'ng2-charts';
+import { DoughnutModule } from '@shared/components/doughnut/doughnut.module';
 
 @NgModule({
   declarations: [AnalyticsComponent],
@@ -22,7 +23,8 @@ import { ChartsModule } from 'ng2-charts';
     ChartsModule,
     SideFilterModule,
     MatSlideToggleModule,
-    PipesModule
+    PipesModule,
+    DoughnutModule
   ]
 })
 export class AnalyticsModule {}

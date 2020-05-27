@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from '@app/authentication/authentication.service';
 import { DateUtils } from '@shared/utils/date.utils';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const BASE_URL = environment.apiTareffaSpring;
 
@@ -39,6 +41,22 @@ export class ScheduledService {
     }
 
     return this._http.post(url, filter, this._headers);
+  }
+
+  getFilters(firstGroup = 0, secondGroup = 1) {
+    const categories$ = this.getCategory();
+    const services$ = this.getGroupedScheduled(firstGroup);
+    const departments$ = this.getGroupedScheduled(secondGroup);
+    const caracteristics$ = this.getCharacteristic();
+
+    return combineLatest([categories$, departments$, services$, caracteristics$]).pipe(
+      map(([categories, departments, services, caracteristics]: any[]) => ({
+        categories,
+        departments,
+        services,
+        caracteristics
+      }))
+    );
   }
 
   private get _headers() {

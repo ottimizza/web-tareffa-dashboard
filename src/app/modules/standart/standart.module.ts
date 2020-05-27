@@ -15,6 +15,7 @@ import {
 import { CollaboratorListDialogComponent } from './dialogs/collaborator-list/collaborator-list-dialog.component';
 import { ScrollTrackerModule } from '@shared/directives/scroll-tracker.module';
 import { DetailIndicatorModule } from './support/detail-indicator/detail-indicator.module';
+import { PipesModule } from '@shared/pipes/pipes.module';
 
 @NgModule({
   declarations: [StandartComponent, CollaboratorListDialogComponent],
@@ -30,7 +31,8 @@ import { DetailIndicatorModule } from './support/detail-indicator/detail-indicat
     MatTooltipModule,
     MatStepperModule,
     ScrollTrackerModule,
-    DetailIndicatorModule
+    DetailIndicatorModule,
+    PipesModule
   ],
   entryComponents: [CollaboratorListDialogComponent]
 })
