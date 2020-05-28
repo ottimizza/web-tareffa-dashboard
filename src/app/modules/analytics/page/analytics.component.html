@@ -55,9 +55,13 @@
               [options]="chartOptions"
               [plugins]="doughnutChartPlugins"
             >
-              <span>20%</span>
-            </canvas>
-          </div>
+          </canvas>
+        </div>
+        <!-- <app-doughnut
+          [data]="chart"
+          [labels]="labels"
+          [colors]="chartColors"
+        ></app-doughnut> -->
           <div class="float-left text-center">
             <h3 class="tareffa-pink-colorr m-0">
               {{ data[i].abertoNoPrazo + data[i].encerradoNoPrazo | thousandSeparator }}

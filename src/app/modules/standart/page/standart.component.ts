@@ -11,6 +11,7 @@ import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { SelectableFilter } from '@shared/models/Filter';
 import { DateUtils } from '@shared/utils/date.utils';
+import { ChartOptions } from 'chart.js';
 
 @Component({
   templateUrl: './standart.component.html',
