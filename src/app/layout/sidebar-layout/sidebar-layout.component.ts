@@ -36,12 +36,11 @@ export class SidebarLayoutComponent implements OnInit {
   ngOnInit() {
     this.currentUser = User.fromLocalStorage();
 
-
     this.verifyPermission().then(result => {
       this.items = [
         { icon: 'fad fa-chart-pie', label: 'Padrão', url: '/dashboard/default' },
-        { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' }
-        // { icon: 'fad fa-comments', label: 'Comunicações', url: '/dashboard/communications' }
+        { icon: 'fad fa-analytics', label: 'Analítico', url: '/dashboard/analytics' },
+        { icon: 'fad fa-comments', label: 'Comunicações', url: '/dashboard/communications' }
       ];
       if (result) {
         this.items.push({
@@ -64,6 +63,5 @@ export class SidebarLayoutComponent implements OnInit {
         }
       );
     });
-
   }
 }

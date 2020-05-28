@@ -1,23 +1,55 @@
-<div class="full-screen">
-
-  <div class="row m-0">
-    <div class="col-md-6 p-0" style="background-color: rebeccapurple;">linha 1 coluna 1</div>
-    <div class="col-md-6 p-0">
-      <div class="row m-0" style="background-color: red;">linha 1 coluna 2 linha 1</div>
-      <div class="row m-0" style="background-color: black;">linha 1 coluna 2 linha 2</div>
-      <div class="row m-0" style="background-color: aliceblue;">linha 1 coluna 2 linha 3</div>
+<div class="full-screen p-3">
+  <div class="row mx-0  justify-content-between mb-3" id="firstSection">
+    <div class="row m-0 w-100 first-section-sizing border rounded p-0 mb-3 mb-md-0">
+      <h4 class="col-12 text-center pt-2">Novas Comunicações</h4>
+      <h3 class="col-12 text-center">432 543</h3>
     </div>
-  </div>
-
-  <div class="row m-0">
-    <div class="col-lg-8 p-0">
-      <div class="row m-0">
-        <div class="col-sm-6 p-0" style="background-color: blueviolet;">linha 2 coluna 1 linha 1 coluna 1</div>
-        <div class="col-sm-6 p-0" style="background-color: brown;">linha 2 coluna 1 linha 1 coluna 2</div>
+    <div class="row m-0 w-100 first-section-sizing p-0">
+      <div class="col-12 border rounded mb-3 mb-md-2 d-flex align-items-center py-1">
+        <span class="col-3 p-0">Internas:</span>
+        <span class="mx-auto"><strong>12 333</strong></span>
       </div>
-      <div class="row m-0" style="background-color: aqua;">linha 2 coluna 1 linha 2</div>
+      <div class="col-12 border rounded mb-3 mb-md-2 d-flex align-items-center py-1">
+        <span class="col-3 p-0">Enviadas:</span>
+        <span class="mx-auto"><strong>432</strong></span>
+      </div>
+      <div class="col-12 border rounded d-flex align-items-center py-1">
+        <span class="col-3 p-0">Recebidas:</span>
+        <span class="mx-auto"><strong>100 000</strong></span>
+      </div>
     </div>
-    <div class="col-lg-4 p-0" style="background-color: chartreuse;">linha 2 coluna 2</div>
   </div>
 
+  <div class="row mx-0 w-100 justify-content-between">
+    <div class="row mx-0 justify-content-between mb-3 mb-md-0" id="secondSection">
+      <div class="second-section-sizing border rounded mb-3 mb-md-0">
+        <h4 class="col-12 text-center pt-2">Não lidas pela contabilidade</h4>
+        <h3 class="col-12 text-center">7</h3>
+      </div>
+      <div class="second-section-sizing border rounded">
+        <h4 class="col-12 text-center pt-2">Não lidas pelo cliente</h4>
+        <h3 class="col-12 text-center">102 365</h3>
+      </div>
+
+      <div class="col-12 border rounded mt-3 mt-md-2 pt-4">
+        <app-bar-chart
+          [barChartLabels]="barChartLabels"
+          [barChartData]="barChartData"
+          [barChartLegend]="true"
+        ></app-bar-chart>
+      </div>
+    </div>
+
+    <div class="row mx-0" id="thirdSection">
+      <div class="third-section-sizing border rounded centralize pt-3">
+        <app-doughnut
+          [data]="getData([encerrado, aberto])"
+          [labels]="['Encerrados', 'Abertos']"
+          [colors]="chartColors"
+          fontSize="40px"
+        >
+        </app-doughnut>
+      </div>
+    </div>
+  </div>
 </div>
