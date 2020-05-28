@@ -52,16 +52,16 @@ const routes: Routes = [
         loadChildren: () =>
           import('@modules/indicators/indicators.module').then(m => m.IndicatorsModule),
         canActivate: [AuthGuard]
-      },
-      {
-        path: 'communications',
-        data: {
-          breadcrumb: 'Comunicações'
-        },
-        loadChildren: () =>
-          import('@modules/communications/communications.module').then(m => m.CommunicationsModule),
-        canActivate: [AuthGuard]
       }
+      // {
+      //   path: 'communications',
+      //   data: {
+      //     breadcrumb: 'Comunicações'
+      //   },
+      //   loadChildren: () =>
+      //     import('@modules/communications/communications.module').then(m => m.CommunicationsModule),
+      //   canActivate: [AuthGuard]
+      // }
     ]
   },
   {

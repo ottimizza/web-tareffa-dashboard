@@ -142,7 +142,10 @@ export class IndicatorService {
       {
         dataProgramadaInicio: new Date(filter.startDate).getTime() || null,
         dataProgramadaTermino: new Date(filter.endDate).getTime() || null,
-        departamento: filter.departamento || []
+        departamento:
+          filter.departamento?.map((dep: unknown) =>
+            typeof dep === 'string' ? JSON.parse(dep) : dep
+          ) || []
       },
       this._headers
     );
