@@ -2,3 +2,46 @@
   width: 100%;
   min-height: calc(100vh - 70px);
 }
+
+#firstSection {
+  width: 100% !important;
+}
+
+#secondSection {
+  @media screen and (max-width: '768px') {
+    width: 100% !important;
+  }
+
+  @media screen and (min-width: '769px') {
+    width: 74% !important;
+  }
+}
+
+#thirdSection {
+  @media screen and (max-width: '768px') {
+    width: 100% !important;
+  }
+
+  @media screen and (min-width: '769px') {
+    width: 24% !important;
+  }
+}
+
+.first,
+.second {
+  &-section-sizing {
+    @media screen and (max-width: '768px') {
+      max-width: 100%;
+      flex: 0 0 100%;
+    }
+
+    @media screen and (min-width: '769px') {
+      max-width: 49%;
+      flex: 0 0 49%;
+    }
+  }
+}
+
+.third-section-sizing {
+  width: 100%;
+}
