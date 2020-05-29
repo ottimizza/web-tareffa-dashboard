@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-interface comunicationData {
+interface IComunicationData {
   newerComunications: number;
   internalMessages: number;
   sendMessages: number;

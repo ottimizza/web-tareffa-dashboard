@@ -159,6 +159,7 @@ export class AnalyticsComponent implements OnInit {
       e.slick.refresh();
     }
     this.selectedIndicator = this.data[e.slick.currentSlide];
+    this.indicatorTitle = this.selectedIndicator.nomeIndicador;
     this.checkUserRefreshTime();
   }
 

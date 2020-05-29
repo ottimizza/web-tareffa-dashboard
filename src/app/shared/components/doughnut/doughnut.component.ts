@@ -18,22 +18,14 @@ export class DoughnutComponent implements OnInit {
     {
       beforeDraw: (chart: any) => {
         const ctx = chart.ctx;
-
-        // DADOS DO GRÁFICO
         const data = chart.config.data.datasets[0].data;
-
-        // REGRA DE 3 PRA DESCOBRIR A PORCENTAGEM DE ENCERRADOS
         const txt = `${Math.round((data[0] * 100) / data.reduce((a, b) => a + b, 0))}%`;
-
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-
         ctx.font = `${this.fontSize} Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif`;
         ctx.fillStyle = '#4b4279';
-
-        // Draw text in center
         ctx.fillText(txt, centerX, centerY);
       }
     }
