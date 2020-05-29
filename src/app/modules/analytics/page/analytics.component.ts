@@ -85,7 +85,7 @@ export class AnalyticsComponent implements OnInit {
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
 
-        ctx.font = '70px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        ctx.font = '45px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         ctx.fillStyle = '#4b4279';
 
         // Draw text in center

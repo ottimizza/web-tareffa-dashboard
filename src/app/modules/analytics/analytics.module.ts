@@ -1,5 +1,4 @@
 import { PipesModule } from '@shared/pipes/pipes.module';
-import { ThousandSeparatorPipe } from './../../shared/pipes/thousand-separator.pipe';
 import { FormsModule } from '@angular/forms';
 import { SideFilterModule } from '@shared/components/side-filter/side-filter.module';
 import { AnalyticsRoutingModule } from './analytics.routing';
