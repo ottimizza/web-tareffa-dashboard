@@ -164,7 +164,11 @@ export class IndicatorService {
       {
         dataProgramadaInicio: filter.startDate.getTime() || null,
         dataProgramadaTermino: filter.endDate.getTime() || null,
-        departamento: filter.departamento || []
+        departamento: filter.departamento
+          ? typeof filter.departamento[0] === 'string'
+            ? filter.departamento.map(dep => JSON.parse(dep))
+            : filter.departamento
+          : []
       },
       { headers: this.authenticationService.getAuthorizationHeaders() }
     );
