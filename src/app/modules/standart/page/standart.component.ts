@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { combineLatest, Subscription, interval } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { MatDialog } from '@angular/material';
@@ -11,7 +11,6 @@ import { ToastService } from '@app/services/toast.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
 import { SelectableFilter } from '@shared/models/Filter';
 import { DateUtils } from '@shared/utils/date.utils';
-import { ChartOptions } from 'chart.js';
 
 @Component({
   templateUrl: './standart.component.html',

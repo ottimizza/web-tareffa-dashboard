@@ -6,7 +6,7 @@ import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/s
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { map, debounceTime, delay, timeout } from 'rxjs/operators';
+import { map, debounceTime } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 
 @Component({
@@ -53,7 +53,7 @@ export class AnalyticsComponent implements OnInit {
     ]
   };
 
-  public labels: Label[] = ['Encerrado', 'Aberto', 'Atrasado'];
+  public labels: Label[] = ['Encerrado', 'Aberto no Prazo', 'Aberto Atrasado'];
   public chartColors: Array<any> = [
     {
       backgroundColor: ['#4b4279', 'lightgrey', '#d9587f']
@@ -174,8 +174,6 @@ export class AnalyticsComponent implements OnInit {
       this.indicatorService
         .getIndicatorById(this.filter.indicador)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
-    } else {
-      this.indicatorTitle = 'TODOS OS INDICADORES';
     }
 
     for (let index = 0; index < length; index++) {
