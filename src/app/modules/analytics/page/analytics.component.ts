@@ -29,7 +29,7 @@ export class AnalyticsComponent implements OnInit {
     function: (selects: SelectableFilter[], param?: any) => {
       if (!param.indicador && param.indicador !== '') {
         const indicators = selects.filter(sel => sel.id === 'indicador')[0];
-        param.indicador = indicators.options[0].value;
+        param.indicador = indicators ? indicators.options[0].value : null;
       }
       return param;
     }
@@ -170,60 +170,68 @@ export class AnalyticsComponent implements OnInit {
 
     const length = this.filter.indicador === '' ? this.indicators.length : 1;
 
-    if (length === 1) {
+    let indicatorSelected = '';
+
+    if (this.filter.indicador === '') {
+      if (this.indicators.length) {
+        indicatorSelected = this.indicators[0].id;
+      }
+    } else {
+      indicatorSelected = this.filter.indicador;
+    }
+
+    if (indicatorSelected) {
       this.indicatorService
-        .getIndicatorById(this.filter.indicador)
+        .getIndicatorById(indicatorSelected)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
     }
 
     for (let index = 0; index < length; index++) {
-      this.indicatorService
-        .getServicoProgramado(this.filter, length > 1 ? this.indicators[index].id : null)
-        .subscribe(
-          (indicador: any) => {
-            this.data = this.data.concat(indicador.records);
+      this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
+        (indicador: any) => {
+          this.data = this.data.concat(indicador.records);
 
-            if (this.data.length > 1 && index === length - 1) {
-              if (this.data.length === 2) {
-                this.data = this.data.concat(this.data);
-              }
-
-              const data = this.data;
-
-              this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-                .concat(this.data)
-                .concat([data[0], data[1], data[2]]);
+          if (this.data.length > 1 && index === length - 1) {
+            if (this.data.length === 2) {
+              this.data = this.data.concat(this.data);
             }
 
-            const charts = [];
+            const data = this.data;
 
-            this.data.forEach(indicator => {
-              charts.push([
-                {
-                  data: [
-                    indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
-                    indicator.abertoNoPrazo,
-                    indicator.abertoAtrasado
-                  ],
-                  label: indicator.nomeGrafico
-                }
-              ]);
-            });
-
-            this.charts = charts;
-          },
-          err => {
-            this.charts = [];
-            this.data = [];
-            this.isLoading = false;
-          },
-          () => {
-            setTimeout(() => {
-              this.isLoading = false;
-              this.updateUsers();
-            }, 300);
+            this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+              .concat(this.data)
+              .concat([data[0], data[1], data[2]]);
           }
-        );
+
+          const charts = [];
+
+          this.data.forEach(indicator => {
+            charts.push([
+              {
+                data: [
+                  indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
+                  indicator.abertoNoPrazo,
+                  indicator.abertoAtrasado
+                ],
+                label: indicator.nomeGrafico
+              }
+            ]);
+          });
+
+          this.charts = charts;
+        },
+        err => {
+          this.charts = [];
+          this.data = [];
+          this.isLoading = false;
+        },
+        () => {
+          setTimeout(() => {
+            this.isLoading = false;
+            this.updateUsers();
+          }, 300);
+        }
+      );
     }
   }
 
