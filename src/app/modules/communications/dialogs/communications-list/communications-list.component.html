@@ -1,0 +1,45 @@
+<section #header class="d-flex justify-content-between m-2">
+  <h5>{{ title }}</h5>
+  <span class="cursor-pointer" (click)="close()">
+    <i class="fal fa-times"></i>
+  </span>
+</section>
+
+<section #body class="overflow-auto border mb-3" style="height: 400px;">
+  <div
+    class="row m-0 w-100 border py-2"
+    style="font-size: 85%;"
+    *ngFor="let communication of communications; let i = index"
+  >
+    <span class="col-10 text-truncate">
+      <strong>{{ communication.title }}</strong>
+    </span>
+    <span class="col-2 pl-0 pr-2 pr-md-1 text-right">
+      {{ communication.date }}
+    </span>
+    <small class="col-12 text-truncate">
+      De:
+      <span class="tareffa-purple-color">
+        {{ communication.from }}
+      </span>
+    </small>
+    <small class="col-12 text-truncate">
+      Para:
+      <span class="tareffa-pink-color">{{ communication.to }} </span>
+    </small>
+    <small class="col-12 text-truncate tareffa-purple-color">
+      <a class="cursor-pointer" (click)="openChat(communication.chatId, i)">
+        Ver conversa
+      </a>
+
+      <i
+        *ngIf="isLoading && selectedIndex === i"
+        class="fad fa-spinner fa-pulse tareffa-purple-color"
+      ></i>
+    </small>
+  </div>
+</section>
+
+<section #footer>
+  <button class="float-right btn btn-outline-danger" tabindex="-1" (click)="close()">Fechar</button>
+</section>
