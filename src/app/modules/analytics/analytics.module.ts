@@ -9,7 +9,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ChartsModule } from 'ng2-charts';
-import { DoughnutModule } from '@shared/components/doughnut/doughnut.module';
+import { DoughnutModule } from '@shared/components/charts/doughnut/doughnut.module';
 
 @NgModule({
   declarations: [AnalyticsComponent],

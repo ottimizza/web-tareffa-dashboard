@@ -13,6 +13,8 @@ function createEnvironementFile() {
   oauthBaseUrl: '${getEnvironmentVariable('API_OAUTH2_SERVICE')}',
   oauthClientId: '${getEnvironmentVariable('OAUTH2_CLIENT_ID')}',
   serviceUrl: '${getEnvironmentVariable('SERVICE_URL')}',
+  communicationAppUrl: '${getEnvironmentVariable('COMMUNICATION_APP_URL')}',
+  communicationAppApiUrl: '${getEnvironmentVariable('OTTIMIZZA_API_COMUNICACAO_URL')}',
   imageCompressionBaseUrl: '${getEnvironmentVariable('IMAGE_COMPRESSION_BASE_URL')}',
   storageBaseUrl: '${getEnvironmentVariable('STORAGE_BASE_URL')}',
   storageApplicationId: '${getEnvironmentVariable('STORAGE_APPLICATION_ID', 'accounts-avatar')}',

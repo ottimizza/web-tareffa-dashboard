@@ -18,12 +18,11 @@ import { AuthenticationService } from '@app/authentication/authentication.servic
   providedIn: 'root'
 })
 export class HttpErrorInterceptor implements HttpInterceptor {
-
   private UNAUTHORIZED = 401;
 
   private _refreshSubject: Subject<any> = new Subject<any>();
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private authenticationService: AuthenticationService) {}
 
   private _ifTokenExpired() {
     this._refreshSubject.subscribe({
@@ -33,7 +32,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     });
     if (this._refreshSubject.observers.length === 1) {
       const authSession = AuthSession.fromLocalStorage();
-      this.authenticationService.refresh(authSession.getAuthenticated().refreshToken).subscribe(this._refreshSubject);
+      this.authenticationService
+        .refresh(authSession.getAuthenticated().refreshToken)
+        .subscribe(this._refreshSubject);
     }
     return this._refreshSubject;
   }
@@ -52,12 +53,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             }
 
             return this._ifTokenExpired().pipe(
-              switchMap((response) => {
+              switchMap(response => {
                 if (response.access_token) {
-                  AuthSession.fromOAuthResponse(response).store().then(async () => {
-                    const storeUserInfo = this.authenticationService.storeUserInfo();
-                    const storeTokenInfo = this.authenticationService.storeTokenInfo();
-                  });
+                  AuthSession.fromOAuthResponse(response)
+                    .store()
+                    .then(async () => {
+                      const storeUserInfo = this.authenticationService.storeUserInfo();
+                      const storeTokenInfo = this.authenticationService.storeTokenInfo();
+                    });
                 }
                 return next.handle(this.updateHeader(request));
               })
@@ -97,12 +100,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   private requestAuthorization() {
     this.authenticationService.authorize();
   }
-
-
 }
 
 export const ErrorInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: HttpErrorInterceptor,
-  multi: true,
+  multi: true
 };

@@ -1,37 +1,72 @@
+<app-side-filter
+  [selects]="selects"
+  STORAGE_KEY="comunication-filter"
+  (filters)="setFilter($event)"
+>
+</app-side-filter>
+
 <div class="full-screen p-3">
-  <div class="row mx-0  justify-content-between mb-3" id="firstSection">
+  <div class="m-1">
+    <span class="d-none d-md-block my-auto">
+      Período: {{ date | date: 'dd/MM/yyyy' }} -
+      {{ date | date: 'dd/MM/yyyy' }}
+    </span>
+  </div>
+
+  <div class="row mx-0 justify-content-between mb-3" id="firstSection">
     <div class="row m-0 w-100 first-section-sizing border rounded p-0 mb-3 mb-md-0">
-      <h4 class="col-12 text-center pt-2">Novas Comunicações</h4>
-      <h3 class="col-12 text-center">432 543</h3>
+      <span
+        class="information-button cursor-pointer"
+        (click)="openModalCommunicationList(newerCommunications.title, 0)"
+      >
+        <i class="fad fa-question fa-xs tareffa-purple-color"></i>
+      </span>
+      <h4 class="col-12 centralize pt-2">{{ newerCommunications.title }}</h4>
+      <h3 class="col-12 text-center m-0 tareffa-purple-color">{{ newerCommunications.value | thousandSeparator }}</h3>
     </div>
     <div class="row m-0 w-100 first-section-sizing p-0">
-      <div class="col-12 border rounded mb-3 mb-md-2 d-flex align-items-center py-1">
-        <span class="col-3 p-0">Internas:</span>
-        <span class="mx-auto"><strong>12 333</strong></span>
-      </div>
-      <div class="col-12 border rounded mb-3 mb-md-2 d-flex align-items-center py-1">
-        <span class="col-3 p-0">Enviadas:</span>
-        <span class="mx-auto"><strong>432</strong></span>
-      </div>
-      <div class="col-12 border rounded d-flex align-items-center py-1">
-        <span class="col-3 p-0">Recebidas:</span>
-        <span class="mx-auto"><strong>100 000</strong></span>
+      <div
+        *ngFor="let communicationType of communicationTypes; let i = index"
+        class="col-12 border rounded d-flex align-items-center py-1 position-relative"
+        [ngClass]="i === communicationTypes.length - 1 ? 'mb-0' : 'mb-3 mb-md-2 '"
+      >
+        <span
+          class="information-button-b6px cursor-pointer"
+          (click)="openModalCommunicationList(communicationType.title, 1)"
+        >
+          <i class="fad fa-question fa-xs tareffa-purple-color"></i>
+        </span>
+        <span class="col-3 p-0"> {{ communicationType.title }}</span>
+        <span class="mx-auto tareffa-purple-color"
+          ><strong> {{ communicationType.value | thousandSeparator }}</strong></span
+        >
       </div>
     </div>
   </div>
 
   <div class="row mx-0 w-100 justify-content-between">
     <div class="row mx-0 justify-content-between mb-3 mb-md-0" id="secondSection">
-      <div class="second-section-sizing border rounded mb-3 mb-md-0">
-        <h4 class="col-12 text-center pt-2">Não lidas pela contabilidade</h4>
-        <h3 class="col-12 text-center">7</h3>
-      </div>
-      <div class="second-section-sizing border rounded">
-        <h4 class="col-12 text-center pt-2">Não lidas pelo cliente</h4>
-        <h3 class="col-12 text-center">102 365</h3>
+      <div
+        class="second-section-sizing border rounded mb-3"
+        *ngFor="let unredMessage of unredMessages"
+      >
+        <span
+          class="information-button cursor-pointer"
+          (click)="openModalCommunicationList(unredMessage.title, 2)"
+        >
+          <i class="fad fa-question fa-xs tareffa-purple-color"></i>
+        </span>
+        <h4 class="col-12 text-center pt-2">{{ unredMessage.title }}</h4>
+        <h3 class="col-12 text-center tareffa-purple-color">{{ unredMessage.value | thousandSeparator }}</h3>
       </div>
 
-      <div class="col-12 border rounded mt-3 mt-md-2 pt-4">
+      <div class="col-12 border rounded pt-5 pt-md-3">
+        <span
+          class="information-button cursor-pointer"
+          (click)="openModalCommunicationList('Quantidade de conversas por departamento', 3)"
+        >
+          <i class="fad fa-question fa-xs tareffa-purple-color"></i>
+        </span>
         <app-bar-chart
           [barChartLabels]="barChartLabels"
           [barChartData]="barChartData"
@@ -41,14 +76,35 @@
     </div>
 
     <div class="row mx-0" id="thirdSection">
-      <div class="third-section-sizing border rounded centralize pt-3">
-        <app-doughnut
-          [data]="getData([encerrado, aberto])"
-          [labels]="['Encerrados', 'Abertos']"
-          [colors]="chartColors"
-          fontSize="40px"
+      <div class="third-section-sizing border rounded">
+        <span
+          class="information-button cursor-pointer"
+          (click)="openModalCommunicationList('Quantidade de conversas por usuário', 4)"
         >
-        </app-doughnut>
+          <i class="fad fa-question fa-xs tareffa-purple-color centralize"></i>
+        </span>
+        <div class="row m-0 w-100 table-sizing">
+          <div class="col-12 p-0">
+            <table mat-table [dataSource]="dataSource" class="table-hover w-100">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
+                  <strong>Nome</strong>
+                </th>
+                <td mat-cell *matCellDef="let element" [title]="element.name">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef class="text-md-right">Conversas</th>
+                <td mat-cell *matCellDef="let element" class="text-md-right">
+                  {{ element.value | thousandSeparator }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -3,6 +3,43 @@
   min-height: calc(100vh - 70px);
 }
 
+.information-button {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 5;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-b6px {
+    position: absolute;
+    right: 8px;
+    z-index: 5;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 6px;
+  }
+
+  @media screen and (max-width: '768px') {
+    top: 8px;
+    right: 8px;
+    left: auto;
+    z-index: 7;
+  }
+}
+
 #firstSection {
   width: 100% !important;
 }
@@ -30,6 +67,8 @@
 .first,
 .second {
   &-section-sizing {
+    position: relative;
+
     @media screen and (max-width: '768px') {
       max-width: 100%;
       flex: 0 0 100%;
@@ -43,5 +82,16 @@
 }
 
 .third-section-sizing {
+  position: relative;
   width: 100%;
+}
+
+.table-sizing {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 275px;
+}
+
+.mat-table-sticky {
+  z-index: 7 !important;
 }

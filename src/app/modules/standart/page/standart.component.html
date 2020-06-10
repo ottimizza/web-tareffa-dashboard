@@ -39,8 +39,8 @@
         </mat-vertical-stepper>
       </div>
 
-      <div class="card p-3" *ngIf="selectedCard !== 1">
-        <div class="card-header">
+      <div class="card p-3 mb-0" *ngIf="selectedCard !== 1">
+        <div class="card-header py-0">
           <h3 class="black-color">Abertos</h3>
           <h2>{{ abertoNoPrazo + abertoAtrasado | thousandSeparator }}</h2>
         </div>
@@ -61,11 +61,15 @@
         <div class="card-rodape d-inline-block">
           <div class="cursor-pointer float-left" (click)="getGrouped([0], 1)">
             <strong>No Prazo</strong>
-            <h2 class="tareffa-purple-color text-bold">{{ abertoNoPrazo | thousandSeparator }}</h2>
+            <h2 class="tareffa-purple-color text-bold mb-0">
+              {{ abertoNoPrazo | thousandSeparator }}
+            </h2>
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 1)">
             <strong>Atrasados</strong>
-            <h2 class="tareffa-pink-color text-bold">{{ abertoAtrasado | thousandSeparator }}</h2>
+            <h2 class="tareffa-pink-color text-bold mb-0">
+              {{ abertoAtrasado | thousandSeparator }}
+            </h2>
           </div>
         </div>
       </div>
@@ -99,8 +103,8 @@
         </mat-vertical-stepper>
       </div>
 
-      <div class="card p-3" *ngIf="selectedCard !== 2">
-        <div class="card-header">
+      <div class="card p-3 mb-0" *ngIf="selectedCard !== 2">
+        <div class="card-header py-0">
           <h3 class="black-color">Fechados</h3>
           <h2>{{ encerradoAtrasado + encerradoNoPrazo | thousandSeparator }}</h2>
         </div>
@@ -121,12 +125,33 @@
         <div class="card-rodape d-inline-block">
           <div class="cursor-pointer float-left" (click)="getGrouped([0], 2)">
             <strong>No Prazo</strong>
-            <h2 class="tareffa-purple-color text-bold">{{ encerradoNoPrazo | thousandSeparator }}</h2>
+            <h2 class="tareffa-purple-color text-bold mb-0">
+              {{ encerradoNoPrazo | thousandSeparator }}
+            </h2>
           </div>
           <div class="cursor-pointer float-right" (click)="getGrouped([1, 2], 2)">
             <strong>Atrasados</strong>
-            <h2 class="tareffa-pink-color text-bold">{{ encerradoAtrasado | thousandSeparator }}</h2>
+            <h2 class="tareffa-pink-color text-bold mb-0">
+              {{ encerradoAtrasado | thousandSeparator }}
+            </h2>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 p-4">
+      <div class="card border rounded">
+        <h3 class="pt-2">Histórico</h3>
+        <div class="mb-3">
+          <app-line [data]="1"></app-line>
+        </div>
+
+        <div class="mb-3">
+          <app-line [data]="2"></app-line>
+        </div>
+
+        <div class="mb-3">
+          <app-line [data]="3"></app-line>
         </div>
       </div>
     </div>
