@@ -26,7 +26,8 @@ export class SideFilterSelectComponent implements OnInit {
 
     if (this.cache && Object.keys(this.cache).includes(this.item.id)) {
       this.selectedValue = this.cache[this.item.id] || '';
-      this.selectedName = this.item.options.filter(opt => opt.value === this.selectedValue)[0].name;
+      const filteredOptions = this.item.options.filter(opt => opt.value === this.selectedValue)[0];
+      this.selectedName = filteredOptions ? filteredOptions.name : '';
       this._emit();
     }
   }
