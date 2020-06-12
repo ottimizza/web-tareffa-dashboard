@@ -23,9 +23,10 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'analytics',
+        redirectTo: 'default',
         pathMatch: 'full'
       },
+
       {
         path: 'analytics',
         data: {
@@ -34,13 +35,44 @@ const routes: Routes = [
         loadChildren: () =>
           import('@modules/analytics/analytics.module').then(m => m.AnalyticsModule),
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'default',
+        data: {
+          breadcrumb: 'Padrão'
+        },
+        loadChildren: () => import('@modules/standart/standart.module').then(m => m.StandartModule),
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'indicators',
+        data: {
+          breadcrumb: 'Indicadores'
+        },
+        loadChildren: () =>
+          import('@modules/indicators/indicators.module').then(m => m.IndicatorsModule),
+        canActivate: [AuthGuard]
       }
+      // {
+      //   path: 'communications',
+      //   data: {
+      //     breadcrumb: 'Comunicações'
+      //   },
+      //   loadChildren: () =>
+      //     import('@modules/communications/communications.module').then(m => m.CommunicationsModule),
+      //   canActivate: [AuthGuard]
+      // }
     ]
   },
   {
     path: 'auth',
     component: AuthLayoutComponent,
     loadChildren: () => import('@modules/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard/default',
+    pathMatch: 'full'
   }
 ];
 

@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { UpdateService } from '@app/services/update.service';
 import { MessagingService } from '@app/services/messaging.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-
+import { DYNAMIC_TYPE } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,6 @@ import { LoggerUtils } from '@shared/utils/logger.utils';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   public updateAvailable = false;
 
   constructor(
@@ -41,8 +40,7 @@ export class AppComponent implements OnInit {
 
   public ngOnInit() {
     // this.messagingService.requestPermission();
-    // this.messagingService.receiveMessage();
-    // this.messagingService.currentMessage.subscribe(msg => LoggerUtils.log(msg));
+    this.messagingService.receiveMessage();
+    this.messagingService.currentMessage.subscribe(msg => LoggerUtils.log(msg));
   }
-
 }

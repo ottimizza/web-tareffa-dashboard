@@ -1,0 +1,19 @@
+<h1 mat-dialog-title> {{ data.title }} </h1>
+<div mat-dialog-content appScrollTracker (scrollEnd)="nextPage()">
+
+  <div class="container">
+    <div class="row w-100 border-top border-bottom p-2" *ngFor="let rec of records">
+      <div class="col-3 d-none d-md-inline">
+        <img [src]="rec.fotoResponsavel || PORTRAIT_PLACEHOLDER" class="img-thumbnail rounded-circle" width="70px" height="70px">
+      </div>
+      <div class="col">
+        <h5 class="mt-2">{{ rec.nomeResponsavel }}</h5>
+        <span>({{ rec.codigoErpEmpresa }}) {{ rec.razaoSocialEmpresa }}</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Ok</button>
+</div>

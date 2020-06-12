@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env';
 import { AuthenticationService } from '@app/authentication/authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { Filter } from '@shared/models/Filter';
 
 const FILTER_KEY = 'filter';
 
@@ -15,8 +14,8 @@ export class FilterService {
 
   buildFilter() {}
 
-  getFilters() {
-    return window.localStorage.getItem(FILTER_KEY);
+  getFilters(filterKey: string) {
+    return JSON.parse(window.localStorage.getItem(filterKey));
   }
 
   requestCategorias() {
@@ -28,11 +27,10 @@ export class FilterService {
 
   requestDepartments(agrupamento = 1) {
     const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
-    const filter: Filter = JSON.parse(this.getFilters());
 
     return this.httpClient.post(
       url,
-      { dataProgramadaInicio: filter.startDate, dataProgramadaTermino: filter.endDate },
+      { dataProgramadaInicio: 1583064907949, dataProgramadaTermino: 1585656907949 },
       {
         headers: this.authenticationService.getAuthorizationHeaders()
       }
@@ -46,8 +44,15 @@ export class FilterService {
     });
   }
 
-  store(f: Filter) {
-    window.localStorage.setItem(FILTER_KEY, JSON.stringify(f));
+  requestCaracteristicas() {
+    const url = `${environment.apiTareffaSpring}/caracteristicas?description=04`;
+    return this.httpClient.get(url, {
+      headers: this.authenticationService.getAuthorizationHeaders()
+    });
+  }
+
+  store(key: string, f: any) {
+    window.localStorage.setItem(key, JSON.stringify(f));
   }
 
   fromLocalStorage() {

@@ -1,7 +1,6 @@
 {
-  "name": "web-tareffa-dashboard",
-  "short_name": "web-tareffa-dashboard",
-  "gcm_sender_id": "92294481127",
+  "name": "Dashboard",
+  "short_name": "Dashboard",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

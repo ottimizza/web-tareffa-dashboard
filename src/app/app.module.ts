@@ -25,7 +25,6 @@ import { ErrorInterceptorProvider } from '@app/interceptor/http.interceptor';
 import { NavbarLayoutModule } from './layout/navbar-layout/navbar-layout.module';
 import { PipesModule } from '@shared/pipes/pipes.module';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FilterLayoutComponent } from './layout/filter-layout/filter-layout.component';
 import { MatSelectFilterModule } from 'mat-select-filter';
 import {
   MatButtonModule,
@@ -36,7 +35,8 @@ import {
   MatList,
   MatListModule,
   MatSelectModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSnackBarModule
 } from '@angular/material';
 
 @NgModule({
@@ -44,8 +44,7 @@ import {
     AppComponent,
     AuthLayoutComponent,
     ContentLayoutComponent,
-    SidebarLayoutComponent,
-    FilterLayoutComponent
+    SidebarLayoutComponent
     // NavbarLayoutComponent
   ],
   imports: [
@@ -92,6 +91,7 @@ import {
     ReactiveFormsModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatSnackBarModule,
 
     // Custom material based modules
     MatSelectFilterModule
