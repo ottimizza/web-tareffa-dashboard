@@ -168,6 +168,11 @@ export class AnalyticsComponent implements OnInit {
     this.charts = [];
     this.data = [];
 
+    if (this.indicators && this.indicators.length === 0) {
+      this.isLoading = false;
+      return;
+    }
+
     const length = this.filter.indicador === '' ? this.indicators.length : 1;
 
     let indicatorSelected = '';
