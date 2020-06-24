@@ -78,14 +78,15 @@ export class AnalyticsComponent implements OnInit {
         const data = chart.config.data.datasets[0].data;
 
         // REGRA DE 3 PRA DESCOBRIR A PORCENTAGEM DE ENCERRADOS
-        const txt = `${Math.round((data[0] * 100) / data.reduce((a, b) => a + b, 0))}%`;
+        const txt =
+          ((data[0] * 100) / data.reduce((a, b) => a + b, 0)).toFixed(1).replace(/\./g, ',') + '%';
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
 
-        ctx.font = '45px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        ctx.font = '38px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         ctx.fillStyle = '#4b4279';
 
         // Draw text in center
@@ -241,10 +242,14 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getPercentage(user) {
-    return Math.round(
+    return +(
       ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
-        (user.abertoAtrasado + user.abertoNoPrazo + user.encerradoAtrasado + user.encerradoNoPrazo)
-    );
+      (user.abertoAtrasado + user.abertoNoPrazo + user.encerradoAtrasado + user.encerradoNoPrazo)
+    ).toFixed(1);
+  }
+
+  valueStringify(value: number) {
+    return value.toString().replace(/\./g, ',');
   }
 
   updateUsers() {
