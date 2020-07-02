@@ -19,8 +19,9 @@ const routes: Routes = [
     data: {
       breadcrumb: null
     },
-    component: LandPageComponent,
-    canActivate: [NoAuthGuard]
+    // component: LandPageComponent,
+    canActivate: [NoAuthGuard],
+    loadChildren: () => import('@modules/land-page/land-page.module').then(m => m.LandPageModule)
   },
   {
     path: 'dashboard',

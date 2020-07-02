@@ -46,9 +46,16 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
         if (error.error instanceof Error) {
         } else {
+          if (error.status === HttpStatus.BAD_REQUEST) {
+            if (this.requestMatchesCallbackURL(request)) {
+              this.router.navigate(['/landpage']);
+              return throwError(error);
+            }
+          }
+
           if (error.status === HttpStatus.UNAUTHORIZED) {
             if (this.requestMatchesCallbackURL(request)) {
-              this.router.navigate(['landpage']);
+              this.router.navigate(['/landpage']);
               return throwError(error);
             }
 
