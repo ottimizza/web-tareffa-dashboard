@@ -25,12 +25,12 @@ export class FilterService {
     });
   }
 
-  requestDepartments(agrupamento = 1) {
+  requestDepartments(dataProgramadaInicio: number, dataProgramadaTermino: number, agrupamento = 1) {
     const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
 
     return this.httpClient.post(
       url,
-      { dataProgramadaInicio: 1583064907949, dataProgramadaTermino: 1585656907949 },
+      { dataProgramadaInicio, dataProgramadaTermino },
       {
         headers: this.authenticationService.getAuthorizationHeaders()
       }
