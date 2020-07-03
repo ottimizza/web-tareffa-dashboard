@@ -8,6 +8,8 @@ import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-cha
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
+import { DateUtils } from '@shared/utils/date.utils';
+import { JSONUtils } from '@shared/utils/json.utils';
 
 @Component({
   selector: 'app-analytics',
@@ -78,14 +80,15 @@ export class AnalyticsComponent implements OnInit {
         const data = chart.config.data.datasets[0].data;
 
         // REGRA DE 3 PRA DESCOBRIR A PORCENTAGEM DE ENCERRADOS
-        const txt = `${Math.round((data[0] * 100) / data.reduce((a, b) => a + b, 0))}%`;
+        const txt =
+          ((data[0] * 100) / data.reduce((a, b) => a + b, 0)).toFixed(1).replace(/\./g, ',') + '%';
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
 
-        ctx.font = '45px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        ctx.font = '38px Montserrat,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         ctx.fillStyle = '#4b4279';
 
         // Draw text in center
@@ -118,25 +121,54 @@ export class AnalyticsComponent implements OnInit {
     });
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
-      this.filter = filter;
+      if (this.filter?.startDate === filter.startDate && this.filter?.endDate === filter.endDate) {
+        this.filter = JSONUtils.reBuildWithDate(filter);
+      } else {
+        this.refreshFilter(filter);
+      }
 
       this.getInfo();
     });
   }
 
   ngOnInit() {
+    this.refreshFilter();
+    window.sessionStorage.removeItem('user-refresh-time');
+  }
+
+  refreshFilter(filter?: any) {
+    const reference = new Date();
+    let startDate = DateUtils.iterateDays(-1, date => date.getDate() === 1).getTime();
+    const endDateReference = DateUtils.iterateDays(1, date => {
+      return (
+        date.getDate() === 1 &&
+        (date.getMonth() === reference.getMonth() + 1 || date.getMonth() === 0)
+      );
+    });
+    let endDate = new Date(endDateReference.getTime() - 24 * 60 * 60 * 1000).getTime();
+
+    if (filter) {
+      this.filter = filter;
+    }
+
+    if (this.filter?.startDate) {
+      startDate = new Date(this.filter.startDate).getTime();
+    }
+    if (this.filter?.endDate) {
+      endDate = new Date(this.filter.endDate).getTime();
+    }
+
     const indicators$ = this.filterService.requestIndicators();
-    const departments$ = this.filterService.requestDepartments();
+    const departments$ = this.filterService.requestDepartments(startDate, endDate);
 
     combineLatest([indicators$, departments$])
       .pipe(map(([indicators, departments]: any[]) => ({ indicators, departments })))
       .subscribe(filterRequest => {
+        this.selects = [];
         this.indicators = filterRequest.indicators.records;
         this.parse(filterRequest.indicators, 'Indicadores', 'indicador');
         this.parse(filterRequest.departments, 'Departamentos', 'departamento', true);
       });
-
-    window.sessionStorage.removeItem('user-refresh-time');
   }
 
   slickInit(e) {
@@ -241,10 +273,14 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getPercentage(user) {
-    return Math.round(
+    return +(
       ((user.encerradoAtrasado + user.encerradoNoPrazo) * 100) /
-        (user.abertoAtrasado + user.abertoNoPrazo + user.encerradoAtrasado + user.encerradoNoPrazo)
-    );
+      (user.abertoAtrasado + user.abertoNoPrazo + user.encerradoAtrasado + user.encerradoNoPrazo)
+    ).toFixed(1);
+  }
+
+  valueStringify(value: number) {
+    return value.toString().replace(/\./g, ',');
   }
 
   updateUsers() {
