@@ -27,7 +27,12 @@ export class FilterService {
 
   requestDepartments(dataProgramadaInicio: number, dataProgramadaTermino: number, agrupamento = 1) {
     const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
-
+    const startDate = new Date(dataProgramadaInicio);
+    const endDate = new Date(dataProgramadaTermino);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    dataProgramadaInicio = startDate.getTime();
+    dataProgramadaTermino = endDate.getTime();
     return this.httpClient.post(
       url,
       { dataProgramadaInicio, dataProgramadaTermino },
