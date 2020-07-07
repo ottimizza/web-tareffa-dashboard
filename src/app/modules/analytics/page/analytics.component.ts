@@ -121,12 +121,6 @@ export class AnalyticsComponent implements OnInit {
     });
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
-      if (this.filter?.startDate === filter.startDate && this.filter?.endDate === filter.endDate) {
-        this.filter = JSONUtils.reBuildWithDate(filter);
-      } else {
-        this.refreshFilter(filter);
-      }
-
       this.getInfo();
     });
   }
@@ -138,24 +132,17 @@ export class AnalyticsComponent implements OnInit {
 
   refreshFilter(filter?: any) {
     const reference = new Date();
-    let startDate = DateUtils.iterateDays(-1, date => date.getDate() === 1).getTime();
+    const startDate = DateUtils.iterateDays(-1, date => date.getDate() === 1).getTime();
     const endDateReference = DateUtils.iterateDays(1, date => {
       return (
         date.getDate() === 1 &&
         (date.getMonth() === reference.getMonth() + 1 || date.getMonth() === 0)
       );
     });
-    let endDate = new Date(endDateReference.getTime() - 24 * 60 * 60 * 1000).getTime();
+    const endDate = new Date(endDateReference.getTime() - 24 * 60 * 60 * 1000).getTime();
 
     if (filter) {
       this.filter = filter;
-    }
-
-    if (this.filter?.startDate) {
-      startDate = new Date(this.filter.startDate).getTime();
-    }
-    if (this.filter?.endDate) {
-      endDate = new Date(this.filter.endDate).getTime();
     }
 
     const indicators$ = this.filterService.requestIndicators();
