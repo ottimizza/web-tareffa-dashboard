@@ -2,11 +2,15 @@ import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthSession } from '@shared/models/AuthSession';
-import { finalize } from 'rxjs/operators';
+import { finalize, skip } from 'rxjs/operators';
 import { StorageService } from '@app/services/storage.service';
 
 import { environment } from '@env';
 import { Observable } from 'rxjs';
+import { SKIP_INTERCEPTOR } from '@app/interceptor/skip-interceptor';
+
+export const REFRESH_URL = '/auth/refresh';
+export const CALLBACK_URL = '/auth/callback';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +63,11 @@ export class AuthenticationService {
     });
   }
 
-  public async storeUserInfo(): Promise<void> {
+  public async storeUserInfo(skipInterceptor = false): Promise<void> {
     const headers = this.getAuthorizationHeaders();
+    if (skipInterceptor) {
+      headers.append(SKIP_INTERCEPTOR, '');
+    }
     return new Promise<void>((resolve, reject) => {
       return this.http
         .get(`${environment.oauthBaseUrl}/oauth/userinfo`, { headers })
@@ -78,8 +85,11 @@ export class AuthenticationService {
     }).then(() => {});
   }
 
-  public async storeTokenInfo(): Promise<void> {
+  public async storeTokenInfo(skipInterceptor = false): Promise<void> {
     const headers = this.getAuthorizationHeaders();
+    if (skipInterceptor) {
+      headers.append(SKIP_INTERCEPTOR, '');
+    }
     return new Promise<void>((resolve, reject) => {
       return this.http
         .get(`${environment.oauthBaseUrl}/oauth/tokeninfo`, { headers })
@@ -117,9 +127,12 @@ export class AuthenticationService {
   }
 
   public refresh(refreshToken: string) {
+    const headers = new HttpHeaders({
+      'X-Skip-Interceptor': ''
+    });
     const clientId = `${environment.oauthClientId}`;
     const url = `${environment.oauthBaseUrl}/auth/refresh?refresh_token=${refreshToken}&client_id=${clientId}`;
-    return this.http.post(url, {}, {});
+    return this.http.post(url, {}, { headers });
   }
 
   public revokeToken() {

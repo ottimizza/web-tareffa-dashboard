@@ -21,7 +21,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BreadcrumbModule } from '@shared/components/breadcrumb/breadcrumb.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ErrorInterceptorProvider } from '@app/interceptor/http.interceptor';
 import { NavbarLayoutModule } from './layout/navbar-layout/navbar-layout.module';
 import { PipesModule } from '@shared/pipes/pipes.module';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -38,6 +37,7 @@ import {
   MatCheckboxModule,
   MatSnackBarModule
 } from '@angular/material';
+import { GlobalHttpInterceptor } from '@app/interceptor/http/http.interceptor';
 
 @NgModule({
   declarations: [
@@ -96,7 +96,7 @@ import {
     // Custom material based modules
     MatSelectFilterModule
   ],
-  providers: [ErrorInterceptorProvider, MatDatepickerModule],
+  providers: [GlobalHttpInterceptor, MatDatepickerModule],
   bootstrap: [AppComponent],
   entryComponents: []
 })
