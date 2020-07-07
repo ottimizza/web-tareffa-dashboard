@@ -6,7 +6,6 @@ import { ContentLayoutComponent } from './layout/content-layout/content-layout.c
 
 import { AuthGuard } from '@app/guard/auth.guard';
 import { NoAuthGuard } from '@app/guard/no-auth.guard';
-import { LandPageComponent } from '@modules/land-page/page/land-page.component';
 
 const routes: Routes = [
   {
