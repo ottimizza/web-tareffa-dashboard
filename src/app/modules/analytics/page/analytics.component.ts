@@ -192,11 +192,13 @@ export class AnalyticsComponent implements OnInit {
       return;
     }
 
-    const length = this.filter.indicador === '' ? this.indicators.length : 1;
+    const filter = this.filter || {};
+
+    const length = filter.indicador === '' ? this.indicators.length : 1;
 
     let indicatorSelected = '';
 
-    if (this.filter.indicador === '') {
+    if (filter.indicador === '') {
       if (this.indicators.length) {
         indicatorSelected = this.indicators[0].id;
       }
