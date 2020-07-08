@@ -121,6 +121,7 @@ export class AnalyticsComponent implements OnInit {
     });
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
+      this.filter = filter;
       this.getInfo();
     });
   }
