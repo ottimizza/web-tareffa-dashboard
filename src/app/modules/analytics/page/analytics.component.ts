@@ -204,7 +204,7 @@ export class AnalyticsComponent implements OnInit {
         indicatorSelected = this.indicators[0].id;
       }
     } else {
-      indicatorSelected = this.filter.indicador;
+      indicatorSelected = filter.indicador;
     }
 
     if (indicatorSelected) {
