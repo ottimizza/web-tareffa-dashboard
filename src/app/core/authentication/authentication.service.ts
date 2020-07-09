@@ -122,7 +122,7 @@ export class AuthenticationService {
   }
 
   public exchange(code: string) {
-    const url = `${environment.apiTareffaSpring}/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
+    const url = `${environment.apiTareffaSpring}/services/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
     return this.http.post(url, {}, {});
   }
 
@@ -132,7 +132,7 @@ export class AuthenticationService {
     });
     const clientId = `${environment.oauthClientId}`;
     const url = `${environment.oauthBaseUrl}/auth/refresh?refresh_token=${refreshToken}&client_id=${clientId}`;
-    return this.http.post(url, {}, { headers });
+    return this.http.post(url, {}, {});
   }
 
   public revokeToken() {
