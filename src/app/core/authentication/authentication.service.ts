@@ -122,7 +122,8 @@ export class AuthenticationService {
   }
 
   public exchange(code: string) {
-    const url = `${environment.apiTareffaSpring}/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
+    const urlTag = environment.production ? '' : 'servicos/';
+    const url = `${environment.apiTareffaSpring}/${urlTag}oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
     return this.http.post(url, {}, {});
   }
 

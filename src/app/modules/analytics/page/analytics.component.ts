@@ -4,12 +4,11 @@ import { FilterService } from '@app/services/filter.service';
 import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, PluginServiceGlobalRegistrationAndOptions, Color } from 'ng2-charts';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
+import { combineLatest, Subject } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 import { DateUtils } from '@shared/utils/date.utils';
-import { JSONUtils } from '@shared/utils/json.utils';
 
 @Component({
   selector: 'app-analytics',

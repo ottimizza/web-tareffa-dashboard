@@ -1,18 +1,16 @@
 export class Product {
+  static Group = class {
+    static OTTIMIZZA = 'ottimizza';
+    static TAREFFA = 'tareffa';
+  };
 
-    static Group = class {
-      static OTTIMIZZA = "ottimizza";
-      static TAREFFA = "tareffa";
-    };
-  
-    id: number;
-  
-    name: string;
-    description: string;
+  id: number;
 
-    appUrl: string;
-    imageUrl: string;
-  
-    group: string;
+  name: string;
+  description: string;
 
+  appUrl: string;
+  imageUrl: string;
+
+  group: string;
 }
