@@ -8,7 +8,7 @@
   (click)="activate(filterInitiated())"
   [ngClass]="{ 'btn-filter-active': opened }"
 >
-  <mat-spinner *ngIf="!filterInitiated()"></mat-spinner>
+  <mat-spinner *ngIf="!filterInitiated()" [diameter]="40"></mat-spinner>
   <ng-template #filterIsReady>
     <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
     <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
