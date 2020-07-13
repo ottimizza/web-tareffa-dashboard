@@ -50,9 +50,8 @@ export class SideFilterComponent implements OnInit {
       }
     });
 
-    if (this._intercept(SideFilterInterceptLocation.ON_INIT)) {
-      this.intercept.function(this.selects);
-    }
+    const that = this;
+    this._intercept(this.location.ON_INIT, result => {}, that);
 
     if (this.STORAGE_KEY) {
       this._restore();
@@ -82,9 +81,15 @@ export class SideFilterComponent implements OnInit {
     this.selecteds.startDate = this.startDate;
     this.selecteds.endDate = this.endDate;
     let selecteds = this.selecteds;
-    if (this._intercept(SideFilterInterceptLocation.EMIT)) {
-      selecteds = this.intercept.function(this.selects, selecteds);
-    }
+
+    this._intercept(
+      this.location.EMIT,
+      result => {
+        selecteds = result;
+      },
+      selecteds
+    );
+
     this.filters.emit(selecteds);
     this._store();
   }
@@ -141,9 +146,15 @@ export class SideFilterComponent implements OnInit {
       return;
     }
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
-    if (this._intercept(SideFilterInterceptLocation.ACTIVE)) {
-      this.cache = this.intercept.function(this.selects, this.selecteds);
-    }
+
+    this._intercept(
+      this.location.ACTIVE,
+      result => {
+        this.cache = result;
+      },
+      this.selecteds
+    );
+
     this.opened = !this.opened;
     if (this.opened && this.STORAGE_KEY) {
       this._restore();
@@ -162,24 +173,44 @@ export class SideFilterComponent implements OnInit {
     this._storageService.fetch(this.STORAGE_KEY).then(json => {
       if (json && json !== '{}') {
         let cache = JSON.parse(json);
-        if (this._intercept(SideFilterInterceptLocation.RESTORE)) {
-          cache = this.intercept.function(this.selects, cache);
-        }
+
+        this._intercept(
+          this.location.RESTORE,
+          result => {
+            cache = result;
+          },
+          cache
+        );
+
         this.startDate = new Date(cache.startDate);
         this.endDate = new Date(cache.endDate);
         delete cache.startDate;
         delete cache.endDate;
         this.cache = cache;
       } else {
-        if (this._intercept(SideFilterInterceptLocation.RESTORE)) {
-          this.cache = this.intercept.function(this.selects, {});
-        }
+        this._intercept(
+          this.location.RESTORE,
+          result => {
+            this.cache = result;
+          },
+          {}
+        );
         this.thisMonth();
       }
     });
   }
 
-  private _intercept(place: SideFilterInterceptLocation) {
-    return this.intercept && this.intercept.place === place;
+  private _intercept(
+    place: SideFilterInterceptLocation,
+    callbackFn: (result: any) => void,
+    params?: any
+  ) {
+    if (this.intercept && this.intercept.place === place) {
+      callbackFn(this.intercept.function(this.selects, params));
+    }
+  }
+
+  private get location() {
+    return SideFilterInterceptLocation;
   }
 }
