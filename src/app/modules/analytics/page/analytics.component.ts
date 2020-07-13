@@ -5,7 +5,7 @@ import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, interval } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import { DateUtils } from '@shared/utils/date.utils';
 
@@ -41,7 +41,7 @@ export class AnalyticsComponent implements OnInit {
   };
 
   public labels: Label[] = ['Encerrado', 'Aberto no Prazo', 'Aberto Atrasado'];
-  public chartColors: Array<any> = [
+  public chartColors = [
     {
       backgroundColor: ['#4b4279', 'lightgrey', '#d9587f']
     }
@@ -112,7 +112,9 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnInit() {
     this.refreshFilter();
-    window.sessionStorage.removeItem('user-refresh-time');
+
+    const period = 1000 * 60 * 10; // 10 minutos em milisegundos.
+    interval(period).subscribe(() => this.updateUsers());
   }
 
   refreshFilter(filter?: any) {
@@ -164,7 +166,6 @@ export class AnalyticsComponent implements OnInit {
     }
     this.selectedIndicator = this.data[e.slick.currentSlide];
     this.indicatorTitle = this.selectedIndicator.nomeIndicador;
-    this.checkUserRefreshTime();
   }
 
   getInfo() {
@@ -183,6 +184,7 @@ export class AnalyticsComponent implements OnInit {
     let indicatorSelected = '';
 
     if (filter.indicador === '') {
+      //// NÃO ME PERGUNTE OQ Q ESSE TROÇO AQUI FAZ
       if (this.indicators.length) {
         indicatorSelected = this.indicators[0].id;
       }
@@ -195,6 +197,8 @@ export class AnalyticsComponent implements OnInit {
         .getIndicatorById(indicatorSelected)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
     }
+
+    console.log(length);
 
     for (let index = 0; index < length; index++) {
       this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
@@ -265,20 +269,6 @@ export class AnalyticsComponent implements OnInit {
           this.users[indicator.id] = res.records;
         });
     });
-
-    // Marca a hora foi feito o request dos usuarios
-    window.sessionStorage.setItem('user-refresh-time', new Date().getTime().toString());
-  }
-
-  // Método chamado sempre que muda o slide para verificar se deve atualizar a lista de usuarioss
-  checkUserRefreshTime() {
-    const previousTime = +window.sessionStorage.getItem('user-refresh-time');
-    const newTime = new Date().getTime();
-
-    // Verifica se já passou 10 minutos desde a ultima atualização da lista de usuarios
-    if (newTime - previousTime > 600000) {
-      this.updateUsers();
-    }
   }
 
   onFilterChange(filter: any) {
