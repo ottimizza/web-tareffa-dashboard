@@ -199,17 +199,17 @@ export class AnalyticsComponent implements OnInit {
         (indicador: any) => {
           this.data = this.data.concat(indicador.records);
 
-          if (this.data.length > 1 && index === length - 1) {
-            if (this.data.length === 2) {
-              this.data = this.data.concat(this.data);
-            }
+          // if (this.data.length > 1 && index === length - 1) {
+          //   if (this.data.length === 2) {
+          //     this.data = this.data.concat(this.data);
+          //   }
 
-            const data = this.data;
+          //   const data = this.data;
 
-            this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-              .concat(this.data)
-              .concat([data[0], data[1], data[2]]);
-          }
+          //   this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+          //     .concat(this.data)
+          //     .concat([data[0], data[1], data[2]]);
+          // }
 
           this.charts = this.data.map(ind => {
             return [
