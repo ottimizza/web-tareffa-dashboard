@@ -4,8 +4,6 @@ import { DOCUMENT } from '@angular/common';
 import { UpdateService } from '@app/services/update.service';
 import { MessagingService } from '@app/services/messaging.service';
 import { LoggerUtils } from '@shared/utils/logger.utils';
-import { DYNAMIC_TYPE } from '@angular/compiler';
-import { JSONUtils } from '@shared/utils/json.utils';
 
 @Component({
   selector: 'app-root',
