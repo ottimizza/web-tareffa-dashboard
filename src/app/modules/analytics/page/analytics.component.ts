@@ -7,7 +7,6 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
-import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
 import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
@@ -22,19 +21,6 @@ export class AnalyticsComponent implements OnInit {
 
   filter: any;
   filterChangedSubject = new Subject<any>();
-  filterInterceptor: {
-    place: SideFilterInterceptLocation.EMIT;
-    function: (param?: any) => any | void;
-  } = {
-    place: SideFilterInterceptLocation.EMIT,
-    function: (selects: SelectableFilter[], param?: any) => {
-      if (!param.indicador && param.indicador !== '') {
-        const indicators = selects.filter(sel => sel.id === 'indicador')[0];
-        param.indicador = indicators ? indicators.options[0].value : null;
-      }
-      return param;
-    }
-  };
 
   indicators = [];
 
@@ -111,12 +97,11 @@ export class AnalyticsComponent implements OnInit {
   indicatorTitle: string;
 
   constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
-    this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
+    this.selectsSubject.pipe(debounceTime(300)).subscribe(async () => {
       const s = this.selects;
       this.selects = [];
-      setTimeout(() => {
-        this.selects = s;
-      }, 1);
+      await this._delay(1);
+      this.selects = s;
     });
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
@@ -183,14 +168,13 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getInfo() {
+    if (!this.indicators?.length) {
+      return;
+    }
+
     this.isLoading = true;
     this.charts = [];
     this.data = [];
-
-    if (this.indicators && this.indicators.length === 0) {
-      this.isLoading = false;
-      return;
-    }
 
     const filter = this.filter || {};
 
@@ -305,5 +289,9 @@ export class AnalyticsComponent implements OnInit {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
 
     this.selectsSubject.next();
+  }
+
+  private _delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

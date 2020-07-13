@@ -8,8 +8,11 @@
   (click)="activate()"
   [ngClass]="{ 'btn-filter-active': opened }"
 >
-  <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
-  <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
+  <mat-spinner *ngIf="selects?.length; else filterIsReady"></mat-spinner>
+  <ng-template #filterIsReady>
+    <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
+    <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
+  </ng-template>
 </button>
 
 <div
