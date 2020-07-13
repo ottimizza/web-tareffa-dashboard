@@ -61,6 +61,10 @@ export class SideFilterComponent implements OnInit {
     }
   }
 
+  filterInitiated() {
+    return !!this.selects?.length;
+  }
+
   onScrollEnd(event: string) {
     const select = this.selects.filter(sel => sel.id === event)[0];
     if (select.paginable) {
@@ -132,7 +136,10 @@ export class SideFilterComponent implements OnInit {
     this.emit();
   }
 
-  activate() {
+  activate(filterInitiated = true) {
+    if (filterInitiated === false) {
+      return;
+    }
     this.selects.sort((i1, i2) => (i1.title > i2.title ? 1 : i2.title > i1.title ? -1 : 0));
     if (this._intercept(SideFilterInterceptLocation.ACTIVE)) {
       this.cache = this.intercept.function(this.selects, this.selecteds);

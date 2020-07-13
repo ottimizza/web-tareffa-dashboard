@@ -5,10 +5,10 @@
 <button
   mat-fab
   class="btn-filter cursor-pointer"
-  (click)="activate()"
+  (click)="activate(filterInitiated())"
   [ngClass]="{ 'btn-filter-active': opened }"
 >
-  <mat-spinner *ngIf="selects?.length; else filterIsReady"></mat-spinner>
+  <mat-spinner *ngIf="!filterInitiated()"></mat-spinner>
   <ng-template #filterIsReady>
     <i class="fa fa-times" [ngClass]="{ 'd-none': !opened }"></i>
     <i class="fa fa-filter" [ngClass]="{ 'd-none': opened }"></i>
