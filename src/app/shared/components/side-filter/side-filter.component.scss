@@ -58,9 +58,13 @@ button {
 
 @keyframes animate {
   0% {
-    transform: rotate(0de);
+    transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
+}
+
+.my-spinner {
+  animation: animate 0.5s linear infinite;
 }
