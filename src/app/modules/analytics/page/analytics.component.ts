@@ -41,11 +41,7 @@ export class AnalyticsComponent implements OnInit {
   };
 
   public labels: Label[] = ['Encerrado', 'Aberto no Prazo', 'Aberto Atrasado'];
-  public chartColors = [
-    {
-      backgroundColor: ['#4b4279', 'lightgrey', '#d9587f']
-    }
-  ];
+  public chartColors = [{ backgroundColor: ['#4b4279', 'lightgrey', '#d9587f'] }];
 
   public chartOptions: ChartOptions = {
     legend: {
@@ -198,8 +194,6 @@ export class AnalyticsComponent implements OnInit {
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
     }
 
-    console.log(length);
-
     for (let index = 0; index < length; index++) {
       this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
         (indicador: any) => {
@@ -217,22 +211,18 @@ export class AnalyticsComponent implements OnInit {
               .concat([data[0], data[1], data[2]]);
           }
 
-          const charts = [];
-
-          this.data.forEach(indicator => {
-            charts.push([
+          this.charts = this.data.map(ind => {
+            return [
               {
                 data: [
-                  indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
-                  indicator.abertoNoPrazo,
-                  indicator.abertoAtrasado
+                  ind.encerradoNoPrazo + ind.encerradoAtrasado,
+                  ind.abertoNoPrazo,
+                  ind.abertoAtrasado
                 ],
-                label: indicator.nomeGrafico
+                label: ind.nomeGrafico
               }
-            ]);
+            ];
           });
-
-          this.charts = charts;
         },
         err => {
           this.charts = [];
