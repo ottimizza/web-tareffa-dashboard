@@ -63,7 +63,7 @@ export class IndicatorService {
   }
 
   getServices(id: number, showMissing: boolean = null, description: string = null) {
-    let url = `${environment.apiTareffaSpring}/grafico/${id}/servico`;
+    let url = `${environment.serviceGetUrl}/grafico/${id}/servico`;
 
     if (showMissing !== null) {
       url += `/faltantes`;
@@ -78,7 +78,7 @@ export class IndicatorService {
   }
 
   getTags(id: number, showMissing: boolean = null) {
-    let url = `${environment.apiTareffaSpring}/grafico/${id}/caracteristica`;
+    let url = `${environment.serviceGetUrl}/grafico/${id}/caracteristica`;
 
     if (showMissing !== null) {
       url += `/faltantes`;
@@ -117,7 +117,7 @@ export class IndicatorService {
   }
 
   getGraph(indicatorId: number) {
-    const url = `${environment.apiTareffaSpring}/indicador/${indicatorId}/grafico`;
+    const url = `${environment.serviceGetUrl}/indicador/${indicatorId}/grafico`;
 
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
@@ -125,17 +125,17 @@ export class IndicatorService {
   }
 
   getIndicators() {
-    const url = `${environment.apiTareffaSpring}/indicador`;
+    const url = `${environment.serviceGetUrl}/indicador`;
     return this.httpClient.get(url, this._headers);
   }
 
   getIndicatorById(indicador) {
-    const url = `${environment.apiTareffaSpring}/indicador/${indicador}`;
+    const url = `${environment.serviceGetUrl}/indicador/${indicador}`;
     return this.httpClient.get(url, this._headers);
   }
 
   getServicoProgramado(filter, indicador?) {
-    const url = `${environment.apiTareffaSpring}/indicador/${indicador ||
+    const url = `${environment.serviceGetUrl}/indicador/${indicador ||
       filter.indicador}/servico/programado/count`;
     return this.httpClient.post(
       url,
@@ -157,7 +157,7 @@ export class IndicatorService {
   }
 
   getUsers(filter, indicatorId) {
-    const url = `${environment.apiTareffaSpring}/grafico/${indicatorId}/usuarios`;
+    const url = `${environment.serviceGetUrl}/grafico/${indicatorId}/usuarios`;
 
     return this.httpClient.post(
       url,
@@ -175,7 +175,7 @@ export class IndicatorService {
   }
 
   createIndicators(descricao: string) {
-    const url = `${environment.apiTareffaSpring}/indicador`;
+    const url = `${environment.serviceGetUrl}/indicador`;
 
     return this.httpClient.post(
       url,

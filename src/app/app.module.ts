@@ -38,6 +38,7 @@ import {
   MatSnackBarModule
 } from '@angular/material';
 import { GlobalHttpInterceptor } from '@app/interceptor/http/http.interceptor';
+import { GlobalHttpInterceptorProvider } from '@app/interceptor/http/http-interceptor.provider';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,7 @@ import { GlobalHttpInterceptor } from '@app/interceptor/http/http.interceptor';
     // Custom material based modules
     MatSelectFilterModule
   ],
-  providers: [GlobalHttpInterceptor, MatDatepickerModule],
+  providers: [GlobalHttpInterceptorProvider, MatDatepickerModule],
   bootstrap: [AppComponent],
   entryComponents: []
 })

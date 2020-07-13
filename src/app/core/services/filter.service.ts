@@ -19,7 +19,7 @@ export class FilterService {
   }
 
   requestCategorias() {
-    const url = `${environment.apiTareffaSpring}/categoria`;
+    const url = `${environment.serviceGetUrl}/categoria`;
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
     });
@@ -43,14 +43,14 @@ export class FilterService {
   }
 
   requestIndicators() {
-    const url = `${environment.apiTareffaSpring}/indicador`;
+    const url = `${environment.serviceGetUrl}/indicador`;
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
     });
   }
 
   requestCaracteristicas() {
-    const url = `${environment.apiTareffaSpring}/caracteristicas?description=04`;
+    const url = `${environment.serviceGetUrl}/caracteristicas?description=04`;
     return this.httpClient.get(url, {
       headers: this.authenticationService.getAuthorizationHeaders()
     });

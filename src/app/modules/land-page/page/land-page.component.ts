@@ -11,7 +11,7 @@ export class LandPageComponent implements OnInit {
   currentUser: User;
 
   supportNumber = '+5547999455447';
-  defaultMessage = ['Estou', 'com', 'dificuldades', 'de', 'acesso', 'ao', 'Tareffa!'];
+  defaultMessage = 'Estou com dificuldades de acesso ao Dashboard do Tareffa!';
 
   constructor(private authenticationService: AuthenticationService) {}
 
@@ -20,14 +20,15 @@ export class LandPageComponent implements OnInit {
   }
 
   authenticate() {
+    this.authenticationService.clearStorage();
     this.authenticationService.authorize();
   }
 
   openWppWeb() {
     window.open(
-      `https://web.whatsapp.com/send?phone=${this.supportNumber}&text=${this.defaultMessage.join(
-        '+'
-      )}`,
+      `https://web.whatsapp.com/send?phone=${this.supportNumber}&text=${this.defaultMessage
+        .split(' ')
+        .join('+')}`,
       '_blank'
     );
   }
