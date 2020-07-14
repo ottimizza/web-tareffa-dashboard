@@ -184,7 +184,7 @@ export class AnalyticsComponent implements OnInit {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res: any) => {
           this._infoManager(res.records);
-          this.indicatorTitle = res.record.descricao;
+          this.indicatorTitle = res.records.descricao;
         });
     } else {
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
