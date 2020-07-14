@@ -178,27 +178,12 @@ export class AnalyticsComponent implements OnInit {
       filter.indicador = this.indicators[0].id;
     }
 
-    const length = filter.indicador === '' ? this.indicators.length : 1;
-
-    // let indicatorSelected = '';
-
-    // if (filter.indicador === '') {
-    //   //// NÃO ME PERGUNTE OQ Q ESSE TROÇO AQUI FAZ
-    //   if (this.indicators.length) {
-    //     indicatorSelected = this.indicators[0].id;
-    //   }
-    // } else {
-    //   indicatorSelected = filter.indicador;
-    // }
-
     if (filter.indicador !== '') {
       this.indicatorService
         .getIndicatorById(filter.indicador)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
       // Esse else faz sentido?
     } else {
-      this.data = [];
-
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
       const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
       type IndicatorsType = { records: any; status: string }[];
@@ -212,23 +197,17 @@ export class AnalyticsComponent implements OnInit {
           }),
           finalize(() => (this.isLoading = false))
         )
-        .subscribe(
-          records => {
-            console.log(records);
+        .subscribe(records => {
+          console.log(records);
 
-            this.data = records;
-            this._chartfy();
-            this.updateUsers();
+          this.data = records;
+          this._chartfy();
+          this.updateUsers();
 
-            this._iDontKnowWhatThisDoesButIKnowItsImportant();
+          // this._iDontKnowWhatThisDoesButIKnowItsImportant();
 
-            this.selectedIndicator = this.indicators[0];
-          },
-          err => {
-            this.charts = [];
-            this.data = [];
-          }
-        );
+          this.selectedIndicator = this.indicators[0];
+        });
     }
   }
 
