@@ -174,7 +174,7 @@ export class AnalyticsComponent implements OnInit {
     this.data = [];
 
     const filter = this.filter || {};
-    if (!filter.indicador) {
+    if (filter.indicador === undefined) {
       filter.indicador = this.indicators[0].id;
     }
 
@@ -198,7 +198,6 @@ export class AnalyticsComponent implements OnInit {
           finalize(() => (this.isLoading = false))
         )
         .subscribe(records => {
-          alert('debug');
           console.log(records);
 
           this.data = records;
