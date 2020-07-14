@@ -186,7 +186,7 @@ export class AnalyticsComponent implements OnInit {
     } else {
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
       const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
-      type IndicatorsType = { records: any; status: string }[];
+      type IndicatorsType = { records: any[]; status: string }[];
 
       combineLatest(indicators$)
         .pipe(
@@ -198,6 +198,7 @@ export class AnalyticsComponent implements OnInit {
           finalize(() => (this.isLoading = false))
         )
         .subscribe(records => {
+          alert('debug');
           console.log(records);
 
           this.data = records;
