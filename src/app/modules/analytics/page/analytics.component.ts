@@ -183,7 +183,7 @@ export class AnalyticsComponent implements OnInit {
         .getServicoProgramado(filter, filter.indicador)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res: any) => {
-          this._infoManager([res.record]);
+          this._infoManager(res.records);
           this.indicatorTitle = res.record.descricao;
         });
     } else {
