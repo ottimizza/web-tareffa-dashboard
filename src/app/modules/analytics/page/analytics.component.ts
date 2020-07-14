@@ -206,10 +206,11 @@ export class AnalyticsComponent implements OnInit {
           console.log(records);
 
           this.data = records;
+
+          this._iDontKnowWhatThisDoesButIKnowItsImportant();
           this._chartfy();
           this.updateUsers();
 
-          this._iDontKnowWhatThisDoesButIKnowItsImportant();
           console.log(this.charts);
 
           this.selectedIndicator = this.data[0];
