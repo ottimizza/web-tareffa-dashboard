@@ -225,6 +225,7 @@ export class AnalyticsComponent implements OnInit {
               ];
             });
             this.updateUsers();
+            const index = this.filter.indicador === '' ? this.indicators.length : 1;
             if (this.data.length > 1 && index === length - 1) {
               if (this.data.length === 2) {
                 this.data = this.data.concat(this.data);
