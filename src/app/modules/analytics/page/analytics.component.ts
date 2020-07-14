@@ -165,9 +165,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getInfo() {
-    console.log(1);
     if (!this.indicators?.length) {
-      console.log(2);
       return;
     }
 
@@ -178,15 +176,13 @@ export class AnalyticsComponent implements OnInit {
     const filter = this.filter || {};
     if (filter.indicador === undefined) {
       filter.indicador = this.indicators[0].id;
-      console.log(3);
     }
 
     if (filter.indicador !== '') {
-      console.log(4);
-      this.indicatorService
-        .getIndicatorById(filter.indicador)
-        .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
-      // Esse else faz sentido?
+      this.indicatorService.getIndicatorById(filter.indicador).subscribe((res: any) => {
+        this._infoManager([res.record]);
+        this.indicatorTitle = res.record.descricao;
+      });
     } else {
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
       const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
@@ -202,17 +198,7 @@ export class AnalyticsComponent implements OnInit {
           finalize(() => (this.isLoading = false))
         )
         .subscribe(records => {
-          console.log(5);
-          console.log(records);
-
-          this.data = records;
-
-          this._iDontKnowWhatThisDoesButIKnowItsImportant();
-          this._chartfy();
-          this.updateUsers();
-
-          console.log(this.charts);
-
+          this._infoManager(records);
           this.selectedIndicator = this.data[0];
         });
     }
@@ -269,7 +255,7 @@ export class AnalyticsComponent implements OnInit {
     });
   }
 
-  private _iDontKnowWhatThisDoesButIKnowItsImportant() {
+  private _expandToCarousel() {
     if (this.data.length > 1) {
       if (this.data.length === 2) {
         this.data = this.data.concat(this.data);
@@ -281,5 +267,12 @@ export class AnalyticsComponent implements OnInit {
         .concat(this.data)
         .concat([data[0], data[1], data[2]]);
     }
+  }
+
+  private _infoManager(data: any[]) {
+    this.data = data;
+    this._expandToCarousel();
+    this._chartfy();
+    this.updateUsers();
   }
 }
