@@ -23,7 +23,8 @@ import { DoughnutModule } from '@shared/components/doughnut/doughnut.module';
     SideFilterModule,
     MatSlideToggleModule,
     PipesModule,
-    DoughnutModule
+    DoughnutModule,
+    SideFilterModule
   ]
 })
 export class AnalyticsModule {}
