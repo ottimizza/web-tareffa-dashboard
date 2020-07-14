@@ -180,7 +180,7 @@ export class AnalyticsComponent implements OnInit {
 
     if (filter.indicador !== '') {
       this.indicatorService
-        .getIndicatorById(filter.indicador)
+        .getServicoProgramado(filter, filter.indicador)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res: any) => {
           this._infoManager([res.record]);
