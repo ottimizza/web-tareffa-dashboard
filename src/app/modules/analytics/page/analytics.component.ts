@@ -225,6 +225,17 @@ export class AnalyticsComponent implements OnInit {
               ];
             });
             this.updateUsers();
+            if (this.data.length > 1 && index === length - 1) {
+              if (this.data.length === 2) {
+                this.data = this.data.concat(this.data);
+              }
+
+              const data = this.data;
+
+              this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+                .concat(this.data)
+                .concat([data[0], data[1], data[2]]);
+            }
           },
           err => {
             this.charts = [];
