@@ -165,7 +165,9 @@ export class AnalyticsComponent implements OnInit {
   }
 
   getInfo() {
+    console.log(1);
     if (!this.indicators?.length) {
+      console.log(2);
       return;
     }
 
@@ -176,9 +178,11 @@ export class AnalyticsComponent implements OnInit {
     const filter = this.filter || {};
     if (filter.indicador === undefined) {
       filter.indicador = this.indicators[0].id;
+      console.log(3);
     }
 
     if (filter.indicador !== '') {
+      console.log(4);
       this.indicatorService
         .getIndicatorById(filter.indicador)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
@@ -198,6 +202,7 @@ export class AnalyticsComponent implements OnInit {
           finalize(() => (this.isLoading = false))
         )
         .subscribe(records => {
+          console.log(5);
           console.log(records);
 
           this.data = records;
