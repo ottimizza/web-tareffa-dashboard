@@ -198,10 +198,38 @@ export class AnalyticsComponent implements OnInit {
       const indicators$ = this.indicators.map(indicator =>
         this.indicatorService.getServicoProgramado(this.filter, indicator.id)
       );
-      combineLatest(indicators$).subscribe(result => {
-        console.log('Pelo menos entrou no subscribe...');
-        console.log(result);
-      });
+      combineLatest(indicators$)
+        .pipe(
+          map((results: { records: any[]; status: string }[]) => {
+            const recs = [];
+            results.forEach(res => recs.concat(res.records));
+            return recs;
+          })
+        )
+        .subscribe(
+          records => {
+            console.log(records);
+
+            this.data = records;
+            this.charts = this.data.map(ind => {
+              return [
+                {
+                  data: [
+                    ind.encerradoNoPrazo + ind.encerradoAtrasado,
+                    ind.abertoNoPrazo,
+                    ind.abertoAtrasado
+                  ],
+                  label: ind.nomeGrafico
+                }
+              ];
+            });
+          },
+          err => {
+            this.charts = [];
+            this.data = [];
+            this.isLoading = false;
+          }
+        );
       // .pipe(map((result: any[]) => ({ indicators, departments })))
       // this.indicators.forEach(indicator => {
       //   this.indicatorService.getServicoProgramado(this.filter, indicator).subscribe((indicador: any) => {
