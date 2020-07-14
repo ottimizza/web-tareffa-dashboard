@@ -2,15 +2,13 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env';
 import { AuthenticationService } from '@app/authentication/authentication.service';
 import { HttpClient } from '@angular/common/http';
+import { HttpHandlerService } from './http-handler.service';
 
 const FILTER_KEY = 'filter';
 
 @Injectable({ providedIn: 'root' })
 export class FilterService {
-  constructor(
-    private httpClient: HttpClient,
-    private authenticationService: AuthenticationService
-  ) {}
+  constructor(private http: HttpHandlerService) {}
 
   buildFilter() {}
 
@@ -20,9 +18,7 @@ export class FilterService {
 
   requestCategorias() {
     const url = `${environment.serviceGetUrl}/categoria`;
-    return this.httpClient.get(url, {
-      headers: this.authenticationService.getAuthorizationHeaders()
-    });
+    return this.http.get(url, 'Falha ao obter categorias!');
   }
 
   requestDepartments(dataProgramadaInicio: number, dataProgramadaTermino: number, agrupamento = 1) {
@@ -33,27 +29,21 @@ export class FilterService {
     endDate.setHours(23, 59, 59, 999);
     dataProgramadaInicio = startDate.getTime();
     dataProgramadaTermino = endDate.getTime();
-    return this.httpClient.post(
+    return this.http.post(
       url,
       { dataProgramadaInicio, dataProgramadaTermino },
-      {
-        headers: this.authenticationService.getAuthorizationHeaders()
-      }
+      'Fa,ha ao obter departamentos!'
     );
   }
 
   requestIndicators() {
     const url = `${environment.serviceGetUrl}/indicador`;
-    return this.httpClient.get(url, {
-      headers: this.authenticationService.getAuthorizationHeaders()
-    });
+    return this.http.get(url, 'Falha ao obter indicadores');
   }
 
   requestCaracteristicas() {
     const url = `${environment.serviceGetUrl}/caracteristicas?description=04`;
-    return this.httpClient.get(url, {
-      headers: this.authenticationService.getAuthorizationHeaders()
-    });
+    return this.http.get(url, 'Falha ao obter características!');
   }
 
   store(key: string, f: any) {
