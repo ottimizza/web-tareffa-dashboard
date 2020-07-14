@@ -144,7 +144,7 @@ export class AnalyticsComponent implements OnInit {
   slickInit(e) {
     if (this.data.length > 1) {
       e.slick.currentSlide = 3;
-      // ! e.slick.refresh();
+      e.slick.refresh();
       this.selectedIndicator = this.data[3];
     } else {
       this.selectedIndicator = this.data[0];
@@ -154,11 +154,11 @@ export class AnalyticsComponent implements OnInit {
   afterChange(e) {
     if (e.slick.currentSlide === this.charts.length - 3) {
       e.slick.currentSlide = 3;
-      // ! e.slick.refresh();
+      e.slick.refresh();
     }
     if (e.slick.currentSlide === 2) {
       e.slick.currentSlide = this.charts.length - 4;
-      // ! e.slick.refresh();
+      e.slick.refresh();
     }
     this.selectedIndicator = this.data[e.slick.currentSlide];
     this.indicatorTitle = this.selectedIndicator.nomeIndicador;
@@ -184,7 +184,6 @@ export class AnalyticsComponent implements OnInit {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res: any) => {
           this._infoManager(res.records);
-          this.indicatorTitle = res.records.descricao;
         });
     } else {
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
@@ -202,7 +201,6 @@ export class AnalyticsComponent implements OnInit {
         )
         .subscribe(records => {
           this._infoManager(records);
-          this.selectedIndicator = this.data[0];
         });
     }
   }
@@ -277,5 +275,7 @@ export class AnalyticsComponent implements OnInit {
     this._expandToCarousel();
     this._chartfy();
     this.updateUsers();
+    this.selectedIndicator = this.data[0];
+    this.indicatorTitle = this.selectedIndicator.nomeIndicador;
   }
 }

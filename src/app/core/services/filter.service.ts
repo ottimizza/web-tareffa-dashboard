@@ -32,7 +32,7 @@ export class FilterService {
     return this.http.post(
       url,
       { dataProgramadaInicio, dataProgramadaTermino },
-      'Fa,ha ao obter departamentos!'
+      'Falha ao obter departamentos!'
     );
   }
 
