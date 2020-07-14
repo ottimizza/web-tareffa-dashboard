@@ -205,7 +205,7 @@ export class AnalyticsComponent implements OnInit {
           this.updateUsers();
 
           this._iDontKnowWhatThisDoesButIKnowItsImportant();
-          console.log(this.data);
+          console.log(this.charts);
 
           this.selectedIndicator = this.data[0];
         });
