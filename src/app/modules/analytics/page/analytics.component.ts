@@ -206,7 +206,7 @@ export class AnalyticsComponent implements OnInit {
 
           // this._iDontKnowWhatThisDoesButIKnowItsImportant();
 
-          this.selectedIndicator = this.indicators[0];
+          this.selectedIndicator = this.data[0];
         });
     }
   }
