@@ -196,7 +196,7 @@ export class AnalyticsComponent implements OnInit {
     } else {
       this.data = [];
       const indicators$ = this.indicators.map(indicator =>
-        this.indicatorService.getServicoProgramado(this.filter, indicator)
+        this.indicatorService.getServicoProgramado(this.filter, indicator.id)
       );
       combineLatest(indicators$).subscribe(result => {
         console.log('Pelo menos entrou no subscribe...');
