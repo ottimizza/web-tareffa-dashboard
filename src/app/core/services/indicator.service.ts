@@ -175,7 +175,7 @@ export class IndicatorService {
   }
 
   createIndicators(descricao: string) {
-    const url = `${environment.serviceGetUrl}/indicador`;
+    const url = `${environment.apiTareffaSpring}/indicador`;
 
     return this.httpClient.post(
       url,
