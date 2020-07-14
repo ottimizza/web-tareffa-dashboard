@@ -144,7 +144,7 @@ export class AnalyticsComponent implements OnInit {
   slickInit(e) {
     if (this.data.length > 1) {
       e.slick.currentSlide = 3;
-      e.slick.refresh();
+      // ! e.slick.refresh();
       this.selectedIndicator = this.data[3];
     } else {
       this.selectedIndicator = this.data[0];
@@ -154,11 +154,11 @@ export class AnalyticsComponent implements OnInit {
   afterChange(e) {
     if (e.slick.currentSlide === this.charts.length - 3) {
       e.slick.currentSlide = 3;
-      e.slick.refresh();
+      // ! e.slick.refresh();
     }
     if (e.slick.currentSlide === 2) {
       e.slick.currentSlide = this.charts.length - 4;
-      e.slick.refresh();
+      // ! e.slick.refresh();
     }
     this.selectedIndicator = this.data[e.slick.currentSlide];
     this.indicatorTitle = this.selectedIndicator.nomeIndicador;
