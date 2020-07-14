@@ -179,10 +179,13 @@ export class AnalyticsComponent implements OnInit {
     }
 
     if (filter.indicador !== '') {
-      this.indicatorService.getIndicatorById(filter.indicador).subscribe((res: any) => {
-        this._infoManager([res.record]);
-        this.indicatorTitle = res.record.descricao;
-      });
+      this.indicatorService
+        .getIndicatorById(filter.indicador)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe((res: any) => {
+          this._infoManager([res.record]);
+          this.indicatorTitle = res.record.descricao;
+        });
     } else {
       const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
       const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
