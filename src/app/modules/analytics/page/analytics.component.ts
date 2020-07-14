@@ -177,66 +177,98 @@ export class AnalyticsComponent implements OnInit {
 
     const length = filter.indicador === '' ? this.indicators.length : 1;
 
-    let indicatorSelected = '';
+    // let indicatorSelected = '';
 
-    if (filter.indicador === '') {
-      //// NÃO ME PERGUNTE OQ Q ESSE TROÇO AQUI FAZ
-      if (this.indicators.length) {
-        indicatorSelected = this.indicators[0].id;
-      }
-    } else {
-      indicatorSelected = filter.indicador;
-    }
+    // if (filter.indicador === '') {
+    //   //// NÃO ME PERGUNTE OQ Q ESSE TROÇO AQUI FAZ
+    //   if (this.indicators.length) {
+    //     indicatorSelected = this.indicators[0].id;
+    //   }
+    // } else {
+    //   indicatorSelected = filter.indicador;
+    // }
 
-    if (indicatorSelected) {
+    if (filter.indicador !== '') {
       this.indicatorService
-        .getIndicatorById(indicatorSelected)
+        .getIndicatorById(filter.indicador)
         .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
-    }
-
-    for (let index = 0; index < length; index++) {
-      this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
-        (indicador: any) => {
-          this.data = this.data.concat(indicador.records);
-
-          if (length > 1 && index === length - 1) {
-            if (length === 2) {
-              this.data = this.data.concat(this.data);
-            }
-
-            const data = this.data;
-
-            this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-              .concat(this.data)
-              .concat([data[0], data[1], data[2]]);
-          }
-
-          this.charts = this.data.map(ind => {
-            return [
-              {
-                data: [
-                  ind.encerradoNoPrazo + ind.encerradoAtrasado,
-                  ind.abertoNoPrazo,
-                  ind.abertoAtrasado
-                ],
-                label: ind.nomeGrafico
-              }
-            ];
-          });
-        },
-        err => {
-          this.charts = [];
-          this.data = [];
-          this.isLoading = false;
-        },
-        () => {
-          setTimeout(() => {
-            this.isLoading = false;
-            this.updateUsers();
-          }, 300);
-        }
+      // Esse else faz sentido?
+    } else {
+      this.data = [];
+      const indicators$ = this.indicators.map(indicator =>
+        this.indicatorService.getServicoProgramado(this.filter, indicator)
       );
+      combineLatest(indicators$).subscribe(result => {
+        console.log('Pelo menos entrou no subscribe...');
+        console.log(result);
+      });
+      // .pipe(map((result: any[]) => ({ indicators, departments })))
+      // this.indicators.forEach(indicator => {
+      //   this.indicatorService.getServicoProgramado(this.filter, indicator).subscribe((indicador: any) => {
+
+      //     this.data = this.data.concat(indicador.records);
+      //     this.charts = this.data.map(ind => {
+      //       return [{
+      //         data: [
+      //           ind.encerradoNoPrazo + ind.encerradoAtrasado,
+      //           ind.abertoNoPrazo,
+      //           ind.abertoAtrasado
+      //         ],
+      //         label: ind.nomeGrafico
+      //       }];
+      //     });
+
+      //   }, err => {
+      //     this.charts = [];
+      //     this.data = [];
+      //     this.isLoading = false;
+      //   });
+      // });
     }
+
+    // for (let index = 0; index < length; index++) {
+    //   this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
+    //     (indicador: any) => {
+    //       this.data = this.data.concat(indicador.records);
+
+    //       if (this.data.length > 1 && index === length - 1) {
+    //         if (this.data.length === 2) {
+    //           this.data = this.data.concat(this.data);
+    //         }
+
+    //         const data = this.data;
+
+    //         this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+    //           .concat(this.data)
+    //           .concat([data[0], data[1], data[2]]);
+    //       }
+
+    //       this.charts = this.data.map(ind => {
+    //         return [
+    //           {
+    //             data: [
+    //               ind.encerradoNoPrazo + ind.encerradoAtrasado,
+    //               ind.abertoNoPrazo,
+    //               ind.abertoAtrasado
+    //             ],
+    //             label: ind.nomeGrafico
+    //           }
+    //         ];
+    //       });
+    //     },
+    //     err => {
+    //       this.charts = [];
+    //       this.data = [];
+    //       this.isLoading = false;
+    //     },
+    //     () => {
+    //       setTimeout(() => {
+    //         this.isLoading = false;
+    //         this.updateUsers();
+    //       }, 300);
+    //     }
+    //   );
+    // }
   }
 
   getPercentage(user) {
