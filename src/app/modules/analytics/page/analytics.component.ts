@@ -174,6 +174,9 @@ export class AnalyticsComponent implements OnInit {
     this.data = [];
 
     const filter = this.filter || {};
+    if (!filter.indicador) {
+      filter.indicador = this.indicators[0].id;
+    }
 
     const length = filter.indicador === '' ? this.indicators.length : 1;
 
@@ -195,12 +198,14 @@ export class AnalyticsComponent implements OnInit {
       // Esse else faz sentido?
     } else {
       this.data = [];
-      const indicators$ = this.indicators.map(indicator =>
-        this.indicatorService.getServicoProgramado(this.filter, indicator.id)
-      );
+
+      const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
+      const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
+      type IndicatorsType = { records: any; status: string }[];
+
       combineLatest(indicators$)
         .pipe(
-          map((results: { records: any[]; status: string }[]) => {
+          map((results: IndicatorsType) => {
             let recs = [];
             results.forEach(res => (recs = recs.concat(res.records)));
             return recs;
@@ -212,104 +217,19 @@ export class AnalyticsComponent implements OnInit {
             console.log(records);
 
             this.data = records;
-            this.charts = this.data.map(ind => {
-              return [
-                {
-                  data: [
-                    ind.encerradoNoPrazo + ind.encerradoAtrasado,
-                    ind.abertoNoPrazo,
-                    ind.abertoAtrasado
-                  ],
-                  label: ind.nomeGrafico
-                }
-              ];
-            });
+            this._chartfy();
             this.updateUsers();
-            const index = this.filter.indicador === '' ? this.indicators.length : 1;
-            if (this.data.length > 1 && index === length - 1) {
-              if (this.data.length === 2) {
-                this.data = this.data.concat(this.data);
-              }
 
-              const data = this.data;
+            this._iDontKnowWhatThisDoesButIKnowItsImportant();
 
-              this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-                .concat(this.data)
-                .concat([data[0], data[1], data[2]]);
-            }
+            this.selectedIndicator = this.indicators[0];
           },
           err => {
             this.charts = [];
             this.data = [];
           }
         );
-      // .pipe(map((result: any[]) => ({ indicators, departments })))
-      // this.indicators.forEach(indicator => {
-      //   this.indicatorService.getServicoProgramado(this.filter, indicator).subscribe((indicador: any) => {
-
-      //     this.data = this.data.concat(indicador.records);
-      //     this.charts = this.data.map(ind => {
-      //       return [{
-      //         data: [
-      //           ind.encerradoNoPrazo + ind.encerradoAtrasado,
-      //           ind.abertoNoPrazo,
-      //           ind.abertoAtrasado
-      //         ],
-      //         label: ind.nomeGrafico
-      //       }];
-      //     });
-
-      //   }, err => {
-      //     this.charts = [];
-      //     this.data = [];
-      //     this.isLoading = false;
-      //   });
-      // });
     }
-
-    // for (let index = 0; index < length; index++) {
-    //   this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
-    //     (indicador: any) => {
-    //       this.data = this.data.concat(indicador.records);
-
-    //       if (this.data.length > 1 && index === length - 1) {
-    //         if (this.data.length === 2) {
-    //           this.data = this.data.concat(this.data);
-    //         }
-
-    //         const data = this.data;
-
-    //         this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-    //           .concat(this.data)
-    //           .concat([data[0], data[1], data[2]]);
-    //       }
-
-    //       this.charts = this.data.map(ind => {
-    //         return [
-    //           {
-    //             data: [
-    //               ind.encerradoNoPrazo + ind.encerradoAtrasado,
-    //               ind.abertoNoPrazo,
-    //               ind.abertoAtrasado
-    //             ],
-    //             label: ind.nomeGrafico
-    //           }
-    //         ];
-    //       });
-    //     },
-    //     err => {
-    //       this.charts = [];
-    //       this.data = [];
-    //       this.isLoading = false;
-    //     },
-    //     () => {
-    //       setTimeout(() => {
-    //         this.isLoading = false;
-    //         this.updateUsers();
-    //       }, 300);
-    //     }
-    //   );
-    // }
   }
 
   getPercentage(user) {
@@ -346,5 +266,34 @@ export class AnalyticsComponent implements OnInit {
 
   private _delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private _chartfy() {
+    this.charts = this.data.map(ind => {
+      return [
+        {
+          data: [
+            ind.encerradoNoPrazo + ind.encerradoAtrasado,
+            ind.abertoNoPrazo,
+            ind.abertoAtrasado
+          ],
+          label: ind.nomeGrafico
+        }
+      ];
+    });
+  }
+
+  private _iDontKnowWhatThisDoesButIKnowItsImportant() {
+    if (this.data.length > 1) {
+      if (this.data.length === 2) {
+        this.data = this.data.concat(this.data);
+      }
+
+      const data = this.data;
+
+      this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+        .concat(this.data)
+        .concat([data[0], data[1], data[2]]);
+    }
   }
 }
