@@ -6,7 +6,7 @@ import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/s
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
 import { combineLatest, Subject, interval } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, finalize } from 'rxjs/operators';
 import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
@@ -201,10 +201,11 @@ export class AnalyticsComponent implements OnInit {
       combineLatest(indicators$)
         .pipe(
           map((results: { records: any[]; status: string }[]) => {
-            const recs = [];
-            results.forEach(res => recs.concat(res.records));
+            let recs = [];
+            results.forEach(res => (recs = recs.concat(res.records)));
             return recs;
-          })
+          }),
+          finalize(() => (this.isLoading = false))
         )
         .subscribe(
           records => {
@@ -223,11 +224,11 @@ export class AnalyticsComponent implements OnInit {
                 }
               ];
             });
+            this.updateUsers();
           },
           err => {
             this.charts = [];
             this.data = [];
-            this.isLoading = false;
           }
         );
       // .pipe(map((result: any[]) => ({ indicators, departments })))
