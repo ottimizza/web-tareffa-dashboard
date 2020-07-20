@@ -55,3 +55,16 @@ button {
     right: calc(100% - 85px) !important;
   }
 }
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.my-spinner {
+  animation: animate 0.8s linear infinite;
+}

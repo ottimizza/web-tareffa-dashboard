@@ -5,9 +5,8 @@ import { SelectableFilter } from '@shared/models/Filter';
 import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/side-filter-conversor.utils';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, PluginServiceGlobalRegistrationAndOptions } from 'ng2-charts';
-import { combineLatest, Subject } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
-import { SideFilterInterceptLocation } from '@shared/components/side-filter/side-filter.component';
+import { combineLatest, Subject, interval } from 'rxjs';
+import { map, debounceTime, finalize } from 'rxjs/operators';
 import { DateUtils } from '@shared/utils/date.utils';
 
 @Component({
@@ -22,19 +21,6 @@ export class AnalyticsComponent implements OnInit {
 
   filter: any;
   filterChangedSubject = new Subject<any>();
-  filterInterceptor: {
-    place: SideFilterInterceptLocation.EMIT;
-    function: (param?: any) => any | void;
-  } = {
-    place: SideFilterInterceptLocation.EMIT,
-    function: (selects: SelectableFilter[], param?: any) => {
-      if (!param.indicador && param.indicador !== '') {
-        const indicators = selects.filter(sel => sel.id === 'indicador')[0];
-        param.indicador = indicators ? indicators.options[0].value : null;
-      }
-      return param;
-    }
-  };
 
   indicators = [];
 
@@ -55,11 +41,7 @@ export class AnalyticsComponent implements OnInit {
   };
 
   public labels: Label[] = ['Encerrado', 'Aberto no Prazo', 'Aberto Atrasado'];
-  public chartColors: Array<any> = [
-    {
-      backgroundColor: ['#4b4279', 'lightgrey', '#d9587f']
-    }
-  ];
+  public chartColors = [{ backgroundColor: ['#4b4279', 'lightgrey', '#d9587f'] }];
 
   public chartOptions: ChartOptions = {
     legend: {
@@ -111,12 +93,11 @@ export class AnalyticsComponent implements OnInit {
   indicatorTitle: string;
 
   constructor(private filterService: FilterService, private indicatorService: IndicatorService) {
-    this.selectsSubject.pipe(debounceTime(300)).subscribe(() => {
+    this.selectsSubject.pipe(debounceTime(300)).subscribe(async () => {
       const s = this.selects;
       this.selects = [];
-      setTimeout(() => {
-        this.selects = s;
-      }, 1);
+      await this._delay(1);
+      this.selects = s;
     });
 
     this.filterChangedSubject.pipe(debounceTime(300)).subscribe((filter: any) => {
@@ -127,7 +108,9 @@ export class AnalyticsComponent implements OnInit {
 
   ngOnInit() {
     this.refreshFilter();
-    window.sessionStorage.removeItem('user-refresh-time');
+
+    const period = 1000 * 60 * 10; // 10 minutos em milisegundos.
+    interval(period).subscribe(() => this.updateUsers());
   }
 
   refreshFilter(filter?: any) {
@@ -179,85 +162,46 @@ export class AnalyticsComponent implements OnInit {
     }
     this.selectedIndicator = this.data[e.slick.currentSlide];
     this.indicatorTitle = this.selectedIndicator.nomeIndicador;
-    this.checkUserRefreshTime();
   }
 
   getInfo() {
+    if (!this.indicators?.length) {
+      return;
+    }
+
     this.isLoading = true;
     this.charts = [];
     this.data = [];
 
-    if (this.indicators && this.indicators.length === 0) {
-      this.isLoading = false;
-      return;
-    }
-
     const filter = this.filter || {};
-
-    const length = filter.indicador === '' ? this.indicators.length : 1;
-
-    let indicatorSelected = '';
-
-    if (filter.indicador === '') {
-      if (this.indicators.length) {
-        indicatorSelected = this.indicators[0].id;
-      }
-    } else {
-      indicatorSelected = filter.indicador;
+    if (filter.indicador === undefined) {
+      filter.indicador = this.indicators[0].id;
     }
 
-    if (indicatorSelected) {
+    if (filter.indicador !== '') {
       this.indicatorService
-        .getIndicatorById(indicatorSelected)
-        .subscribe((res: any) => (this.indicatorTitle = res.record.descricao));
-    }
+        .getServicoProgramado(filter, filter.indicador)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe((res: any) => {
+          this._infoManager(res.records);
+        });
+    } else {
+      const mapper = id => this.indicatorService.getServicoProgramado(this.filter, id);
+      const indicators$ = this.indicators.map(indicator => mapper(indicator.id));
+      type IndicatorsType = { records: any[]; status: string }[];
 
-    for (let index = 0; index < length; index++) {
-      this.indicatorService.getServicoProgramado(this.filter, indicatorSelected).subscribe(
-        (indicador: any) => {
-          this.data = this.data.concat(indicador.records);
-
-          if (this.data.length > 1 && index === length - 1) {
-            if (this.data.length === 2) {
-              this.data = this.data.concat(this.data);
-            }
-
-            const data = this.data;
-
-            this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
-              .concat(this.data)
-              .concat([data[0], data[1], data[2]]);
-          }
-
-          const charts = [];
-
-          this.data.forEach(indicator => {
-            charts.push([
-              {
-                data: [
-                  indicator.encerradoNoPrazo + indicator.encerradoAtrasado,
-                  indicator.abertoNoPrazo,
-                  indicator.abertoAtrasado
-                ],
-                label: indicator.nomeGrafico
-              }
-            ]);
-          });
-
-          this.charts = charts;
-        },
-        err => {
-          this.charts = [];
-          this.data = [];
-          this.isLoading = false;
-        },
-        () => {
-          setTimeout(() => {
-            this.isLoading = false;
-            this.updateUsers();
-          }, 300);
-        }
-      );
+      combineLatest(indicators$)
+        .pipe(
+          map((results: IndicatorsType) => {
+            let recs = [];
+            results.forEach(res => (recs = recs.concat(res.records)));
+            return recs;
+          }),
+          finalize(() => (this.isLoading = false))
+        )
+        .subscribe(records => {
+          this._infoManager(records);
+        });
     }
   }
 
@@ -281,20 +225,6 @@ export class AnalyticsComponent implements OnInit {
           this.users[indicator.id] = res.records;
         });
     });
-
-    // Marca a hora foi feito o request dos usuarios
-    window.sessionStorage.setItem('user-refresh-time', new Date().getTime().toString());
-  }
-
-  // Método chamado sempre que muda o slide para verificar se deve atualizar a lista de usuarioss
-  checkUserRefreshTime() {
-    const previousTime = +window.sessionStorage.getItem('user-refresh-time');
-    const newTime = new Date().getTime();
-
-    // Verifica se já passou 10 minutos desde a ultima atualização da lista de usuarios
-    if (newTime - previousTime > 600000) {
-      this.updateUsers();
-    }
   }
 
   onFilterChange(filter: any) {
@@ -305,5 +235,47 @@ export class AnalyticsComponent implements OnInit {
     this.selects.push(SideFilterConversorUtils.parse(subscriptions.records, title, id, multiple));
 
     this.selectsSubject.next();
+  }
+
+  private _delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private _chartfy() {
+    this.charts = this.data.map(ind => {
+      return [
+        {
+          data: [
+            ind.encerradoNoPrazo + ind.encerradoAtrasado,
+            ind.abertoNoPrazo,
+            ind.abertoAtrasado
+          ],
+          label: ind.nomeGrafico
+        }
+      ];
+    });
+  }
+
+  private _expandToCarousel() {
+    if (this.data.length > 1) {
+      if (this.data.length === 2) {
+        this.data = this.data.concat(this.data);
+      }
+
+      const data = this.data;
+
+      this.data = [data[data.length - 3], data[data.length - 2], data[data.length - 1]]
+        .concat(this.data)
+        .concat([data[0], data[1], data[2]]);
+    }
+  }
+
+  private _infoManager(data: any[]) {
+    this.data = data;
+    this._expandToCarousel();
+    this._chartfy();
+    this.updateUsers();
+    this.selectedIndicator = this.data[0];
+    this.indicatorTitle = this.selectedIndicator.nomeIndicador;
   }
 }
