@@ -1,9 +1,8 @@
 export class ClipboardUtils {
-
   public static fallbackCopyTextToClipboard(text: string) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
-    textArea.style.position = 'fixed';  // avoid scrolling to bottom
+    textArea.style.position = 'fixed'; // avoid scrolling to bottom
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
@@ -23,11 +22,13 @@ export class ClipboardUtils {
       ClipboardUtils.fallbackCopyTextToClipboard(text);
       return;
     }
-    navigator.clipboard.writeText(text).then(() => {
-      console.log('Async: Copying to clipboard was successful!');
-    }, (err) => {
-      console.error('Async: Could not copy text: ', err);
-    });
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log('Async: Copying to clipboard was successful!');
+      },
+      err => {
+        console.error('Async: Could not copy text: ', err);
+      }
+    );
   }
-
 }
