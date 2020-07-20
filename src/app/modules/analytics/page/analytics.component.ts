@@ -271,10 +271,11 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private _infoManager(data: any[]) {
+    // ! A ORDEM DOS EVENTOS A SEGUIR É IMPORTANTÍSSIMA
     this.data = data;
+    this.updateUsers();
     this._expandToCarousel();
     this._chartfy();
-    this.updateUsers();
     this.selectedIndicator = this.data[0];
     this.indicatorTitle = this.selectedIndicator.nomeIndicador;
   }
