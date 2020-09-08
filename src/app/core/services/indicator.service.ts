@@ -1,6 +1,4 @@
 import { environment } from '@env';
-import { AuthenticationService } from './../authentication/authentication.service';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpHandlerService } from './http-handler.service';
 
