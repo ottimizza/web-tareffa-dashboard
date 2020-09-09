@@ -110,7 +110,7 @@ export class AnalyticsComponent implements OnInit {
     this.refreshFilter();
 
     const period = 1000 * 60 * 10; // 10 minutos em milisegundos.
-    interval(period).subscribe(() => this.updateUsers());
+    interval(period).subscribe(() => this.filterChangedSubject.next(this.filter));
   }
 
   refreshFilter(filter?: any) {
