@@ -39,6 +39,7 @@ import {
 } from '@angular/material';
 import { GlobalHttpInterceptor } from '@app/interceptor/http/http.interceptor';
 import { GlobalHttpInterceptorProvider } from '@app/interceptor/http/http-interceptor.provider';
+import { GlobalErrorHandlerProvider } from '@shared/handlers/global-error-handler.provider';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,7 @@ import { GlobalHttpInterceptorProvider } from '@app/interceptor/http/http-interc
     // Custom material based modules
     MatSelectFilterModule
   ],
-  providers: [GlobalHttpInterceptorProvider, MatDatepickerModule],
+  providers: [GlobalHttpInterceptorProvider, GlobalErrorHandlerProvider, MatDatepickerModule],
   bootstrap: [AppComponent],
   entryComponents: []
 })
