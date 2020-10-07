@@ -6,9 +6,6 @@ export const environment = {
   oauthClientId: '81232c9b87ccc999bdf8',
   serviceUrl: 'https://development-api-oauth-tareffa.herokuapp.com/services',
   serviceGetUrl: 'https://development-api-oauth-tareffa.herokuapp.com/services',
-  imageCompressionBaseUrl: 'https://development-image-compression.herokuapp.com',
-  storageBaseUrl: 'https://s4.ottimizzacontabil.com:55325',
-  storageApplicationId: 'account-avatar',
   storageAccountingId: 'tareffa',
   applicationId: 'tareffa',
   firebase: {
