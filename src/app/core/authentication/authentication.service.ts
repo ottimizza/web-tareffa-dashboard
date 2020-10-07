@@ -132,7 +132,7 @@ export class AuthenticationService {
       'X-Skip-Interceptor': ''
     });
     const clientId = `${environment.oauthClientId}`;
-    const url = `${environment.apiTareffaSpring}/auth/refresh?refresh_token=${refreshToken}&client_id=${clientId}`;
+    const url = `${environment.apiTareffaSpring}/oauth/refresh?refresh_token=${refreshToken}&client_id=${clientId}`;
     return this.http.post(url, {}, {});
   }
 
