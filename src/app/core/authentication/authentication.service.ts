@@ -123,7 +123,7 @@ export class AuthenticationService {
   }
 
   public exchange(code: string) {
-    const url = `${environment.serviceUrl}/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
+    const url = `${environment.apiTareffaSpring}/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
     return this.http.post(url, {}, {});
   }
 

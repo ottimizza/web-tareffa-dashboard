@@ -17,12 +17,12 @@ export class FilterService {
   }
 
   requestCategorias() {
-    const url = `${environment.dashboardApi}/categoria`;
+    const url = `${environment.serviceGetUrl}/categoria`;
     return this.http.get(url, 'Falha ao obter categorias!');
   }
 
   requestDepartments(dataProgramadaInicio: number, dataProgramadaTermino: number, agrupamento = 1) {
-    const url = `${environment.dashboardApi}/servico/programado/agrupamento/${agrupamento}`;
+    const url = `${environment.apiTareffaSpring}/servico/programado/agrupamento/${agrupamento}`;
     const startDate = new Date(dataProgramadaInicio);
     const endDate = new Date(dataProgramadaTermino);
     startDate.setHours(0, 0, 0, 0);
@@ -37,12 +37,12 @@ export class FilterService {
   }
 
   requestIndicators() {
-    const url = `${environment.dashboardApi}/indicador`;
+    const url = `${environment.serviceGetUrl}/indicador`;
     return this.http.get(url, 'Falha ao obter indicadores');
   }
 
   requestCaracteristicas() {
-    const url = `${environment.dashboardApi}/caracteristicas?description=04`;
+    const url = `${environment.serviceGetUrl}/caracteristicas?description=04`;
     return this.http.get(url, 'Falha ao obter características!');
   }
 

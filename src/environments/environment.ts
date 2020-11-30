@@ -1,13 +1,11 @@
 export const environment = {
-  // https://dev-api-tareffa-dashboard.herokuapp.com/
   production: false,
-  dashboardApi: 'https://dev-api-tareffa-dashboard.herokuapp.com',
-  apiTareffaSpring: 'https://development-api-tareffa-spring.herokuapp.com',
+  apiTareffaSpring: 'https://dev-api-tareffa-dashboard.herokuapp.com',
   oauthBaseUrl: 'https://dev-tareffa-oauth-server.herokuapp.com',
-  tareffaOauthService: 'https://development-api-oauth-tareffa.herokuapp.com',
-  oauthClientId: 'd032a11061cf7ab77917',
+  tareffaOauthService: 'https://development-api-oauth-tareffa.herokuapp.com/services',
+  oauthClientId: '81232c9b87ccc999bdf8',
   serviceUrl: 'https://development-api-oauth-tareffa.herokuapp.com/services',
-  serviceGetUrl: 'https://development-api-oauth-tareffa.herokuapp.com/services',
+  serviceGetUrl: 'https://dev-api-tareffa-dashboard.herokuapp.com',
   storageAccountingId: 'tareffa',
   applicationId: 'tareffa',
   firebase: {
