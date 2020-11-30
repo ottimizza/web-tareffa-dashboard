@@ -7,7 +7,7 @@ import { SideFilterConversorUtils } from '@shared/components/side-filter/utils/s
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const BASE_URL = environment.serviceGetUrl;
+const BASE_URL = environment.dashboardApi;
 
 @Injectable({ providedIn: 'root' })
 export class ScheduledService {

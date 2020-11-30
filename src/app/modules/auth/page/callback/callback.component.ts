@@ -7,8 +7,6 @@ import { environment } from '@env';
 import { StorageService } from '@app/services/storage.service';
 import { FunctionAccessService } from '@app/services/function-access.service';
 
-// import { Project } from '../../../../data/schema/project';
-
 @Component({
   selector: 'app-auth-callback',
   templateUrl: './callback.component.html',
@@ -66,19 +64,6 @@ export class AuthCallbackComponent implements OnInit {
                     this.logout();
                   }
                 );
-
-                // const storeUserInfo = that.authenticationService.storeUserInfo();
-                // const storeTokenInfo = that.authenticationService.storeTokenInfo();
-
-                // return Promise.all([
-                //   storeUserInfo,
-                //   storeTokenInfo
-                // ]).then((values) => {
-
-                // that.router.navigate(['dashboard']);
-                // }).catch((e) => {
-                //   console.log(e);
-                // });
               });
           }
         });
@@ -91,9 +76,7 @@ export class AuthCallbackComponent implements OnInit {
   }
 
   public logout() {
-    this.authenticationService.revokeToken().subscribe((response: any) => {
-      this.authenticationService.clearStorage();
-      this.authenticationService.authorize();
-    });
+    this.authenticationService.clearStorage();
+    this.authenticationService.authorize();
   }
 }

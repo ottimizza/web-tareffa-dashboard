@@ -17,6 +17,7 @@ export const CALLBACK_URL = '/auth/callback';
 })
 export class AuthenticationService {
   static REFRESH_URL = '/auth/refresh';
+  static CALLBACK_URL = '/auth/callback';
 
   static STORAGE_KEY_USERINFO = 'user-info';
   static STORAGE_KEY_TOKENINFO = 'token-info';
@@ -115,15 +116,14 @@ export class AuthenticationService {
 
   public authorize(responseType: string = 'code'): void {
     const that = this;
-    const baseUrl = `${environment.oauthBaseUrl}/oauth/authorize`;
+    const baseUrl = `${environment.oauthBaseUrl}/oauth/authorize/oauthchooseaccount`;
     const clientId = `${environment.oauthClientId}`;
     const url = `${baseUrl}?response_type=${responseType}&prompt=login&client_id=${clientId}&redirect_uri=${this.redirectURI}`;
     this.document.location.href = url;
   }
 
   public exchange(code: string) {
-    const urlTag = environment.production ? '' : 'servicos/';
-    const url = `${environment.apiTareffaSpring}/${urlTag}oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
+    const url = `${environment.serviceUrl}/oauth/callback?code=${code}&redirect_uri=${this.redirectURI}`;
     return this.http.post(url, {}, {});
   }
 
@@ -133,13 +133,7 @@ export class AuthenticationService {
     });
     const clientId = `${environment.oauthClientId}`;
     const url = `${environment.apiTareffaSpring}/oauth/refresh?refresh_token=${refreshToken}&client_id=${clientId}`;
-    return this.http.post(url, {}, {});
-  }
-
-  public revokeToken() {
-    const url = `${environment.oauthBaseUrl}/oauth/revoke_token`;
-    const headers = this.getAuthorizationHeaders();
-    return this.http.delete(url, { headers });
+    return this.http.post(url, {}, { headers });
   }
 
   public logout() {

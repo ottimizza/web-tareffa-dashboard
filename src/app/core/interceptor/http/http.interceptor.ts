@@ -4,22 +4,15 @@ import {
   HttpRequest,
   HttpErrorResponse,
   HttpHandler,
-  HttpEvent,
-  HttpResponse,
-  HTTP_INTERCEPTORS
+  HttpEvent
 } from '@angular/common/http';
 
-import { Observable, EMPTY, throwError, of, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
-// import { MocksService, refreshtoken_resource } from '@app/http/mocks.service';
-import {
-  AuthenticationService,
-  REFRESH_URL,
-  CALLBACK_URL
-} from '@app/authentication/authentication.service';
-import { AuthSession } from '@shared/models/AuthSession';
 import { SKIP_INTERCEPTOR } from '../skip-interceptor';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '@app/authentication/authentication.service';
+import { AuthSession } from '@shared/models/AuthSession';
 
 export const HttpStatus = {
   BAD_REQUEST: 400,
@@ -33,7 +26,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
 
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private authenticationService: AuthenticationService, public router: Router) {}
+  constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const groupId: string = this.id();
@@ -48,14 +41,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         } else {
           if (error.status === HttpStatus.BAD_REQUEST) {
             if (this.requestMatchesCallbackURL(request)) {
-              this.router.navigate(['/landpage']);
+              this.router.navigate(['/land-page']);
               return throwError(error);
             }
           }
 
           if (error.status === HttpStatus.UNAUTHORIZED) {
             if (this.requestMatchesCallbackURL(request)) {
-              this.router.navigate(['/landpage']);
+              this.router.navigate(['/land-page']);
               return throwError(error);
             }
 
@@ -64,7 +57,9 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
               return this.refreshTokenSubject.pipe(
                 filter(result => result !== null),
                 take(1),
-                switchMap(() => next.handle(this.addAuthenticationToken(request)))
+                switchMap((response: any) =>
+                  next.handle(this.addAuthenticationToken(request, response.access_token))
+                )
               );
             } else {
               this.refreshTokenEmProgresso = true;
@@ -84,7 +79,7 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
                         const storeTokenInfo = this.authenticationService.storeTokenInfo(true);
                       });
 
-                    return next.handle(this.addAuthenticationToken(request));
+                    return next.handle(this.addAuthenticationToken(request, response.access_token));
                   }),
                   catchError((err: any) => {
                     this.refreshTokenEmProgresso = false;
@@ -116,8 +111,9 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     }
   }
 
-  addAuthenticationToken(request) {
-    const accessToken = AuthSession.fromLocalStorage().getAuthenticated().accessToken;
+  addAuthenticationToken(request, refreshToken?: string) {
+    const accessToken =
+      refreshToken || AuthSession.fromLocalStorage().getAuthenticated().accessToken;
 
     return request.clone({
       setHeaders: {
@@ -127,12 +123,8 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     });
   }
 
-  private requestMatchesRefreshTokenURL(request: HttpRequest<any>): boolean {
-    return request.url.includes(REFRESH_URL);
-  }
-
   private requestMatchesCallbackURL(request: HttpRequest<any>): boolean {
-    return request.url.includes(CALLBACK_URL);
+    return request.url.includes(AuthenticationService.CALLBACK_URL);
   }
 
   private logout() {

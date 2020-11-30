@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '@app/authentication/authentication.service';
-import { AuthSession } from '@shared/models/AuthSession';
 import { environment } from '@env';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -14,16 +13,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AuthLogoutComponent implements OnInit {
   // cria um iframe para o oauth server poder excluir os cookies relacionados
-  url = this.sanitizer.bypassSecurityTrustResourceUrl(
-    `${environment.oauthBaseUrl}/logout`
-  );
+  url = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.oauthBaseUrl}/logout`);
 
   constructor(
     public sanitizer: DomSanitizer,
     public router: Router,
     public route: ActivatedRoute,
     public authenticationService: AuthenticationService
-  ) { }
+  ) {}
 
   // evento invocado após o iframe tenha sido carregado.
   public onLoad() {
@@ -31,17 +28,13 @@ export class AuthLogoutComponent implements OnInit {
   }
 
   public logout() {
-    this.authenticationService.revokeToken()
-      .subscribe((response: any) => {
-        this.authenticationService.clearStorage();
-        this.authenticationService.authorize();
-      });
+    this.authenticationService.clearStorage();
+    this.authenticationService.authorize();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   pause(value = '') {
     prompt('App Pause', value);
   }
-
 }

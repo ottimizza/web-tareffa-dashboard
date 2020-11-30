@@ -7,37 +7,37 @@ export class IndicatorService {
   constructor(private http: HttpHandlerService) {}
 
   deleteIndicators(id: number) {
-    const url = `${environment.apiTareffaSpring}/indicador/${id}`;
+    const url = `${environment.dashboardApi}/indicador/${id}`;
     return this.http.delete(url, 'Falha ao remover indicador!');
   }
 
   deleteGraph(id: number) {
-    const url = `${environment.apiTareffaSpring}/grafico/${id}`;
+    const url = `${environment.dashboardApi}/grafico/${id}`;
     return this.http.delete(url, 'Falha ao remover gráfico!');
   }
 
   removeServiceFromGraph(graficoId: number, servicoId: number) {
-    const url = `${environment.apiTareffaSpring}/grafico/${graficoId}/servico/${servicoId}`;
+    const url = `${environment.dashboardApi}/grafico/${graficoId}/servico/${servicoId}`;
     return this.http.delete(url, 'Falha ao remover serviço do gráfico!');
   }
 
   removeTagFromGraph(graficoId: number, tagId: number) {
-    const url = `${environment.apiTareffaSpring}/grafico/${graficoId}/caracteristica/${tagId}`;
+    const url = `${environment.dashboardApi}/grafico/${graficoId}/caracteristica/${tagId}`;
     return this.http.delete(url, 'Falha ao remover marcador do gráfico!');
   }
 
   addServiceToGraph(graficoId: number, servicoId: number) {
-    const url = `${environment.apiTareffaSpring}/grafico/${graficoId}/servico/${servicoId}`;
+    const url = `${environment.dashboardApi}/grafico/${graficoId}/servico/${servicoId}`;
     return this.http.post(url, {}, 'Falha ao adicionar serviço ao gráfico');
   }
 
   addTagToGraph(graficoId: number, tagId: number) {
-    const url = `${environment.apiTareffaSpring}/grafico/${graficoId}/caracteristica/${tagId}`;
+    const url = `${environment.dashboardApi}/grafico/${graficoId}/caracteristica/${tagId}`;
     return this.http.post(url, {}, 'Falha ao adicionar marcador ao gráfico!');
   }
 
   getServices(id: number, showMissing: boolean = null, description: string = null) {
-    let url = `${environment.serviceGetUrl}/grafico/${id}/servico`;
+    let url = `${environment.dashboardApi}/grafico/${id}/servico`;
     if (showMissing !== null) {
       url += `/faltantes`;
     }
@@ -46,7 +46,7 @@ export class IndicatorService {
   }
 
   getTags(id: number, showMissing: boolean = null) {
-    let url = `${environment.serviceGetUrl}/grafico/${id}/caracteristica`;
+    let url = `${environment.dashboardApi}/grafico/${id}/caracteristica`;
     if (showMissing !== null) {
       url += `/faltantes`;
     }
@@ -56,7 +56,7 @@ export class IndicatorService {
   }
 
   createGraph(nomeGrafico: string, id: number) {
-    const url = `${environment.apiTareffaSpring}/grafico`;
+    const url = `${environment.dashboardApi}/grafico`;
 
     const obj = {
       nomeGrafico,
@@ -69,27 +69,27 @@ export class IndicatorService {
   }
 
   updateGraph(id: number, nomeGrafico: string) {
-    const url = `${environment.apiTareffaSpring}/grafico/${id}`;
+    const url = `${environment.dashboardApi}/grafico/${id}`;
     return this.http.put(url, { nomeGrafico }, 'Falha ao atualizar gráfico');
   }
 
   getGraph(indicatorId: number) {
-    const url = `${environment.serviceGetUrl}/indicador/${indicatorId}/grafico`;
+    const url = `${environment.dashboardApi}/indicador/${indicatorId}/grafico`;
     return this.http.get(url, 'Falha ao obter gráfico!');
   }
 
   getIndicators() {
-    const url = `${environment.serviceGetUrl}/indicador`;
+    const url = `${environment.dashboardApi}/indicador`;
     return this.http.get(url, 'Falha ao obter indicadores!');
   }
 
   getIndicatorById(indicador) {
-    const url = `${environment.serviceGetUrl}/indicador/${indicador}`;
+    const url = `${environment.dashboardApi}/indicador/${indicador}`;
     return this.http.get(url, 'Falha ao obter indicador!');
   }
 
   getServicoProgramado(filter, indicador?) {
-    const url = `${environment.serviceGetUrl}/indicador/${indicador ||
+    const url = `${environment.dashboardApi}/indicador/${indicador ||
       filter.indicador}/servico/programado/count`;
     const body = {
       dataProgramadaInicio: new Date(filter.startDate).getTime() || null,
@@ -103,7 +103,7 @@ export class IndicatorService {
   }
 
   getUsers(filter, indicatorId) {
-    const url = `${environment.serviceGetUrl}/grafico/${indicatorId}/usuarios`;
+    const url = `${environment.dashboardApi}/grafico/${indicatorId}/usuarios`;
     const body = {
       dataProgramadaInicio: filter.startDate.getTime() || null,
       dataProgramadaTermino: filter.endDate.getTime() || null,
@@ -117,12 +117,12 @@ export class IndicatorService {
   }
 
   createIndicators(descricao: string) {
-    const url = `${environment.apiTareffaSpring}/indicador`;
+    const url = `${environment.dashboardApi}/indicador`;
     return this.http.post(url, { descricao }, 'Falha ao criar indicador!');
   }
 
   updateIndicator(id: number, descricao: string) {
-    const url = `${environment.apiTareffaSpring}/indicador/${id}`;
+    const url = `${environment.dashboardApi}/indicador/${id}`;
     return this.http.put(url, { descricao }, 'Falha ao atualizar indicador!');
   }
 }

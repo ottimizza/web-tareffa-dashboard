@@ -10,6 +10,7 @@ function getEnvironmentVariable(key, _default = '') {
 function createEnvironementFile() {
   return `export const environment = {
   production: true,
+  dashboardApi: '${getEnvironmentVariable('DASHBOARD_API')}',
   oauthBaseUrl: '${getEnvironmentVariable('API_OAUTH2_SERVICE')}',
   oauthClientId: '${getEnvironmentVariable('OAUTH2_CLIENT_ID')}',
   serviceUrl: '${getEnvironmentVariable('SERVICE_URL')}',
