@@ -7,22 +7,20 @@ import { RxEvent } from './rx-event.service';
   providedIn: 'root'
 })
 export class UpdateService {
-
   constructor(public updates: SwUpdate, public events: RxEvent) {
     if (updates.isEnabled) {
-      interval(60 * 60 * 1000) // 1 Hora
-        .subscribe(() => updates.checkForUpdate());
+      // 10 minutos
+      interval(10 * 1000).subscribe(() => updates.checkForUpdate());
     }
   }
 
   public checkForUpdates(): void {
     console.log('checking for updates');
-    this.updates.available.subscribe((event) => this.promptUser());
+    this.updates.available.subscribe(event => this.promptUser());
   }
 
   private promptUser(): void {
     console.log('updating to new version');
     this.updates.activateUpdate().then(() => this.events.next('sw::update', {}));
   }
-
 }
