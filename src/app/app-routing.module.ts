@@ -14,15 +14,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'landpage',
-    data: {
-      breadcrumb: null
-    },
-    // component: LandPageComponent,
-    canActivate: [NoAuthGuard],
-    loadChildren: () => import('@modules/land-page/land-page.module').then(m => m.LandPageModule)
-  },
-  {
     path: 'dashboard',
     data: {
       breadcrumb: 'Dashboard'

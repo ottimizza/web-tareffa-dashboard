@@ -41,14 +41,14 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         } else {
           if (error.status === HttpStatus.BAD_REQUEST) {
             if (this.requestMatchesCallbackURL(request)) {
-              this.router.navigate(['/land-page']);
+              this.logout();
               return throwError(error);
             }
           }
 
           if (error.status === HttpStatus.UNAUTHORIZED) {
             if (this.requestMatchesCallbackURL(request)) {
-              this.router.navigate(['/land-page']);
+              this.logout();
               return throwError(error);
             }
 
