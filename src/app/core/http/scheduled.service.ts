@@ -29,7 +29,6 @@ export class ScheduledService {
   }
 
   getGroupedScheduled(grouping: number, body = this._thisMonth) {
-    console.log('getGroupedScheduled: ', BASE_URL);
     const url = `${BASE_URL}/servico/programado/agrupamento/${grouping}`;
     return this._http.post(url, body, this._headers);
   }
