@@ -32,11 +32,12 @@ export class AuthCallbackComponent implements OnInit {
   }
 
   public ngOnInit() {
-    const that = this;
+    this.onLoad();
+
     this.route.queryParamMap.subscribe(queryParams => {
       this.callbackCode = queryParams.get('code');
       if (this.callbackCode) {
-        that.authenticationService.exchange(this.callbackCode).subscribe((response: any) => {
+        this.authenticationService.exchange(this.callbackCode).subscribe((response: any) => {
           if (response.access_token) {
             AuthSession.fromOAuthResponse(response)
               .store()
@@ -50,9 +51,9 @@ export class AuthCallbackComponent implements OnInit {
                     this.storageService.fetch('redirect_url').then(value => {
                       this.storageService.destroy('redirect_url');
                       if (value) {
-                        that.router.navigate([value]);
+                        this.router.navigate([value]);
                       } else {
-                        that.router.navigate(['/dashboard']);
+                        this.router.navigate(['/dashboard']);
                       }
                     });
                   },

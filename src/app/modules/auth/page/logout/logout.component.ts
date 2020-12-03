@@ -22,17 +22,14 @@ export class AuthLogoutComponent implements OnInit {
     public authenticationService: AuthenticationService
   ) {}
 
-  // evento invocado após o iframe tenha sido carregado.
-  public onLoad() {
-    this.logout();
-  }
-
   public logout() {
     this.authenticationService.clearStorage();
     this.authenticationService.authorize();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.logout();
+  }
 
   pause(value = '') {
     prompt('App Pause', value);
